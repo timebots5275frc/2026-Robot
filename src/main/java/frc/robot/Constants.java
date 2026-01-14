@@ -244,4 +244,72 @@ public final class Constants
   {
     public static final double INCH_TO_METER = 0.0254;
   }
-}
+
+  public static enum AprilTagData
+    {
+      ba_source_left(1, "Source left", DriverStation.Alliance.Blue),
+      ba_source_right(2, "Source right", DriverStation.Alliance.Blue),
+      ra_speaker_aux(3, "Speaker auxillary", DriverStation.Alliance.Red),
+      ra_speaker_main(4, "Speaker main", DriverStation.Alliance.Red, 0, 16.6193978),
+      ra_amplifier(5, "Amplifier", DriverStation.Alliance.Red, -2.7389074, 14.778355),
+      ba_amplifier(6, "Amplifier", DriverStation.Alliance.Blue, -2.7389074, 1.858645),
+      ba_speaker_main(7, "Speaker main", DriverStation.Alliance.Blue, 0, 0),
+      ba_speaker_aux(8, "Speaker auxillary", DriverStation.Alliance.Blue),
+      ra_source_right(9, "Source right", DriverStation.Alliance.Red),
+      ra_source_left(10, "Source left", DriverStation.Alliance.Red),
+      ra_core_scoring_table(11, "Core scoring table side", DriverStation.Alliance.Red),
+      ra_core_opp_scoring_table(12, "Core opposite scoring table side", DriverStation.Alliance.Red),
+      ra_core_mid(13, "Core middle side", DriverStation.Alliance.Red),
+      ba_core_mid(14, "Core middle side", DriverStation.Alliance.Blue),
+      ba_core_opp_scoring_table(15, "Core opposite scoring table side", DriverStation.Alliance.Blue),
+      ba_core_scoring_table(16, "Core scoring table side", DriverStation.Alliance.Blue);
+
+      public final int id;
+      public final String name;
+      public final DriverStation.Alliance alliance;
+      private AprilTagData(int id, String name, DriverStation.Alliance alliance)
+      {
+        this.id = id;
+        this.name = name;
+        this.alliance = alliance;
+      }
+
+      private AprilTagData(int id, String name, DriverStation.Alliance alliance, double x, double y)
+      {
+        this.id = id;
+        this.name = name;
+        this.alliance = alliance;
+      }
+
+      @Override
+      public String toString()
+      {
+        return (alliance == DriverStation.Alliance.Blue ? "Blue " : "Red ") + name + "[" + id + "]";
+      }
+
+      public static AprilTagData getTag(int id) {
+        switch(id){
+          case 1: return ba_source_left;
+          case 2: return ba_source_right;
+          case 3: return ra_speaker_aux;
+          case 4: return ra_speaker_main;
+          case 5: return ra_amplifier;
+          case 6: return ba_amplifier;
+          case 7: return ba_speaker_main;
+          case 8: return ba_speaker_aux;
+          case 9: return ra_source_right;
+          case 10: return ra_source_left;
+          case 11: return ra_core_scoring_table;
+          case 12: return ra_core_opp_scoring_table;
+          case 13: return ra_core_mid;
+          case 14: return ba_core_mid;
+          case 15: return ba_core_opp_scoring_table;
+          case 16: return ba_core_scoring_table;
+          default: return null;
+        }
+      }
+
+      public static boolean isSpeakerTag(AprilTagData tag) { return tag == AprilTagData.ra_speaker_main || tag == AprilTagData.ba_speaker_main; }
+      public static boolean isAmpTag(AprilTagData tag) { return tag == AprilTagData.ra_amplifier || tag == AprilTagData.ba_amplifier; }
+    }
+  }
