@@ -33,16 +33,7 @@ public final class Constants
     public static final int kDriverControllerPort = 0;
   }
 
-  public static class LaserCanConstants
-  {
-    public static final int LASERCAN_ID1 = 55;
-    public static final int LASERCAN_ID2 = 56;
-
-    public static final int LASERCAN_DISTANCE_CORAL_IN1 = 50; //its mm
-    public static final int LASERCAN_DISTANCE_CORAL_OUT1 = 0; //its mm
-    public static final int LASERCAN_DISTANCE_CORAL_IN2 = 50; //its mm
-    public static final int LASERCAN_DISTANCE_CORAL_OUT2 = 0; //its mm
-  }
+  
 //guh
   public static class ButtonConstants
   {
@@ -74,91 +65,9 @@ public final class Constants
     public static final int ALGAE_PIVOT_SHOOT = 1;
   }
 
-  //Elevator Constants
-  public final class ElevatorConstants
-  {
-    //IDs
-    public static final int ELEVATOR_HEIGHT_MOTOR1_ID = 41;
-    public static final int ELEVATOR_HEIGHT_MOTOR2_ID = 42;
+  
 
-    //switch ports
-    public static final int ELEVATOR_LIMIT_SWITCH_PORT1 = 0;
-    public static final int ELEVATOR_LIMIT_SWITCH_PORT2 = 1;
-
-    //PIDs
-
-    //P = gain, tells motor to accelerate towards target velocity
-    //i = error, starts to remove error that occurs when over/under-shooting target velocity
-    //d = change, tells motor it needs to start to slow as it reaches target velocity
-
-    public static final PID ELEVATOR_HEIGHT_PID = new PID(0.03,0.000008,0.00005,0,0); //
-    //public static final PID ARM_TELESCOPE_VELOCITY_PID = new PID(0,0.0,0.0,.00001,0);
-    // public static final PID ELEVATOR_INTAKE_PID = new PID(0,0,0,0.0001,0);
-
-    //speeds
-    public static final double ELEVATOR_HEIGHT_SPEED = 10.0;
-    public static final double ELEVATOR_INTAKE_SPEED = 2500.0;    
-
-    // public static final double LEVEL_ONE = (INTAKE_PIVOT_ROTATIONS_PER_DEGREE * (360*.04));
-    public static final double LEVEL_TWO = (INTAKE_PIVOT_ROTATIONS_PER_DEGREE * (360*.07));
-    public static final double LEVEL_THREE = (INTAKE_PIVOT_ROTATIONS_PER_DEGREE * (360*.14));
-    public static final double LEVEL_FOUR = (INTAKE_PIVOT_ROTATIONS_PER_DEGREE * (360*.27));
-    public static final double DRIVE      = 0;
-    public static final double INTAKE     = (INTAKE_PIVOT_ROTATIONS_PER_DEGREE * (360*.0233));
-    public static final double ALGAE =INTAKE_PIVOT_ROTATIONS_PER_DEGREE*360*.2;
-  }
-
-  //Intake Constants
-  public final class AlgaeIntakeConstants
-  {
-
-    //encoder ids
-    //public static final int ALGAE_PIVOT_MOTOR_ENCODER_ID = 61;
-    public static final int ALGAE_INTAKE_RUN_MOTOR_ID = 51;
-    public static final int ALGAE_PIVOT_MOTOR_ID = 52;
-
-    //PID's
-    public static final PID ALGAE_INTAKE_RUN_PID = new PID(0.0,0,0,0.000085,0);
-    public static final PID ALGAE_INTAKE_PIVOT_PID = new PID(0.003,0,0,0,0);
-
-    public static final double ALGAE_INTAKE_HOLD_CURRENT = 1.5f;
-
-    //speeds
-     public static final int ALGAE_INTAKE_RUN_SPEED = 3000;
-
-    //Pivot Angle
-    public static final double ALGAE_GROUND_ANGLE = 0;
-    public static final double ALGAE_REEF_ANGLE = 0;
-    public static final double SHOOT_ANGLE = 0;
-    public static final double DRIVE_ANGLE = 0;
-
-     //Heights
-    //  public static final double PROCESSOR_HEIGHT = ;//(ALGAE_INTAKE_PIVOT_ROTATIONS_PER_DEGREE * 10);
-    //  public static final double ALGAE_ON_REEF = ;
-
-     public static final double GROUND = 50;
-    //  public static final double DRIVE_HEIGHT = PROCESSOR_HEIGHT;//(ALGAE_INTAKE_PIVOT_ROTATIONS_PER_DEGREE *80);
-     
-  }
-  public static final class CoralIntakeConstants {
-
-    public static final int CORAL_INTAKE_LASERCAN_ID1 = 55;
-    public static final int CORAL_INTAKE_LASERCAN_ID2 = 56;
-
-    public static final int CORAL_INTAKE_MOTOR_ID1 = 61;
-    public static final int CORAL_INTAKE_MOTOR_ID2 = 62;
-
-    public static final PID CORAL_INTAKE_PID = new PID(0,0,0,0.000085, 0); // ripped from algae intake constant. might not be good.
-    public static final int CORAL_INTAKE_RUN_SPEED_NORMAL = 2000;
-    public static final int CORAL_INTAKE_RUN_SPEED_L1 = CORAL_INTAKE_RUN_SPEED_NORMAL - 1000;
-  }
-   public static final class ControllerConstants 
-   {
-      public static final int DRIVER_STICK_CHANNEL = 0;
-      public static final int AUX_STICK_CHANNEL    = 1;
-      public static final double DEADZONE_DRIVE    = 0.1;
-      public static final double DEADZONE_STEER    = 0.3;
-    }
+ 
 
     public static final class DriveConstants {
       // Final Robot Constants
@@ -312,4 +221,16 @@ public final class Constants
       public static boolean isSpeakerTag(AprilTagData tag) { return tag == AprilTagData.ra_speaker_main || tag == AprilTagData.ba_speaker_main; }
       public static boolean isAmpTag(AprilTagData tag) { return tag == AprilTagData.ra_amplifier || tag == AprilTagData.ba_amplifier; }
     }
+
+    public static final class ControllerConstants 
+    {
+      public static final int DRIVER_STICK_CHANNEL = 0;
+      public static final int AUX_STICK_CHANNEL    = 1;
+      public static final double DEADZONE_DRIVE    = 0.1;
+      public static final double DEADZONE_STEER    = 0.3;
+    }
+
+    
+
+
   }
