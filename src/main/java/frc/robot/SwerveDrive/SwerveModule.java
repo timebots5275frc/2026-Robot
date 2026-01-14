@@ -1,189 +1,149 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+package frc.robot.SwerveDrive;
 
-package frc.robot.subsystems.DriveTrain;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-
-import java.util.List;
-import com.ctre.phoenix6.hardware.Pigeon2;
-
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.ctre.phoenix6.hardware.CANcoder;
+
 import frc.robot.Constants.DriveConstants;
 
-import frc.robot.CustomTypes.Math.Vector2;
+public class SwerveModule {
 
-public class SwerveDrive extends SubsystemBase {
-  private final Translation2d leftFrontWheelLocation  = new Translation2d(DriveConstants.ROBOT_SWERVE_LOCATIONS.LEFT_FRONT_WHEEL_X,  DriveConstants.ROBOT_SWERVE_LOCATIONS.LEFT_FRONT_WHEEL_Y);
-  private final Translation2d rightFrontWheelLocation = new Translation2d(DriveConstants.ROBOT_SWERVE_LOCATIONS.RIGHT_FRONT_WHEEL_X, DriveConstants.ROBOT_SWERVE_LOCATIONS.RIGHT_FRONT_WHEEL_Y);    
-  private final Translation2d rightRearWheelLocation  = new Translation2d(DriveConstants.ROBOT_SWERVE_LOCATIONS.RIGHT_REAR_WHEEL_X,  DriveConstants.ROBOT_SWERVE_LOCATIONS.RIGHT_REAR_WHEEL_Y);
-  private final Translation2d leftRearWheelLocation   = new Translation2d(DriveConstants.ROBOT_SWERVE_LOCATIONS.LEFT_REAR_WHEEL_X,   DriveConstants.ROBOT_SWERVE_LOCATIONS.LEFT_REAR_WHEEL_Y);
+    public SparkFlex driveMotor;
+    private SparkMax steerMotor;
+    public RelativeEncoder driveNEOVortexMotorEncoder; // NEO build-in Encoder
 
-  private final SwerveModule leftFrontSwerveModule  = new SwerveModule(DriveConstants.ROBOT_SWERVE_CAN.LEFT_FRONT_DRIVE_MOTOR_ID,  DriveConstants.ROBOT_SWERVE_CAN.LEFT_FRONT_STEER_MOTOR_ID, DriveConstants.ROBOT_SWERVE_CAN.LEFT_FRONT_STEER_ENCODER_ID,"LF");
-  private final SwerveModule rightFrontSwerveModule = new SwerveModule(DriveConstants.ROBOT_SWERVE_CAN.RIGHT_FRONT_DRIVE_MOTOR_ID, DriveConstants.ROBOT_SWERVE_CAN.RIGHT_FRONT_STEER_MOTOR_ID, DriveConstants.ROBOT_SWERVE_CAN.RIGHT_FRONT_STEER_ENCODER_ID,"RF");
-  private final SwerveModule rightRearSwerveModule  = new SwerveModule(DriveConstants.ROBOT_SWERVE_CAN.RIGHT_REAR_DRIVE_MOTOR_ID,  DriveConstants.ROBOT_SWERVE_CAN.RIGHT_REAR_STEER_MOTOR_ID, DriveConstants.ROBOT_SWERVE_CAN.RIGHT_REAR_STEER_ENCODER_ID,"RR");
-  private final SwerveModule leftRearSwerveModule   = new SwerveModule(DriveConstants.ROBOT_SWERVE_CAN.LEFT_REAR_DRIVE_MOTOR_ID,   DriveConstants.ROBOT_SWERVE_CAN.LEFT_REAR_STEER_MOTOR_ID, DriveConstants.ROBOT_SWERVE_CAN.LEFT_REAR_STEER_ENCODER_ID,"LR");
-  
-  Pigeon2 pigeon2Gyro = new Pigeon2(DriveConstants.PIGEON_2_ID);
+    private CANcoder steerAngleEncoder;
+    private String name;
+    private PIDController steerAnglePID;
+    private SparkClosedLoopController steerMotorVelocityPID;
+    private SparkClosedLoopController driveMotorVelocityPID;
 
-    public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(leftFrontWheelLocation, rightFrontWheelLocation, rightRearWheelLocation, leftRearWheelLocation);
+    public SwerveModule(int driveMotorID, int steerMotorID, int steerEncoderId, String n) {
+        this.name = n;
+        driveMotor = new SparkFlex(driveMotorID, MotorType.kBrushless);
+        steerMotor = new SparkMax(steerMotorID, MotorType.kBrushless);
+
+        steerAngleEncoder = new CANcoder(steerEncoderId);
+
+        driveNEOVortexMotorEncoder = driveMotor.getEncoder();
+        //driveNEOVortexMotorEncoder.setPositionConversionFactor();
+
+        /// PID Controllers ///
+        steerAnglePID = new PIDController(DriveConstants.PID_Encoder_Steer.p, DriveConstants.PID_Encoder_Steer.i, DriveConstants.PID_Encoder_Steer.d);
+        steerAnglePID.enableContinuousInput(-180, 180);
+
+        // Get the motor controller PIDs
+        steerMotorVelocityPID = steerMotor.getClosedLoopController();
+        driveMotorVelocityPID = driveMotor.getClosedLoopController();
+        // set PID coefficients
+        ClosedLoopConfig steerClosedLoopConfig = new ClosedLoopConfig();
+        SparkMaxConfig steerConfig = new SparkMaxConfig();
+        steerConfig.idleMode(IdleMode.kCoast);
+        steerClosedLoopConfig.pidf(DriveConstants.PID_SparkMax_Steer.p, DriveConstants.PID_SparkMax_Steer.i, DriveConstants.PID_SparkMax_Steer.d, DriveConstants.PID_SparkMax_Steer.kff);
+        steerClosedLoopConfig.iZone(DriveConstants.PID_SparkMax_Steer.iz);
+        steerClosedLoopConfig.outputRange(-1, 1);
+        steerConfig.apply(steerClosedLoopConfig);
+        steerMotor.configure(steerConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     
-    public final SwerveModulePosition[] startingSwerveModulePositions = new SwerveModulePosition[] {leftFrontSwerveModule.getPosition(), rightFrontSwerveModule.getPosition(), rightRearSwerveModule.getPosition(), leftRearSwerveModule.getPosition()};
-    private final SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(kinematics, this.getHeading(), startingSwerveModulePositions);
 
-    SwerveModulePosition[] currentSwerveModulePositions = startingSwerveModulePositions;
-    
-    public void Drivetrain() {
-        flip = false;
-        System.out.println("SwerveDrive.java started...");
-    }
-    
-    @Override
-    public void periodic() {
-        updateOdometry();
-        SmartDashboard.putNumber("Heading", getHeading().getDegrees());
-        SmartDashboard.putNumber("LF Drive Speed", leftFrontSwerveModule.driveNEOVortexMotorEncoder.getVelocity());
-        SmartDashboard.putNumber("RF Drive Speed", rightFrontSwerveModule.driveNEOVortexMotorEncoder.getVelocity());
-        SmartDashboard.putNumber("LR Drive Speed", leftRearSwerveModule.driveNEOVortexMotorEncoder.getVelocity());
-        SmartDashboard.putNumber("RR Drive Speed", rightRearSwerveModule.driveNEOVortexMotorEncoder.getVelocity());
-    }
-    private boolean flip;
-    /**
-     * Method to drive the robot using joystick info.
-     *
-     * @param xSpeed        Speed of the robot in the x direction (forward).
-     * @param ySpeed        Speed of the robot in the y direction (sideways).
-     * @param rot           Angular rate of the robot.
-     * @param fieldRelative Whether the provided x and y speeds are relative to the
-     *                      field.
-     */
-    @SuppressWarnings("ParameterName")
-    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-        SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates((fieldRelative && !flip )? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, this.getHeading()) : new ChassisSpeeds(-ySpeed, xSpeed, rot));
-        SmartDashboard.putNumber("RRDesiredM/S", swerveModuleStates[3].speedMetersPerSecond);
-        SmartDashboard.putNumber("RRRotDeg", swerveModuleStates[3].angle.getDegrees());
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.MAX_DRIVE_SPEED);
-        SmartDashboard.putBoolean("Field Relative", fieldRelative && !flip);
-        
-        leftFrontSwerveModule.setDesiredState(swerveModuleStates[0], true);
-        rightFrontSwerveModule.setDesiredState(swerveModuleStates[1], true);
-        rightRearSwerveModule.setDesiredState(swerveModuleStates[2], true);
-        leftRearSwerveModule.setDesiredState(swerveModuleStates[3], true);
-
-        currentSwerveModulePositions = new SwerveModulePosition[] { leftFrontSwerveModule.getPosition(), rightFrontSwerveModule.getPosition(), rightRearSwerveModule.getPosition(), leftRearSwerveModule.getPosition(), };
-
-        SmartDashboard.putString("positions", currentSwerveModulePositions[0].distanceMeters+" "+currentSwerveModulePositions[1].distanceMeters+" "+currentSwerveModulePositions[2].distanceMeters+" "+currentSwerveModulePositions[3].distanceMeters+" ");
-        SmartDashboard.putNumber("left front pos", leftFrontSwerveModule.getPosition().distanceMeters);
-        SmartDashboard.putString("Odometry Pos", this.getOdometryPosition().toString());
-        SmartDashboard.putString("Odometry Rot", m_odometry.getPoseMeters().getRotation().toString());
+        // set PID coefficients
+        ClosedLoopConfig driveClosedLoopConfig = new ClosedLoopConfig();
+        SparkFlexConfig driveConfig = new SparkFlexConfig();
+        driveConfig.idleMode(IdleMode.kCoast);
+        driveClosedLoopConfig.pidf(DriveConstants.PID_SparkFlex_Drive.p, DriveConstants.PID_SparkFlex_Drive.i, DriveConstants.PID_SparkFlex_Drive.d, DriveConstants.PID_SparkFlex_Drive.kff);
+        driveClosedLoopConfig.iZone(DriveConstants.PID_SparkFlex_Drive.iz);
+        // driveClosedLoopConfig.outputRange(-1, 1);
+        driveConfig.apply(driveClosedLoopConfig);
+        driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+       
     }
 
     /**
-     * Returns the currently-estimated pose of the robot.
-     *
-     * @return The pose.
-     */
-    public Pose2d getPose() {
-        return m_odometry.getPoseMeters();
-    }
-
-    public Vector2 getOdometryPosition()
-    {
-        Pose2d pose = m_odometry.getPoseMeters();
-        return new Vector2(pose.getX(), pose.getY());
-    }
-
-    /** Updates the field relative position of the robot. */
-    public void updateOdometry() {
-        m_odometry.update(this.getHeading(), currentSwerveModulePositions);
-    }
-
-    /**
-     * Resets the odometry Position and Angle to 0.
-     */
-    public void resetOdometry() {
-        System.out.println("resetOdometry");
-        m_odometry.resetPosition(this.getHeading(), currentSwerveModulePositions, new Pose2d(0,0, new Rotation2d(0)));
-    }
-
-    /**
-     * Resets the odometry to the specified pose.
-     *
-     * @param pose The pose to which to set the odometry.
-     */
-    public void resetOdometryWithPose2d(Pose2d pose) {
-        System.out.println("resetOdometryWithPose2d");
-        m_odometry.resetPosition(pose.getRotation(), startingSwerveModulePositions, pose); // imuADIS16470.getRotation2d()
-    }
-
-    public void resetPigeon() {
-        pigeon2Gyro.setYaw(0);
-    }
-
-    public void setGyroYaw(double degrees) {
-        pigeon2Gyro.setYaw(degrees);
-    }
-
-    /**
-     * Returns the heading of the robot.
+     * Returns the current state of the module.
      * 
-     * @return the robot's heading in degrees, from -180 to 180. // ! This comment
-     *         was from last year.
+     * @return The current state of the module.
      */
-    public Rotation2d getHeading() {
+    public SwerveModuleState getState() {
+        double driveSpeed = speedFromDriveRpm(driveNEOVortexMotorEncoder.getVelocity());
+        double steerAngleRadians = Math.toRadians(steerAngleEncoder.getAbsolutePosition().getValueAsDouble() * 360);
 
-        Rotation2d heading = Rotation2d.fromDegrees(pigeon2Gyro.getYaw().getValueAsDouble());
-
-        // System.out.println( "getYComplementaryAngle = " + heading );
-        // System.out.println( "getXComplementaryAngle = " +
-        // imuADIS16470.getXComplementaryAngle() );
-
-        return heading; // TODO Lucas //.minus(new Rotation2d(this.autoTurnOffsetRadians)); // radians
-
+        return new SwerveModuleState(driveSpeed, new Rotation2d(steerAngleRadians));
     }
-    public void flipFieldRelative() {flip = !flip;}
-    public double getGyroYawInDegrees() { return pigeon2Gyro.getYaw().getValueAsDouble(); }
 
     /**
-     * Sets the swerve ModuleStates.
-     * 
-     * @param desiredStates The desired SwerveModule states.
+     * Sets the desired state for the module.
+     *
+     * @param desiredState Desired state with speed and angle.
      */
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.MAX_DRIVE_SPEED);
+    public void setDesiredState(SwerveModuleState desiredState, boolean logValues) {
 
-        leftFrontSwerveModule.setDesiredState(desiredStates[0], true);
-        rightFrontSwerveModule.setDesiredState(desiredStates[1], true);
-        rightRearSwerveModule.setDesiredState(desiredStates[2], true);
-        leftRearSwerveModule.setDesiredState(desiredStates[3], true);
+        double steerAngleDegrees = steerAngleEncoder.getAbsolutePosition().getValueAsDouble() * 360;
+        double curSteerAngleRadians = Math.toRadians(steerAngleDegrees);
+
+        // Optimize the reference state to avoid spinning further than 90 degrees
+        var state = SwerveModuleState.optimize(desiredState, new Rotation2d(curSteerAngleRadians));
+
+        // The output of the steerAnglePID becomes the steer motor rpm reference.
+        double steerMotorRpm = steerAnglePID.calculate(steerAngleDegrees,
+                state.angle.getDegrees());
+       
+        steerMotorVelocityPID.setReference(-steerMotorRpm, SparkMax.ControlType.kVelocity);
+
+        double driveMotorRpm = driveRpmFromSpeed(state.speedMetersPerSecond);
+
+        if (logValues) {
+            double driveSpeed = driveNEOVortexMotorEncoder.getVelocity();
+            SmartDashboard.putNumber(name + " DriveSpeedMetersPerSecond", state.speedMetersPerSecond);
+            SmartDashboard.putNumber(name + " DriveMotorRpmCommand", driveMotorRpm);
+            SmartDashboard.putNumber(name + " DriveMotorSpeed", driveSpeed);
+        }
+
+        driveMotorVelocityPID.setReference(driveMotorRpm, SparkMax.ControlType.kVelocity);
     }
 
-    public void alignWheels() {
-        SwerveModuleState desiredStates = new SwerveModuleState(0, new Rotation2d(0));
-
-        leftFrontSwerveModule.setDesiredState(desiredStates, true);
-        rightFrontSwerveModule.setDesiredState(desiredStates, true);
-        rightRearSwerveModule.setDesiredState(desiredStates, true);
-        leftRearSwerveModule.setDesiredState(desiredStates, true);
+    /**
+     * Returns the required motor rpm from the desired wheel speed in meters/second
+     * 
+     * @param speedMetersPerSecond
+     * @return rpm of the motor
+     */
+    public double driveRpmFromSpeed(double speedMetersPerSecond) {
+        double rpm = speedMetersPerSecond * 60.0 / DriveConstants.WHEEL_CIRCUMFERENCE / DriveConstants.DRIVE_GEAR_RATIO;
+        return -rpm; // rotation flip from gear count
     }
 
-    public static Trajectory generateTrajectory(TrajectoryConfig config, List<Pose2d> list) {
-        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(list, config);
-        return exampleTrajectory;
+    /**
+     * Returns the wheel speed in meters/second calculated from the drive motor rpm.
+     * 
+     * @param rpm
+     * @return wheelSpeed
+     */
+    public double speedFromDriveRpm(double rpm) {
+        double speedMetersPerSecond = rpm * DriveConstants.DRIVE_GEAR_RATIO * DriveConstants.WHEEL_CIRCUMFERENCE / 60.0;
+        return -1 * speedMetersPerSecond; // Rotation reversed due to gears.
+    }
+
+    public SwerveModulePosition getPosition() {
+        double distance = Math.abs(driveNEOVortexMotorEncoder.getPosition()*DriveConstants.DRIVE_GEAR_RATIO * DriveConstants.WHEEL_CIRCUMFERENCE);
+        // if (name.equals("LR")||name.equals("RR")){
+        //     distance *=-1;
+        // }
+        return new SwerveModulePosition(distance, new Rotation2d(Math.toRadians(steerAngleEncoder.getAbsolutePosition().getValueAsDouble())));
     }
 }
