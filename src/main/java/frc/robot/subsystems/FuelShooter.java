@@ -6,9 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class FuelErector extends SubsystemBase {
+public class FuelShooter extends SubsystemBase {
   /** Creates a new FuelErector. */
-  public FuelErector() {}
+  public FuelShooter() {}
 
   @Override
   public void periodic() {

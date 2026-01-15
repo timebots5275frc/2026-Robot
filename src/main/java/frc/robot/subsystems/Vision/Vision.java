@@ -10,7 +10,8 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.AprilTagData;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.VisionConstants.AprilTagData;
 import frc.robot.CustomTypes.Math.Vector3;
 
 
@@ -36,26 +37,28 @@ public class Vision extends SubsystemBase {
     public boolean getAsBoolean() { return hasValidData(); };
   };
 
-  public BooleanSupplier LookingAtSpeakerTag = new BooleanSupplier() {
-    public boolean getAsBoolean() { return aprilTagID != -1 && AprilTagData.isSpeakerTag(AprilTagData.getTag(aprilTagID)); }
-  };
+  //change to Looking at Hub Front Right Tag
+  // public BooleanSupplier LookingAtSpeakerTag = new BooleanSupplier() {
+  //   public boolean getAsBoolean() { return aprilTagID != -1 && AprilTagData.isSpeakerTag(AprilTagData.getTag(aprilTagID)); }
+  // };
 
-  public BooleanSupplier LookingAtAmpTag = new BooleanSupplier() {
-    public boolean getAsBoolean() { return aprilTagID != -1 && AprilTagData.isAmpTag(AprilTagData.getTag(aprilTagID)); }
-  };
+  //Change to Looking at Hub Front Left Tag
+  // public BooleanSupplier LookingAtAmpTag = new BooleanSupplier() {
+  //   public boolean getAsBoolean() { return aprilTagID != -1 && AprilTagData.isAmpTag(AprilTagData.getTag(aprilTagID)); }
+  // };
 
   public static Vision Instance;
   public static boolean usingLimelight = false;
 
   int thingsUsingLimelight = 0;
 
-  public Vision() 
-  {
-    VisionDriveCalculator.SetVisionReference(this);
-    VisionShooterCalculator.SetVisionReference(this);
+  // public Vision() 
+  // {
+  //   VisionDriveCalculator.SetVisionReference(this);
+  //   VisionShooterCalculator.SetVisionReference(this);
 
-    Instance = this;
-  }
+  //   Instance = this;
+  // }
 
   @Override
   public void periodic() {
@@ -172,7 +175,7 @@ public class Vision extends SubsystemBase {
   public int AprilTagID() { return aprilTagID; }
   public Vector3 AprilTagPosInRobotSpace() { return avgAprilTagPosInRobotSpace; }
   public Vector3 AprilTagRotInRobotSpace() { return avgAprilTagRotInRobotSpace; }
-public Vector3 RobotPosInFieldSpace() { return avgRobotPosInFieldSpace; }
+  public Vector3 RobotPosInFieldSpace() { return avgRobotPosInFieldSpace; }
   public Vector3 RobotRotInFieldSpace() { return avgRobotRotInFieldSpace; }
   public double HorizontalOffsetFromAprilTag() { return horizontalOffsetFromAprilTag; }
 }

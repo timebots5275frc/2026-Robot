@@ -37,32 +37,7 @@ public final class Constants
 //guh
   public static class ButtonConstants
   {
-    //elevator
-    // public static final int ELEVATOR_L1 = 1;
-    public static final int ELEVATOR_RESET = 1;
-    public static final int ELEVATOR_INTAKE = 6;
-    public static final int ELEVATOR_L2 = 7;
-    public static final int ELEVATOR_L3 = 8;
-    public static final int ELEVATOR_L4 = 3;
-    // public static final int ELEVATOR_DRIVE = 1;
-
-    //coral intake
-    public static final int CORAL_NONE = 6;
-    public static final int CORAL_INTAKE = 5;
-    public static final int CORAL_OUTTAKE_L1 = 3;
-    public static final int CORAL_OUTTAKE_L2_TO_L3 = 4;
-    public static final int CORAL_OUTTAKE_L4 = 9;
-
-    //algae intake
-    public static final int ALGAE_INTAKE_INTAKE = 1;
-    public static final int ALGAE_INTAKE_OUTTAKE = 1;
-    public static final int ALGAE_INTAKE_NONE = 1;
-
-    //algae pivot
-    public static final int ALGAE_PIVOT_DRIVE = 1;
-    public static final int ALGAE_PIVOT_GROUND = 1;
-    public static final int ALGAE_PIVOT_REEF = 1;
-    public static final int ALGAE_PIVOT_SHOOT = 1;
+   
   }
 
   
@@ -154,24 +129,37 @@ public final class Constants
     public static final double INCH_TO_METER = 0.0254;
   }
 
-  public static enum AprilTagData
+  public static final class VisionConstants {
+    public static final boolean ENABLE_LIMELIGHT_LIGHT_ON_ENABLE = true;
+    public static final int VALUES_TO_AVERAGE = 3;
+    public static final double TARGET_POSITION_ALLOWED_ERROR = .1; // meters
+    public static final double LIMELIGHT_X_OFFSET = 0.31773; // meters
+
+    public static final double LIMELIGHT_DATA_WAIT_TIME = .5; // seconds
+
+    public static final double MAX_AMP_TARGET_DISTANCE = 3;
+    public static final Vector2 AMP_VISION_DRIVE_TARGET = new Vector2(.07, .47);
+
+    public static enum AprilTagData
     {
-      ba_source_left(1, "Source left", DriverStation.Alliance.Blue),
-      ba_source_right(2, "Source right", DriverStation.Alliance.Blue),
-      ra_speaker_aux(3, "Speaker auxillary", DriverStation.Alliance.Red),
-      ra_speaker_main(4, "Speaker main", DriverStation.Alliance.Red, 0, 16.6193978),
-      ra_amplifier(5, "Amplifier", DriverStation.Alliance.Red, -2.7389074, 14.778355),
-      ba_amplifier(6, "Amplifier", DriverStation.Alliance.Blue, -2.7389074, 1.858645),
-      ba_speaker_main(7, "Speaker main", DriverStation.Alliance.Blue, 0, 0),
-      ba_speaker_aux(8, "Speaker auxillary", DriverStation.Alliance.Blue),
-      ra_source_right(9, "Source right", DriverStation.Alliance.Red),
-      ra_source_left(10, "Source left", DriverStation.Alliance.Red),
-      ra_core_scoring_table(11, "Core scoring table side", DriverStation.Alliance.Red),
-      ra_core_opp_scoring_table(12, "Core opposite scoring table side", DriverStation.Alliance.Red),
-      ra_core_mid(13, "Core middle side", DriverStation.Alliance.Red),
-      ba_core_mid(14, "Core middle side", DriverStation.Alliance.Blue),
-      ba_core_opp_scoring_table(15, "Core opposite scoring table side", DriverStation.Alliance.Blue),
-      ba_core_scoring_table(16, "Core scoring table side", DriverStation.Alliance.Blue);
+      //Red Hub
+      Hub_Right_Far_Red(2, "Hub Right Far", DriverStation.Alliance.Red),
+      Hub_Back_Right_Red(3, "Hub Back Right", DriverStation.Alliance.Red),
+      Hub_Back_Left_Red(4, "Hub Back Left", DriverStation.Alliance.Red, 0, 16.6193978),
+      Hub_Left_Far_Red(5, "Hub Left Far", DriverStation.Alliance.Red, -2.7389074, 14.778355),
+      Hub_Left_Close_Red(8, "Hub Left Close", DriverStation.Alliance.Red),
+      Hub_Front_Left_Red(9, "Hub Front Left", DriverStation.Alliance.Red),
+      Hub_Front_Right_Red(10, "Hub Front Right", DriverStation.Alliance.Red),
+      Hub_Right_Close_Red(11, "Hub Right Close", DriverStation.Alliance.Red),
+      //Blue Hub
+      Hub_Right_Far_Blue(18, "Hub Right Far", DriverStation.Alliance.Blue),
+      Hub_Back_Right_Blue(19, "Hub Back Right", DriverStation.Alliance.Blue),
+      Hub_Back_Left_Blue(20, "Hub Back Left", DriverStation.Alliance.Blue, 0, 16.6193978),
+      Hub_Left_Far_Blue(21, "Hub Left Far", DriverStation.Alliance.Blue, -2.7389074, 14.778355),
+      Hub_Left_Close_Blue(24, "Hub Left Close", DriverStation.Alliance.Blue),
+      Hub_Front_Left_Blue(25, "Hub Front Left", DriverStation.Alliance.Blue),
+      Hub_Front_Right_Blue(26, "Hub Front Right", DriverStation.Alliance.Blue),
+      Hub_Right_Close_Blue(27, "Hub Right Close", DriverStation.Alliance.Blue);
 
       public final int id;
       public final String name;
@@ -198,29 +186,46 @@ public final class Constants
 
       public static AprilTagData getTag(int id) {
         switch(id){
-          case 1: return ba_source_left;
-          case 2: return ba_source_right;
-          case 3: return ra_speaker_aux;
-          case 4: return ra_speaker_main;
-          case 5: return ra_amplifier;
-          case 6: return ba_amplifier;
-          case 7: return ba_speaker_main;
-          case 8: return ba_speaker_aux;
-          case 9: return ra_source_right;
-          case 10: return ra_source_left;
-          case 11: return ra_core_scoring_table;
-          case 12: return ra_core_opp_scoring_table;
-          case 13: return ra_core_mid;
-          case 14: return ba_core_mid;
-          case 15: return ba_core_opp_scoring_table;
-          case 16: return ba_core_scoring_table;
+          // case 1: return Trench_Right_Neutral_Zone;
+          case 2: return Hub_Right_Far_Red;
+          case 3: return Hub_Back_Right_Red;
+          case 4: return Hub_Back_Left_Red;
+          case 5: return Hub_Left_Far_Red;
+          // case 6: return Trench_Left_Neutral_Zone;
+          // case 7: return Trench_Left_Alliance_Zone;
+          case 8: return Hub_Left_Close_Red;
+          case 9: return Hub_Front_Left_Red;
+          case 10: return Hub_Front_Right_Red;
+          case 11: return Hub_Right_Close_Red;
+          // case 12: return Trench_Right_Alliance_Zone;
+          // case 13: return Loading_Station_Right;
+          // case 14: return Loading_Station_Left;
+          // case 15: return Tower_Right;
+          // case 16: return Tower_Left;
+          // case 17: return Trench_Right_Neutral_Zone;
+          case 18: return Hub_Right_Far_Blue;
+          case 19: return Hub_Back_Right_Blue;
+          case 20: return Hub_Back_Left_Blue;
+          case 21: return Hub_Left_Far_Blue;
+          // case 22: return ba_amplifier;
+          // case 23: return ba_speaker_main;
+          case 24: return Hub_Left_Close_Blue;
+          case 25: return Hub_Front_Left_Blue;
+          case 26: return Hub_Front_Right_Blue;
+          case 27: return Hub_Right_Close_Blue;
+          // case 28: return ra_core_opp_scoring_table;
+          // case 29: return ra_core_mid;
+          // case 30: return ba_core_mid;
+          // case 31: return ba_core_opp_scoring_table;
+          // case 32: return ba_core_scoring_table;
           default: return null;
         }
       }
 
-      public static boolean isSpeakerTag(AprilTagData tag) { return tag == AprilTagData.ra_speaker_main || tag == AprilTagData.ba_speaker_main; }
-      public static boolean isAmpTag(AprilTagData tag) { return tag == AprilTagData.ra_amplifier || tag == AprilTagData.ba_amplifier; }
+      // public static boolean isSpeakerTag(AprilTagData tag) { return tag == AprilTagData.Hub_Back_Left || tag == AprilTagData.Hub_Back_Right; }
+      // public static boolean isAmpTag(AprilTagData tag) { return tag == AprilTagData.Hub_Front_Left || tag == AprilTagData.Hub_Front_Right; }
     }
+  }
 
     public static final class ControllerConstants 
     {
