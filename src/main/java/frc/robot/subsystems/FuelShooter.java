@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class FuelShooter extends SubsystemBase {
   /** Creates a new FuelErector. */
+  
+
   public FuelShooter() {}
 
   @Override
