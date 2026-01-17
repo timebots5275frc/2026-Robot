@@ -4,19 +4,20 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.SwerveDrive.SwerveDrive;
+import frc.robot.subsystems.CANDriveSubsystem;
+
 import frc.robot.subsystems.Vision.Vision;
 
 public class HubAimCommand extends Command {
 
-    private SwerveDrive swerve;
+    private CANDriveSubsystem drive;
     private Vision vision;
 
-    public HubAimCommand(SwerveDrive swerve, Vision vision) {
-        this.swerve = swerve;
+    public HubAimCommand(CANDriveSubsystem drive, Vision vision) {
+        this.drive = drive;
         this.vision = vision;
 
-        addRequirements(swerve);
+        addRequirements(drive);
         addRequirements(vision);
     }
 
@@ -32,7 +33,7 @@ public class HubAimCommand extends Command {
     public void execute() {
 
         if (!vision.hasValidData()) {
-            swerve.drive(0, 0, 0, false);
+            drive.driveArcade(0, 0);
             return;
         }
         double allowedError = 1.0; //degrees //TODO 
@@ -43,7 +44,7 @@ public class HubAimCommand extends Command {
 
         //STOP to not have wiggles
         if (Math.abs(tx) < allowedError) {
-            swerve.drive(0, 0, 0, false);
+            drive.driveArcade(0,0);
             return;
         }
 
@@ -52,14 +53,14 @@ public class HubAimCommand extends Command {
 
         correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
 
-        swerve.drive(0, 0, correctionRad, false);
+        drive.driveArcade( 0, correctionRad);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         vision.setUsingLimelight(false);
-        swerve.drive(0, 0, 0, false);
+        drive.driveArcade(0, 0);
     }
 
     // Returns true when the command should end.

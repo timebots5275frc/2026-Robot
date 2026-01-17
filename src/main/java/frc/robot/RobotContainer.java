@@ -13,7 +13,7 @@ import frc.robot.commands.auto.AutoDrive;
 import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Input.Input;
-import frc.robot.subsystems.SwerveDrive.SwerveDrive;
+
 import frc.robot.subsystems.Vision.Vision;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -41,6 +41,7 @@ public class RobotContainer {
     TeleopJoystickDrive teleJoyDrive;
     GenericHID bBoard;
     Vision vision;
+    CANDriveSubsystem tankDrive;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -51,7 +52,7 @@ public class RobotContainer {
     bBoard = new GenericHID(1);
     joy = new Joystick(0);
     input = new Input(joy);
-    swerveDrive = new SwerveDrive();
+    tankDrive = new CANDriveSubsystem();
     vision = new Vision();
     
     
@@ -85,9 +86,9 @@ public class RobotContainer {
     //new JoystickButton(joy, 7).onTrue(new InstantCommand(tankDrive::flipFieldRelative ,tankDrive));
     /*tmp */
     //pigeon
-    new JoystickButton(joy, 8).onTrue(new InstantCommand(swerveDrive::resetPigeon, swerveDrive));
+    //new JoystickButton(joy, 8).onTrue(new InstantCommand(swerveDrive::resetPigeon, swerveDrive));
 
-    new JoystickButton(joy, 4).whileTrue(new HubAimCommand(swerveDrive, vision));
+    new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision));
 
   }
 

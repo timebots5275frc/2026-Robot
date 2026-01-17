@@ -24,11 +24,13 @@ public class FuelShooter extends SubsystemBase {
   }
 
   public FuelShooter() {
+    /* 
     motor1 = new SparkMax(0, ControlType.kVelocity);
 
     motor2 = new SparkMax(0, null);
 
     motor3 = new SparkMax(0, null);
+    */
   }
 
   @Override
