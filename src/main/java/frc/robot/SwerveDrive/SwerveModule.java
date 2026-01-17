@@ -55,7 +55,7 @@ public class SwerveModule {
         ClosedLoopConfig steerClosedLoopConfig = new ClosedLoopConfig();
         SparkMaxConfig steerConfig = new SparkMaxConfig();
         steerConfig.idleMode(IdleMode.kCoast);
-        steerClosedLoopConfig.pidf(DriveConstants.PID_SparkMax_Steer.p, DriveConstants.PID_SparkMax_Steer.i, DriveConstants.PID_SparkMax_Steer.d, DriveConstants.PID_SparkMax_Steer.kff);
+        steerClosedLoopConfig.pidf(DriveConstants.PID_SparkMax_Steer.p, DriveConstants.PID_SparkMax_Steer.i, DriveConstants.PID_SparkMax_Steer.d, DriveConstants.PID_SparkMax_Steer.kS);
         steerClosedLoopConfig.iZone(DriveConstants.PID_SparkMax_Steer.iz);
         steerClosedLoopConfig.outputRange(-1, 1);
         steerConfig.apply(steerClosedLoopConfig);
@@ -66,7 +66,7 @@ public class SwerveModule {
         ClosedLoopConfig driveClosedLoopConfig = new ClosedLoopConfig();
         SparkFlexConfig driveConfig = new SparkFlexConfig();
         driveConfig.idleMode(IdleMode.kCoast);
-        driveClosedLoopConfig.pidf(DriveConstants.PID_SparkFlex_Drive.p, DriveConstants.PID_SparkFlex_Drive.i, DriveConstants.PID_SparkFlex_Drive.d, DriveConstants.PID_SparkFlex_Drive.kff);
+        driveClosedLoopConfig.pidf(DriveConstants.PID_SparkFlex_Drive.p, DriveConstants.PID_SparkFlex_Drive.i, DriveConstants.PID_SparkFlex_Drive.d, DriveConstants.PID_SparkFlex_Drive.kS);
         driveClosedLoopConfig.iZone(DriveConstants.PID_SparkFlex_Drive.iz);
         // driveClosedLoopConfig.outputRange(-1, 1);
         driveConfig.apply(driveClosedLoopConfig);

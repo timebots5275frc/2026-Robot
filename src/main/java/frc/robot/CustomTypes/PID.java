@@ -2,16 +2,16 @@ package frc.robot.CustomTypes;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.ctre.phoenix6.controls.Follower;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public class PID {
-    public double p,i,d,kff,iz;
-    public PID(double p, double i, double d, double kff) {this.p=p; this.i=i; this.d=d; this.kff=kff;this.iz=0;}
-    public PID(double p, double i, double d, double kff, double iz) {this.p=p; this.i=i; this.d=d; this.kff=kff; this.iz=iz;}
+    public double p,i,d,kS,kV,kA,kG,iz;
+    public PID(double p, double i, double d, double kS) {this.p=p; this.i=i; this.kS=kS; this.d=d;}
+    public PID(double p, double i, double d, double iz, double kS) {this.p=p; this.i=i; this.d=d; this.iz=iz; this.kS=kS;}
+    public PID(double p, double i, double d, double kS, double kV, double kA, double kG){this.p=p; this.i=i; this.d=d; this.kS=kS; this.kV=kV; this.kA=kA; this.kG=kG;}
     public PID() {this(0,0,0,0);}
     public PID(double p, double i, double d) {this(p,i,d,0);}
     public PID(PID cpy) {this(cpy.p, cpy.i, cpy.d);}
@@ -43,7 +43,7 @@ public class PID {
     }
     private SparkMaxConfig setPIDBase(SparkMax sp) {
       ClosedLoopConfig c = new ClosedLoopConfig();
-      c.pidf(p,i,d,kff);
+      c.pidf(p,i,d,kS);
       c.iZone(iz);
       SparkMaxConfig sc = new SparkMaxConfig();
       sc.apply(c);
