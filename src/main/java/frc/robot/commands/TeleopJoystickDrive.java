@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
 import frc.robot.CustomTypes.Math.Vector2;
-import frc.robot.SwerveDrive.SwerveDrive;
+import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.Input.Input;
 
 public class TeleopJoystickDrive extends Command {
 
-    private SwerveDrive drivetrain;
+    private CANDriveSubsystem drivetrain;
     private Input input;
 
     //private Joystick driveStick;
@@ -30,12 +30,12 @@ public class TeleopJoystickDrive extends Command {
      * @param subsystem The drive subsystem this command wil run on.
      * @param joystick  The control input for driving
      */
-    public TeleopJoystickDrive(SwerveDrive _swerveDrive, Input input_, boolean _fieldRelative) {
-        this.drivetrain = _swerveDrive;
+    public TeleopJoystickDrive(CANDriveSubsystem drive, Input input_, boolean _fieldRelative) {
+        this.drivetrain = drive;
         this.input = input_;
         this.fieldRelative = _fieldRelative;
         usingJoystick = this.input.usingJoystick;
-        addRequirements(_swerveDrive);
+        addRequirements(drive);
 
         C = 6;
     }
@@ -78,7 +78,7 @@ public class TeleopJoystickDrive extends Command {
         SmartDashboard.putNumber("Turn_speed", inputRotationVelocity);
 
 
-        drivetrain.drive(inputVelocity.x, inputVelocity.y, inputRotationVelocity, fieldRelative);
+        drivetrain.driveArcade(inputVelocity.x, inputRotationVelocity);
         
     }
 

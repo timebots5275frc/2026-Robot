@@ -6,10 +6,11 @@ package frc.robot;
 
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.SwerveDrive.SwerveDrive;
+
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.TeleopJoystickDrive;
 import frc.robot.commands.auto.AutoDrive;
+import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Input.Input;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -36,8 +37,8 @@ public class RobotContainer {
     Joystick joy;
     Input input;
     TeleopJoystickDrive teleJoyDrive;
-    SwerveDrive swerveDrive;
     GenericHID bBoard;
+    CANDriveSubsystem tankDrive;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -48,12 +49,14 @@ public class RobotContainer {
     bBoard = new GenericHID(1);
     joy = new Joystick(0);
     input = new Input(joy);
-    swerveDrive = new SwerveDrive();
+    tankDrive = new CANDriveSubsystem();
+    
     
     
 
     autonChooser.setDefaultOption("Drive ONLY", new SequentialCommandGroup(
-      new AutoDrive(MathConstants.INCH_TO_METER*22,1,swerveDrive)
+      //new AutoDrive(MathConstants.INCH_TO_METER*22,1,tankDrive)
+      new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22, 1)
     ));
 
     SmartDashboard.putData(autonChooser);
@@ -73,14 +76,14 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    teleJoyDrive = new TeleopJoystickDrive(swerveDrive, input, true);
-    swerveDrive.setDefaultCommand(teleJoyDrive);
-    swerveDrive.resetPigeon();
+    teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true);
+    tankDrive.setDefaultCommand(teleJoyDrive);
     
-    new JoystickButton(joy, 7).onTrue(new InstantCommand(swerveDrive::flipFieldRelative ,swerveDrive));
+    
+    //new JoystickButton(joy, 7).onTrue(new InstantCommand(tankDrive::flipFieldRelative ,tankDrive));
     /*tmp */
     //pigeon
-    new JoystickButton(joy, 8).onTrue(new InstantCommand(swerveDrive::resetPigeon, swerveDrive));
+    //new JoystickButton(joy, 8).onTrue(new InstantCommand(tankDrive::resetPigeon, tankDrive));
 
   }
 
