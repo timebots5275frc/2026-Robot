@@ -12,6 +12,7 @@ import frc.robot.commands.TeleopJoystickDrive;
 import frc.robot.commands.auto.AutoDrive;
 import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.Input.Input;
 
 import frc.robot.subsystems.Vision.Vision;
@@ -41,6 +42,7 @@ public class RobotContainer {
     TeleopJoystickDrive teleJoyDrive;
     GenericHID bBoard;
     Vision vision;
+    FuelShooter fs;
     CANDriveSubsystem tankDrive;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -53,6 +55,7 @@ public class RobotContainer {
     joy = new Joystick(0);
     input = new Input(joy);
     tankDrive = new CANDriveSubsystem();
+    fs = new FuelShooter();
     vision = new Vision();
     
     
@@ -88,7 +91,7 @@ public class RobotContainer {
     //pigeon
     //new JoystickButton(joy, 8).onTrue(new InstantCommand(swerveDrive::resetPigeon, swerveDrive));
 
-    new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision));
+    new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision, fs));
 
   }
 

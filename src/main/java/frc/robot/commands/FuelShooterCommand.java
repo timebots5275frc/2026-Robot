@@ -5,11 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.FuelShooter;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class FuelShooterCommand extends Command {
   /** Creates a new FuelErectorCommand. */
-  public FuelShooterCommand() {
+
+  private FuelShooter fs;
+
+  public FuelShooterCommand(FuelShooter fs) {
+    this.fs = fs;
+    addRequirements(fs);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

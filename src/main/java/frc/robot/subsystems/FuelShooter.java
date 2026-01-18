@@ -33,6 +33,20 @@ public class FuelShooter extends SubsystemBase {
     */
   }
 
+  public double calculateRPM(double x0, double y0, double x1, double y1, double theta, double r, double g) {
+    double dx = x1 - x0;  // horizontal distance
+    double dy = y1 - y0;  // vertical difference
+
+    double denominator = 2 * Math.pow(Math.cos(theta), 2) * (dx * Math.tan(theta) - dy);
+
+    if (denominator <= 0) {
+        throw new IllegalArgumentException("Target unreachable at this angle.");
+    }
+
+    double v0 = Math.sqrt(g * dx * dx / denominator);  // linear velocity
+    return (60 / (2 * Math.PI * r)) * v0;            // convert to RPM
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
