@@ -33,6 +33,7 @@ public class HubAimCommand extends Command {
     @Override
     public void execute() {
 
+        System.out.println("See April tag " +vision.AprilTagID());
         double rpm; 
         double g = 9.8; // gravity
         double r = 0; // radius of wheel launching ball

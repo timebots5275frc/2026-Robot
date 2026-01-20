@@ -53,7 +53,7 @@ public final class Constants
 
     public static final class DriveConstants {
     // Motor controller IDs for drivetrain motors
-    public static final int LEFT_LEADER_ID = 1;
+    public static final int LEFT_LEADER_ID = 5  ;
     public static final int LEFT_FOLLOWER_ID = 2;
     public static final int RIGHT_LEADER_ID = 3;
     public static final int RIGHT_FOLLOWER_ID = 4;
@@ -186,7 +186,17 @@ public final class Constants
       public static final double DEADZONE_STEER    = 0.3;
     }
 
-    
+    public static final class FuelShooterConstants{
+      public static int motor1ID = 0;
+      public static int motor2ID = 0;
+      public static int motor3ID = 0;
+
+      public static final PID motor1PID = new PID(0,0,0);
+      public static final PID motor2PID = new PID(0,0,0);
+      public static final PID motor3PID = new PID(0,0,0);
+
+      public static final int IntakeSpeed = 2000;
+    }
 
 
-  }
+}
