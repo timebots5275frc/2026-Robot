@@ -36,15 +36,18 @@ public class HubAimCommand extends Command {
         double rpm; 
         double g = 9.8; // gravity
         double r = 0; // radius of wheel launching ball
-        double x1 = 0; // target pose
-        double xi = 0; // robot pose
+        double x0 = vision.RobotPosInFieldSpace().x; // robot pose
         double theta = 0.977384; //angle in radians
-        double y1 = 0; // target pose
-        double yi = vision.RobotPosInFieldSpace(); // robot pose
+        double y0 = vision.RobotPosInFieldSpace().y; // robot pose
+        double tx = vision.HorizontalOffsetFromAprilTag(); //target pose
+        double ty = vision.AprilTagRotInRobotSpace().y; //target pose
+        double cameraHeight = 0; //look into limelight offset
+        double targetHeight = 0;
+        double mountingAngle = 0;
 
         if (!vision.hasValidData()) {
             drive.driveArcade(0, 0);
-            fs.calculateRPM(xi, yi, x1, y1, theta, r, g);
+            fs.calculateRPMFromLimelight(ty, tx, cameraHeight, targetHeight, mountingAngle, theta, r, g);
             return;
         }
         else {
@@ -53,7 +56,7 @@ public class HubAimCommand extends Command {
         double allowedError = 1.0; //degrees //TODO 
         double kP = 0.1; // TODO
         double maxRot = 1; //TODO
-        double tx = vision.HorizontalOffsetFromAprilTag(); 
+        // double tx = vision.HorizontalOffsetFromAprilTag(); 
 
 
         //STOP to not have wiggles
