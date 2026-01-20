@@ -115,6 +115,34 @@ public class FuelShooter extends SubsystemBase {
       return false;
   }
 
+  public double calculateRPMFromLimelight(double ty, double tx, double cameraHeight, 
+  double targetHeight, double mountingAngle, double theta, double r, double g) {
+
+    // Convert vertical angles to radians
+    double totalAngle = Math.toRadians(ty + mountingAngle);
+
+    // Calculate straight-line distance to target
+    double distance = (targetHeight - cameraHeight) / Math.tan(totalAngle);
+
+    // Horizontal distance along forward axis
+    double dx = distance * Math.cos(Math.toRadians(tx));
+
+    // Vertical difference
+    double dy = targetHeight - cameraHeight;
+
+    // Formula for linear velocity
+    double denominator = 2 * Math.pow(Math.cos(theta), 2) * (dx * Math.tan(theta) - dy);
+    if (denominator <= 0) {
+        throw new IllegalArgumentException("Target unreachable at this angle.");
+    }
+
+    double v0 = Math.sqrt(g * dx * dx / denominator);
+
+    // Convert to wheel RPM
+    return (60 / (2 * Math.PI * r)) * v0;
+}
+
+
   @Override
   public void periodic() {
     // ShooterEncoder.getVelocity();

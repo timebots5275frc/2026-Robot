@@ -1,24 +1,25 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.CANDriveSubsystem;
-
+import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.Vision.Vision;
 
 public class HubAimCommand extends Command {
 
+    private FuelShooter fs;
     private CANDriveSubsystem drive;
     private Vision vision;
 
-    public HubAimCommand(CANDriveSubsystem drive, Vision vision) {
+    public HubAimCommand(CANDriveSubsystem drive, Vision vision, FuelShooter fs) {
         this.drive = drive;
         this.vision = vision;
+        this.fs = fs;
 
         addRequirements(drive);
         addRequirements(vision);
+        addRequirements(fs);
     }
 
     // Called when the command is initially scheduled.
@@ -33,15 +34,30 @@ public class HubAimCommand extends Command {
     public void execute() {
 
         System.out.println("See April tag " +vision.AprilTagID());
+        double rpm; 
+        double g = 9.8; // gravity
+        double r = 0; // radius of wheel launching ball
+        double x0 = vision.RobotPosInFieldSpace().x; // robot pose
+        double theta = 0.977384; //angle in radians
+        double y0 = vision.RobotPosInFieldSpace().y; // robot pose
+        double tx = vision.HorizontalOffsetFromAprilTag(); //target pose
+        double ty = vision.AprilTagRotInRobotSpace().y; //target pose
+        double cameraHeight = 0; //look into limelight offset
+        double targetHeight = 0;
+        double mountingAngle = 0;
 
         if (!vision.hasValidData()) {
             drive.driveArcade(0, 0);
+            fs.calculateRPMFromLimelight(ty, tx, cameraHeight, targetHeight, mountingAngle, theta, r, g);
             return;
+        }
+        else {
+            rpm = 4000;
         }
         double allowedError = 1.0; //degrees //TODO 
         double kP = 0.1; // TODO
         double maxRot = 1; //TODO
-        double tx = vision.HorizontalOffsetFromAprilTag(); 
+        // double tx = vision.HorizontalOffsetFromAprilTag(); 
 
 
         //STOP to not have wiggles

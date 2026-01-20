@@ -18,7 +18,12 @@ public class FuelShooterCommand extends Command {
   private boolean end = false;
 
   /** Creates a new FuelErectorCommand. */
-  public FuelShooterCommand(FuelShooter fuelShooter, Vision vision) {
+
+  private FuelShooter fs;
+
+  public FuelShooterCommand(FuelShooter fs) {
+    this.fs = fs;
+    addRequirements(fs);
     // Use addRequirements() here to declare subsystem dependencies.
 
     this.vision = vision;

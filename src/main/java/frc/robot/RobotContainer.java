@@ -43,6 +43,7 @@ public class RobotContainer {
     TeleopJoystickDrive teleJoyDrive;
     GenericHID bBoard;
     Vision vision;
+    FuelShooter fs;
     CANDriveSubsystem tankDrive;
     FuelShooter fuelShooter;
 
@@ -56,6 +57,7 @@ public class RobotContainer {
     joy = new Joystick(0);
     input = new Input(joy);
     tankDrive = new CANDriveSubsystem();
+    fs = new FuelShooter();
     vision = new Vision();
     fuelShooter = new FuelShooter();
     
@@ -94,6 +96,7 @@ public class RobotContainer {
 
     new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision));
     new JoystickButton(joy, 1).whileTrue(new FuelShooterCommand(fuelShooter, vision));
+    new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision, fs));
 
   }
 
