@@ -32,6 +32,8 @@ public class HubAimCommand extends Command {
     @Override
     public void execute() {
 
+        System.out.println("See April tag " +vision.AprilTagID());
+
         if (!vision.hasValidData()) {
             drive.driveArcade(0, 0);
             return;
