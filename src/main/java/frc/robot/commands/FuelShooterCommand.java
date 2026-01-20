@@ -12,24 +12,25 @@ import frc.robot.subsystems.Vision.Vision;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class FuelShooterCommand extends Command {
 
-  private FuelShooter shooter;
+  
   private Vision vision;
 
   private boolean end = false;
 
   /** Creates a new FuelErectorCommand. */
 
-  private FuelShooter fs;
+  private FuelShooter shooter;
+  
 
-  public FuelShooterCommand(FuelShooter fs) {
-    this.fs = fs;
-    addRequirements(fs);
+  public FuelShooterCommand(FuelShooter fs, Vision vision) {
+    
+    
     // Use addRequirements() here to declare subsystem dependencies.
 
     this.vision = vision;
-    shooter = fuelShooter;
+    this.shooter = fs;
 
-    addRequirements(fuelShooter);
+    addRequirements(shooter);
     addRequirements(vision);
   }
 

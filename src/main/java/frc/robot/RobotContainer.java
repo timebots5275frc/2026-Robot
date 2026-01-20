@@ -94,7 +94,7 @@ public class RobotContainer {
     //pigeon
     //new JoystickButton(joy, 8).onTrue(new InstantCommand(swerveDrive::resetPigeon, swerveDrive));
 
-    new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision));
+    //new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision));
     new JoystickButton(joy, 1).whileTrue(new FuelShooterCommand(fuelShooter, vision));
     new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision, fs));
 
