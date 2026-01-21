@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.FuelShooter;
@@ -11,6 +13,7 @@ public class HubAimCommand extends Command {
     private FuelShooter fs;
     private CANDriveSubsystem drive;
     private Vision vision;
+    private SlewRateLimiter srl = new SlewRateLimiter(10);
 
     public HubAimCommand(CANDriveSubsystem drive, Vision vision, FuelShooter fs) {
         this.drive = drive;
@@ -33,32 +36,36 @@ public class HubAimCommand extends Command {
     @Override
     public void execute() {
 
-        System.out.println("See April tag " +vision.AprilTagID());
         double rpm; 
         double g = 9.8; // gravity
-        double r = 0; // radius of wheel launching ball
+        double r = 0.1016; // radius of wheel launching ball
         double x0 = vision.RobotPosInFieldSpace().x; // robot pose
-        double theta = 0.977384; //angle in radians
+        double theta = Math.toDegrees(0.977384); //angle in radians
         double y0 = vision.RobotPosInFieldSpace().y; // robot pose
         double tx = vision.HorizontalOffsetFromAprilTag(); //target pose
         double ty = vision.AprilTagRotInRobotSpace().y; //target pose
         double cameraHeight = 0; //look into limelight offset
         double targetHeight = 0;
         double mountingAngle = 0;
+        double targetRPM;
 
-        if (!vision.hasValidData()) {
-            drive.driveArcade(0, 0);
-            fs.calculateRPMFromLimelight(ty, tx, cameraHeight, targetHeight, mountingAngle, theta, r, g);
-            return;
-        }
-        else {
-            rpm = 4000;
-        }
         double allowedError = 1.0; //degrees //TODO 
         double kP = 0.1; // TODO
         double maxRot = 1; //TODO
         // double tx = vision.HorizontalOffsetFromAprilTag(); 
 
+        if(vision.hasValidData() == true){
+            System.out.println("See April tag " + vision.AprilTagID());
+            targetRPM = fs.calculateRPMFromLimelight(ty, cameraHeight, targetHeight, mountingAngle, theta, r, g);
+            rpm = srl.calculate(targetRPM);
+            SmartDashboard.putNumber("Shooter Distance", fs.dx);
+            SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
+        }
+        if(vision.hasValidData() == false){
+            System.out.println("No valid data");
+            drive.driveArcade(0, 0);
+            rpm = 4000;
+        }
 
         //STOP to not have wiggles
         if (Math.abs(tx) < allowedError) {

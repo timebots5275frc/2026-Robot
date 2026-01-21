@@ -66,7 +66,7 @@ public class TeleopJoystickDrive extends Command {
         }
         
         Vector2 inputVelocity = moveInput.times(speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED);
-        double inputRotationVelocity = turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE;
+        double inputRotationVelocity = turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE*.5; //rot. vel.
         
         int rot_sign = (int)(inputRotationVelocity / Math.abs(inputRotationVelocity));
         

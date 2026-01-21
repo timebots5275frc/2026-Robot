@@ -175,8 +175,8 @@ public class Vision extends SubsystemBase {
   // Getter methods //
   public int AprilTagID() { return aprilTagID; }
   public Vector3 AprilTagPosInRobotSpace() { return avgAprilTagPosInRobotSpace; } //
-  public Vector3 AprilTagRotInRobotSpace() { return avgAprilTagRotInRobotSpace; } //ty
+  public Vector3 AprilTagRotInRobotSpace() { return avgAprilTagRotInRobotSpace; } //
   public Vector3 RobotPosInFieldSpace() { return avgRobotPosInFieldSpace; } //
   public Vector3 RobotRotInFieldSpace() { return avgRobotRotInFieldSpace; } //
-  public double HorizontalOffsetFromAprilTag() { return horizontalOffsetFromAprilTag; } //tx
+  public double HorizontalOffsetFromAprilTag() { return horizontalOffsetFromAprilTag; } //
 }

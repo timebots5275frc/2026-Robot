@@ -187,9 +187,9 @@ public final class Constants
     }
 
     public static final class FuelShooterConstants{
-      public static int motor1ID = 0;
-      public static int motor2ID = 0;
-      public static int motor3ID = 0;
+      public static final int INTAKE_MOTOR_1_ID = 10;
+      public static final int INTAKE_MOTOR_2_ID = 11;
+      public static final int SHOOTER_MOTOR_ID = 12;
 
       public static final PID motor1PID = new PID(0,0,0);
       public static final PID motor2PID = new PID(0,0,0);
@@ -198,5 +198,9 @@ public final class Constants
       public static final int IntakeSpeed = 2000;
     }
 
+    public static final class ClimberConstants{
+      public static final int CLIMBER_MOTOR_1_ID = 20;
+      public static final int CLIMBER_MOTOR_2_ID = 21;
+    }
 
 }

@@ -29,10 +29,9 @@ public class FuelShooter extends SubsystemBase {
   private AbsoluteEncoder ShooterEncoder;
   
   private Shooter shooterState = Shooter.NONE;
-
-  private double shooterRPM = 0;
-
+  private double shooterRPM = 4000;
   private boolean feedingFuel = false;
+  public double dx;
 
   public enum Shooter{
     INTAKE,
@@ -43,15 +42,15 @@ public class FuelShooter extends SubsystemBase {
 
   public FuelShooter() {
     
-    IntakeMotor1 = new SparkMax(Constants.FuelShooterConstants.motor1ID, SparkLowLevel.MotorType.kBrushless);
+    IntakeMotor1 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, SparkLowLevel.MotorType.kBrushless);
     Constants.FuelShooterConstants.motor1PID.setSparkMaxPID(IntakeMotor1, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     IntakePIDOne = IntakeMotor1.getClosedLoopController();
 
-    IntakeMotor2 = new SparkMax(Constants.FuelShooterConstants.motor2ID, SparkLowLevel.MotorType.kBrushless);
+    IntakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, SparkLowLevel.MotorType.kBrushless);
     Constants.FuelShooterConstants.motor2PID.setSparkMaxPID(IntakeMotor2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     IntakePIDTwo = IntakeMotor2.getClosedLoopController();
 
-    shooterMotor = new SparkMax(Constants.FuelShooterConstants.motor3ID, SparkLowLevel.MotorType.kBrushless);
+    shooterMotor = new SparkMax(Constants.FuelShooterConstants.SHOOTER_MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
     Constants.FuelShooterConstants.motor3PID.setSparkMaxPID(shooterMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     ShooterPID = shooterMotor.getClosedLoopController();
     
@@ -60,18 +59,15 @@ public class FuelShooter extends SubsystemBase {
   public void Shooter(){
 
     switch (shooterState) {
-      case INTAKE: IntakePIDOne.setReference(Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
-                   IntakePIDTwo.setReference(Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
-                   ShooterPID.setReference(0, ControlType.kVelocity);
-
+      case NONE: feedingFuel = false;
+                 ShooterPID.setReference(0, ControlType.kCurrent);
       break;
-      case NONE: IntakePIDOne.setReference(0, ControlType.kVelocity);
-                 IntakePIDTwo.setReference(0, ControlType.kVelocity);
-                 ShooterPID.setReference(0, ControlType.kVelocity);
+      case INTAKE: feedingFuel = true;
+
       break;
       case OUTTAKE: IntakePIDOne.setReference(-Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
                     IntakePIDTwo.setReference(-Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
-                    ShooterPID.setReference(-Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
+                    ShooterPID.setReference(0, ControlType.kVelocity);
       break;
       case SHOOT: IntakePIDOne.setReference(0, ControlType.kVelocity);
                   IntakePIDTwo.setReference(0, ControlType.kVelocity);
@@ -91,8 +87,8 @@ public class FuelShooter extends SubsystemBase {
 
   public void stopFeedingFuel() {
     if (feedingFuel == false) return;
-      IntakePIDOne.setReference(0, ControlType.kVelocity);
-      IntakePIDTwo.setReference(0, ControlType.kVelocity);
+      IntakePIDOne.setReference(0, ControlType.kCurrent);
+      IntakePIDTwo.setReference(0, ControlType.kCurrent);
       feedingFuel = false;
     }
 
@@ -115,37 +111,44 @@ public class FuelShooter extends SubsystemBase {
       return false;
   }
 
-  public double calculateRPMFromLimelight(double ty, double tx, double cameraHeight, 
-  double targetHeight, double mountingAngle, double theta, double r, double g) {
+  //does the calculations in HubAimCommand
+  public double calculateRPMFromLimelight(
+        double ty,
+        double cameraHeight,
+        double targetHeight,
+        double mountingAngle,
+        double thetaDeg,
+        double wheelRadius,
+        double g) {
 
-    // Convert vertical angles to radians
-    double totalAngle = Math.toRadians(ty + mountingAngle);
+    // Convert angles to radians
+    double totalAngleRad = Math.toRadians(ty + mountingAngle);
+    double thetaRad = Math.toRadians(thetaDeg);
 
-    // Calculate straight-line distance to target
-    double distance = (targetHeight - cameraHeight) / Math.tan(totalAngle);
+    // Height difference
+    double deltaH = targetHeight - cameraHeight;
 
-    // Horizontal distance along forward axis
-    double dx = distance * Math.cos(Math.toRadians(tx));
+    // Horizontal distance to target
+    double dx = deltaH / Math.tan(totalAngleRad);
 
-    // Vertical difference
-    double dy = targetHeight - cameraHeight;
+    // Projectile motion denominator
+    double denominator =
+            2.0 * Math.pow(Math.cos(thetaRad), 2.0)
+            * (dx * Math.tan(thetaRad) - deltaH);
 
-    // Formula for linear velocity
-    double denominator = 2 * Math.pow(Math.cos(theta), 2) * (dx * Math.tan(theta) - dy);
-    if (denominator <= 0) {
+    if (denominator <= 0.0) {
         throw new IllegalArgumentException("Target unreachable at this angle.");
     }
 
+    // Required exit velocity
     double v0 = Math.sqrt(g * dx * dx / denominator);
 
-    // Convert to wheel RPM
-    return (60 / (2 * Math.PI * r)) * v0;
+    // Convert linear velocity to wheel RPM
+    return (60.0 / (2.0 * Math.PI * wheelRadius)) * v0;
 }
-
 
   @Override
   public void periodic() {
-    // ShooterEncoder.getVelocity();
-    // SmartDashboard.putNumber("Shooter vel.",ShooterEncoder);
+
   }
 }
