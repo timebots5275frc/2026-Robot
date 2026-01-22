@@ -25,7 +25,7 @@ public class FuelShooter extends SubsystemBase {
   SparkMax IntakeMotor2;
   private SparkClosedLoopController IntakePIDTwo;
   SparkMax shooterMotor;
-  private SparkClosedLoopController ShooterPID;
+  public SparkClosedLoopController ShooterPID;
   private AbsoluteEncoder ShooterEncoder;
   
   private Shooter shooterState = Shooter.NONE;
@@ -113,23 +113,22 @@ public class FuelShooter extends SubsystemBase {
 
   //does the calculations in HubAimCommand
   public double calculateRPMFromLimelight(
+        double tx, 
         double ty,
-        double cameraHeight,
-        double targetHeight,
-        double mountingAngle,
-        double thetaDeg,
-        double wheelRadius,
-        double g) {
+        double thetaDeg
+        ) {
 
     // Convert angles to radians
-    double totalAngleRad = Math.toRadians(ty + mountingAngle);
+    double totalAngleRad = Math.toRadians(ty + Constants.CalculateShooterRpmConstants.MOUNTING_ANGLE);
     double thetaRad = Math.toRadians(thetaDeg);
 
     // Height difference
-    double deltaH = targetHeight - cameraHeight;
+    double deltaH = Constants.CalculateShooterRpmConstants.TARGET_HEIGHT - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
 
     // Horizontal distance to target
-    double dx = deltaH / Math.tan(totalAngleRad);
+    // double dx = deltaH / Math.tan(totalAngleRad);
+    double dx = (deltaH / Math.tan(totalAngleRad)) * Math.cos(Math.toRadians(tx));
+
 
     // Projectile motion denominator
     double denominator =
@@ -141,10 +140,10 @@ public class FuelShooter extends SubsystemBase {
     }
 
     // Required exit velocity
-    double v0 = Math.sqrt(g * dx * dx / denominator);
+    double v0 = Math.sqrt(Constants.CalculateShooterRpmConstants.GRAVITY * dx * dx / denominator);
 
     // Convert linear velocity to wheel RPM
-    return (60.0 / (2.0 * Math.PI * wheelRadius)) * v0;
+    return (60.0 / (2.0 * Math.PI * Constants.CalculateShooterRpmConstants.WHEEL_RADIUS)) * v0;
 }
 
   @Override

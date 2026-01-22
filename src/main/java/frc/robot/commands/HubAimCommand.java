@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import com.revrobotics.spark.SparkBase.ControlType;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,35 +38,32 @@ public class HubAimCommand extends Command {
     @Override
     public void execute() {
 
-        double rpm; 
-        double g = 9.8; // gravity
-        double r = 0.1016; // radius of wheel launching ball
-        double x0 = vision.RobotPosInFieldSpace().x; // robot pose
-        double theta = Math.toDegrees(0.977384); //angle in radians
-        double y0 = vision.RobotPosInFieldSpace().y; // robot pose
+        double rpm; //current rpm
+        double x0 = vision.RobotPosInFieldSpace().x; // robot X pose
+        double y0 = vision.RobotPosInFieldSpace().y; // robot Y pose
+        double thetaRad = 0.977384; //launch angle in radians
+        double thetaDeg = Math.toDegrees(thetaRad); //launch angle in degrees
         double tx = vision.HorizontalOffsetFromAprilTag(); //target pose
         double ty = vision.AprilTagRotInRobotSpace().y; //target pose
-        double cameraHeight = 0; //look into limelight offset
-        double targetHeight = 0;
-        double mountingAngle = 0;
-        double targetRPM;
+        double targetRPM; //target rpm
 
         double allowedError = 1.0; //degrees //TODO 
         double kP = 0.1; // TODO
         double maxRot = 1; //TODO
         // double tx = vision.HorizontalOffsetFromAprilTag(); 
 
-        if(vision.hasValidData() == true){
+        if(vision.hasValidData()){
             System.out.println("See April tag " + vision.AprilTagID());
-            targetRPM = fs.calculateRPMFromLimelight(ty, cameraHeight, targetHeight, mountingAngle, theta, r, g);
+            targetRPM = fs.calculateRPMFromLimelight(tx,ty,thetaRad);
             rpm = srl.calculate(targetRPM);
+            fs.ShooterPID.setReference(rpm, ControlType.kVelocity);
             SmartDashboard.putNumber("Shooter Distance", fs.dx);
             SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
         }
-        if(vision.hasValidData() == false){
+        if(!vision.hasValidData()){
             System.out.println("No valid data");
             drive.driveArcade(0, 0);
-            rpm = 4000;
+            fs.ShooterPID.setReference(4000, ControlType.kVelocity);
         }
 
         //STOP to not have wiggles
