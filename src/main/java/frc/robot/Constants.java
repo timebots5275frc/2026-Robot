@@ -48,7 +48,11 @@ public final class Constants
 //guh
   public static class ButtonConstants
   {
-   
+    //9,10,11,12
+    public static final int INCREASE_LEFT_MOTOR = 10;
+    public static final int INCREASE_RIGHT_MOTOR = 12;
+    public static final int DECREASE_LEFT_MOTOR = 9;
+    public static final int DECREASE_RIGHT_MOTOR = 11;
   }
 
     public static final class DriveConstants {

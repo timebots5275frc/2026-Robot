@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ChangeMotorSpeed;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.HubAimCommand;
 // import frc.robot.commands.FuelShooterCommand;
@@ -98,6 +99,9 @@ public class RobotContainer {
     //new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision));
     // new JoystickButton(joy, 1).whileTrue(new FuelShooterCommand(fuelShooter, vision));
     new JoystickButton(joy, 1).onTrue((new HubAimCommand(tankDrive, vision, fs)));
+
+
+    new JoystickButton(bBoard, Constants.ButtonConstants.INCREASE_LEFT_MOTOR).onTrue(new ChangeMotorSpeed(tankDrive, 0.1, false));
 
   }
 

@@ -79,6 +79,7 @@ public class TeleopJoystickDrive extends Command {
         SmartDashboard.putNumber("Throttle teleJoy", speedPercent);
         SmartDashboard.putNumber("Turn_speed", inputRotationVelocity);
 
+        System.out.println(moveInput.x);
 
         drivetrain.driveArcade(inputVelocity.x, inputRotationVelocity);
     }

@@ -85,11 +85,10 @@ public class CANDriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
   }
 
   public void driveArcade(double xSpeed, double zRotation) {
-
-    
 
     var speeds = DifferentialDrive.arcadeDriveIK(xSpeed, zRotation, true);
 
@@ -99,7 +98,10 @@ public class CANDriveSubsystem extends SubsystemBase {
     leftSpeed = leftSpeed * leftMult;
     rightSpeed = rightSpeed * rightMult;
 
-    drive.tankDrive(leftSpeed, rightSpeed, true);
+    drive.tankDrive(leftSpeed, rightSpeed, false);
+
+    System.out.println(xSpeed);
+
   }
 
   public void changeRightSpeed(double change) {
