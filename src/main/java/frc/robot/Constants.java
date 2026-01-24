@@ -60,7 +60,10 @@ public final class Constants
 
     // Current limit for drivetrain motors. 60A is a reasonable maximum to reduce
     // likelihood of tripping breakers or damaging CIM motors
-    public static final int DRIVE_MOTOR_CURRENT_LIMIT = 60;
+    public static final int DRIVE_MOTOR_STALL_LIMIT = 25;
+    public static final int DRIVE_MOTOR_FREE_LIMIT = 20;
+    public static final int DRIVE_MOTOR_LIMIT_RPM = 5000;
+    public static final int DRIVE_MOTOR_RAMP_RATE = 15;
 
     public static final double WHEEL_RADIUS = 2.0 * 0.0254; // meters * 0.98
     public static final double WHEEL_CIRCUMFERENCE = 2.0 * Math.PI * WHEEL_RADIUS; // meters/revolution
@@ -191,11 +194,11 @@ public final class Constants
       public static final int INTAKE_MOTOR_2_ID = 11;
       public static final int SHOOTER_MOTOR_ID = 12;
 
-      public static final PID motor1PID = new PID(0,0,0);
-      public static final PID motor2PID = new PID(0,0,0);
-      public static final PID motor3PID = new PID(0,0,0);
+      public static final PID MOTOR1PID = new PID(0,0,0);
+      public static final PID MOTOR2PID = new PID(0,0,0);
+      public static final PID MOTOR3PID = new PID(0,0,0);
 
-      public static final int IntakeSpeed = 2000;
+      public static final int INTAKESPEED = 2000;
     }
 
     public static final class ClimberConstants{
@@ -209,6 +212,19 @@ public final class Constants
       public static final double CAMERA_HEIGHT = 0.75;
       public static final double TARGET_HEIGHT = 2.64;
       public static final double MOUNTING_ANGLE = 25.0;
+    } 
+
+    public static final class ClimbConstants {
+
+        public static final int MOTOR1_ID = 0;
+        public static final int MOTOR2_ID = 0;
+
+        public static final PID MOTOR1PID = new PID(0,0 , 0);
+        public static final PID motor2PID = new PID(0,0 , 0);
+        public static final double DRIVE = 0;
+        public static final double L1 = 0;
+        public static final double RESET = 3;
+
     }
 
 }

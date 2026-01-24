@@ -7,8 +7,9 @@ package frc.robot;
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.FuelShooterCommand;
 import frc.robot.commands.HubAimCommand;
+// import frc.robot.commands.FuelShooterCommand;
+// import frc.robot.commands.HubAimCommand;
 import frc.robot.commands.TeleopJoystickDrive;
 import frc.robot.commands.auto.AutoDrive;
 import frc.robot.subsystems.CANDriveSubsystem;
@@ -43,9 +44,8 @@ public class RobotContainer {
     TeleopJoystickDrive teleJoyDrive;
     GenericHID bBoard;
     Vision vision;
-    FuelShooter fs;
     CANDriveSubsystem tankDrive;
-    FuelShooter fuelShooter;
+    FuelShooter fs;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -59,7 +59,8 @@ public class RobotContainer {
     tankDrive = new CANDriveSubsystem();
     fs = new FuelShooter();
     vision = new Vision();
-    fuelShooter = new FuelShooter();
+    
+    // fuelShooter = new FuelShooter();
     
     
 
@@ -95,8 +96,8 @@ public class RobotContainer {
     //new JoystickButton(joy, 8).onTrue(new InstantCommand(swerveDrive::resetPigeon, swerveDrive));
 
     //new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision));
-    new JoystickButton(joy, 1).whileTrue(new FuelShooterCommand(fuelShooter, vision));
-    new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision, fs));
+    // new JoystickButton(joy, 1).whileTrue(new FuelShooterCommand(fuelShooter, vision));
+    new JoystickButton(joy, 1).onTrue((new HubAimCommand(tankDrive, vision, fs)));
 
   }
 

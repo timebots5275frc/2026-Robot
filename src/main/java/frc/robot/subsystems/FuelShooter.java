@@ -28,88 +28,88 @@ public class FuelShooter extends SubsystemBase {
   public SparkClosedLoopController ShooterPID;
   private AbsoluteEncoder ShooterEncoder;
   
-  private Shooter shooterState = Shooter.NONE;
+//   private Shooter shooterState = Shooter.NONE;
   private double shooterRPM = 4000;
   private boolean feedingFuel = false;
   public double dx;
 
-  public enum Shooter{
-    INTAKE,
-    OUTTAKE,
-    SHOOT,
-    NONE;
-  }
+//   public enum Shooter{
+//     INTAKE,
+//     OUTTAKE,
+//     SHOOT,
+//     NONE;
+//   }
 
   public FuelShooter() {
     
-    IntakeMotor1 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, SparkLowLevel.MotorType.kBrushless);
-    Constants.FuelShooterConstants.motor1PID.setSparkMaxPID(IntakeMotor1, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    IntakePIDOne = IntakeMotor1.getClosedLoopController();
+    // IntakeMotor1 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, SparkLowLevel.MotorType.kBrushless);
+    // Constants.FuelShooterConstants.motor1PID.setSparkMaxPID(IntakeMotor1, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    //IntakePIDOne = IntakeMotor1.getClosedLoopController();
 
-    IntakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, SparkLowLevel.MotorType.kBrushless);
-    Constants.FuelShooterConstants.motor2PID.setSparkMaxPID(IntakeMotor2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    IntakePIDTwo = IntakeMotor2.getClosedLoopController();
+    // IntakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, SparkLowLevel.MotorType.kBrushless);
+    // Constants.FuelShooterConstants.motor2PID.setSparkMaxPID(IntakeMotor2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // IntakePIDTwo = IntakeMotor2.getClosedLoopController();
 
-    shooterMotor = new SparkMax(Constants.FuelShooterConstants.SHOOTER_MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
-    Constants.FuelShooterConstants.motor3PID.setSparkMaxPID(shooterMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    ShooterPID = shooterMotor.getClosedLoopController();
+    // shooterMotor = new SparkMax(Constants.FuelShooterConstants.SHOOTER_MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
+    // Constants.FuelShooterConstants.motor3PID.setSparkMaxPID(shooterMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // ShooterPID = shooterMotor.getClosedLoopController();
     
   }
 
-  public void Shooter(){
+//   public void Shooter(){
 
-    switch (shooterState) {
-      case NONE: feedingFuel = false;
-                 ShooterPID.setReference(0, ControlType.kCurrent);
-      break;
-      case INTAKE: feedingFuel = true;
+//     switch (shooterState) {
+//       case NONE: feedingFuel = false;
+//                  ShooterPID.setReference(0, ControlType.kCurrent);
+//       break;
+//       case INTAKE: feedingFuel = true;
 
-      break;
-      case OUTTAKE: IntakePIDOne.setReference(-Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
-                    IntakePIDTwo.setReference(-Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
-                    ShooterPID.setReference(0, ControlType.kVelocity);
-      break;
-      case SHOOT: IntakePIDOne.setReference(0, ControlType.kVelocity);
-                  IntakePIDTwo.setReference(0, ControlType.kVelocity);
-                  ShooterPID.setReference(shooterRPM, ControlType.kVelocity);
-        break;
+//       break;
+//       case OUTTAKE: IntakePIDOne.setReference(-Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
+//                     IntakePIDTwo.setReference(-Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
+//                     ShooterPID.setReference(0, ControlType.kVelocity);
+//       break;
+//       case SHOOT: IntakePIDOne.setReference(0, ControlType.kVelocity);
+//                   IntakePIDTwo.setReference(0, ControlType.kVelocity);
+//                   ShooterPID.setReference(shooterRPM, ControlType.kVelocity);
+//         break;
       
-    }
+//     }
 
-  }
+//   }
 
-  public void feedFuel() {
-    if (feedingFuel == true) return;
-      IntakePIDOne.setReference(Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
-      IntakePIDTwo.setReference(-Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
-      feedingFuel = true;
-    }
+//   public void feedFuel() {
+//     if (feedingFuel == true) return;
+//       IntakePIDOne.setReference(Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
+//       IntakePIDTwo.setReference(-Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
+//       feedingFuel = true;
+//     }
 
-  public void stopFeedingFuel() {
-    if (feedingFuel == false) return;
-      IntakePIDOne.setReference(0, ControlType.kCurrent);
-      IntakePIDTwo.setReference(0, ControlType.kCurrent);
-      feedingFuel = false;
-    }
+//   public void stopFeedingFuel() {
+//     if (feedingFuel == false) return;
+//       IntakePIDOne.setReference(0, ControlType.kCurrent);
+//       IntakePIDTwo.setReference(0, ControlType.kCurrent);
+//       feedingFuel = false;
+//     }
 
   
 
-  public void setState(Shooter state) {
-    shooterState = state;
-    Shooter();
-  }
+//   public void setState(Shooter state) {
+//     shooterState = state;
+//     Shooter();
+//   }
 
-  public void setShooterRPM(double rpm) {
-    shooterRPM = rpm;
-    Shooter();
-  } 
+//   public void setShooterRPM(double rpm) {
+//     shooterRPM = rpm;
+//     Shooter();
+//   } 
 
-  public boolean shooterAtTargetRPM() {
-      if(shooterMotor.getEncoder().getVelocity() == shooterRPM && shooterRPM != 0) {
-        return true;
-      }
-      return false;
-  }
+//   public boolean shooterAtTargetRPM() {
+//       if(shooterMotor.getEncoder().getVelocity() == shooterRPM && shooterRPM != 0) {
+//         return true;
+//       }
+//       return false;
+//   }
 
   //does the calculations in HubAimCommand
   public double calculateRPMFromLimelight(

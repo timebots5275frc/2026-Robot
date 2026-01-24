@@ -14,9 +14,13 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
 import static frc.robot.Constants.DriveConstants.*;
 
 public class CANDriveSubsystem extends SubsystemBase {
+  Constants c = new Constants();
+
   private final SparkFlex leftLeader;
   private final SparkFlex leftFollower;
   private final SparkFlex rightLeader;
@@ -31,6 +35,7 @@ public class CANDriveSubsystem extends SubsystemBase {
     rightLeader = new SparkFlex(RIGHT_LEADER_ID, MotorType.kBrushless);
     rightFollower = new SparkFlex(RIGHT_FOLLOWER_ID, MotorType.kBrushless);
 
+    
     // set up differential drive class
     drive = new DifferentialDrive(leftLeader, rightLeader);
 
@@ -49,7 +54,13 @@ public class CANDriveSubsystem extends SubsystemBase {
     // breakers.
     SparkFlexConfig config = new SparkFlexConfig();
     config.voltageCompensation(12);
-    config.smartCurrentLimit(DRIVE_MOTOR_CURRENT_LIMIT);
+    config.smartCurrentLimit(Constants.DriveConstants.DRIVE_MOTOR_STALL_LIMIT, 
+                             Constants.DriveConstants.DRIVE_MOTOR_FREE_LIMIT,
+                             Constants.DriveConstants.DRIVE_MOTOR_LIMIT_RPM);
+
+    config.closedLoopRampRate(Constants.DriveConstants.DRIVE_MOTOR_RAMP_RATE);
+
+    
 
     // Set configuration to follow each leader and then apply it to corresponding
     // follower. Resetting in case a new controller is swapped

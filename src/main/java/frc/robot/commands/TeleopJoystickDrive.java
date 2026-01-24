@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 //import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -65,8 +66,8 @@ public class TeleopJoystickDrive extends Command {
             speedPercent = input.getControllerSpeed();
         }
         
-        Vector2 inputVelocity = moveInput.times(speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED);
-        double inputRotationVelocity = turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE*.75; //rot. vel.
+        Vector2 inputVelocity = moveInput.times((speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED));
+        double inputRotationVelocity = (turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE)*.35; //rot. vel.
                                                                                                                //remove last multiplied number for max results
         
         int rot_sign = (int)(inputRotationVelocity / Math.abs(inputRotationVelocity));
@@ -80,7 +81,6 @@ public class TeleopJoystickDrive extends Command {
 
 
         drivetrain.driveArcade(inputVelocity.x, inputRotationVelocity);
-        
     }
 
     @Override

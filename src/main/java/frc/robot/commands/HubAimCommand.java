@@ -16,6 +16,8 @@ public class HubAimCommand extends Command {
     private CANDriveSubsystem drive;
     private Vision vision;
     private SlewRateLimiter srl = new SlewRateLimiter(10);
+    double tx = 0;
+    double ty = 0;
 
     public HubAimCommand(CANDriveSubsystem drive, Vision vision, FuelShooter fs) {
         this.drive = drive;
@@ -39,12 +41,12 @@ public class HubAimCommand extends Command {
     public void execute() {
 
         double rpm; //current rpm
-        double x0 = vision.RobotPosInFieldSpace().x; // robot X pose
-        double y0 = vision.RobotPosInFieldSpace().y; // robot Y pose
+        // double x0 = vision.RobotPosInFieldSpace().x; // robot X pose
+        // double y0 = vision.RobotPosInFieldSpace().y; // robot Y pose
         double thetaRad = 0.977384; //launch angle in radians
         double thetaDeg = Math.toDegrees(thetaRad); //launch angle in degrees
-        double tx = vision.HorizontalOffsetFromAprilTag(); //target pose
-        double ty = vision.AprilTagRotInRobotSpace().y; //target pose
+        tx = vision.HorizontalOffsetFromAprilTag(); //target pose
+        ty = vision.AprilTagRotInRobotSpace().y; //target pose
         double targetRPM; //target rpm
 
         double allowedError = 1.0; //degrees //TODO 
@@ -52,15 +54,16 @@ public class HubAimCommand extends Command {
         double maxRot = 1; //TODO
         // double tx = vision.HorizontalOffsetFromAprilTag(); 
 
-        if(vision.hasValidData()){
+        if(vision.hasValidData() == true){
             System.out.println("See April tag " + vision.AprilTagID());
             targetRPM = fs.calculateRPMFromLimelight(tx,ty,thetaRad);
+            System.out.println(targetRPM);
             rpm = srl.calculate(targetRPM);
             fs.ShooterPID.setReference(rpm, ControlType.kVelocity);
             SmartDashboard.putNumber("Shooter Distance", fs.dx);
             SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
         }
-        if(!vision.hasValidData()){
+        if(vision.hasValidData() == false){
             System.out.println("No valid data");
             drive.driveArcade(0, 0);
             fs.ShooterPID.setReference(4000, ControlType.kVelocity);
