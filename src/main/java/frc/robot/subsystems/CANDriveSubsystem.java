@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -27,6 +28,9 @@ public class CANDriveSubsystem extends SubsystemBase {
   private final SparkFlex rightFollower;
 
   private final DifferentialDrive drive;
+
+  private double leftMult = 1;
+  private double rightMult = 1;
 
   public CANDriveSubsystem() {
     // create brushed motors for drive
@@ -84,7 +88,26 @@ public class CANDriveSubsystem extends SubsystemBase {
   }
 
   public void driveArcade(double xSpeed, double zRotation) {
-    drive.arcadeDrive(xSpeed, zRotation);
+
+    
+
+    var speeds = DifferentialDrive.arcadeDriveIK(xSpeed, zRotation, true);
+
+    double leftSpeed = speeds.left;
+    double rightSpeed = speeds.right;
+
+    leftSpeed = leftSpeed * leftMult;
+    rightSpeed = rightSpeed * rightMult;
+
+    drive.tankDrive(leftSpeed, rightSpeed, true);
+  }
+
+  public void changeRightSpeed(double change) {
+    rightMult += change;
+  }
+
+  public void changeLeftSpeed(double change) {
+    leftMult += change;
   }
 
 }
