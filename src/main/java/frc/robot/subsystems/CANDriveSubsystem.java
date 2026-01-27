@@ -6,13 +6,12 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -20,17 +19,12 @@ import frc.robot.Constants;
 import static frc.robot.Constants.DriveConstants.*;
 
 public class CANDriveSubsystem extends SubsystemBase {
-  Constants c = new Constants();
-
   private final SparkFlex leftLeader;
   private final SparkFlex leftFollower;
   private final SparkFlex rightLeader;
   private final SparkFlex rightFollower;
 
   private final DifferentialDrive drive;
-
-  private double leftMult = 1;
-  private double rightMult = 1;
 
   public CANDriveSubsystem() {
     // create brushed motors for drive
@@ -39,7 +33,6 @@ public class CANDriveSubsystem extends SubsystemBase {
     rightLeader = new SparkFlex(RIGHT_LEADER_ID, MotorType.kBrushless);
     rightFollower = new SparkFlex(RIGHT_FOLLOWER_ID, MotorType.kBrushless);
 
-    
     // set up differential drive class
     drive = new DifferentialDrive(leftLeader, rightLeader);
 
@@ -59,12 +52,10 @@ public class CANDriveSubsystem extends SubsystemBase {
     SparkFlexConfig config = new SparkFlexConfig();
     config.voltageCompensation(12);
     config.smartCurrentLimit(Constants.DriveConstants.DRIVE_MOTOR_STALL_LIMIT, 
-                             Constants.DriveConstants.DRIVE_MOTOR_FREE_LIMIT,
-                             Constants.DriveConstants.DRIVE_MOTOR_LIMIT_RPM);
+                             Constants.DriveConstants.DRIVE_MOTOR_FREE_LIMIT
+                             ); //Constants.DriveConstants.DRIVE_MOTOR_LIMIT_RPM
 
     config.closedLoopRampRate(Constants.DriveConstants.DRIVE_MOTOR_RAMP_RATE);
-
-    
 
     // Set configuration to follow each leader and then apply it to corresponding
     // follower. Resetting in case a new controller is swapped
@@ -85,31 +76,10 @@ public class CANDriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
   }
 
   public void driveArcade(double xSpeed, double zRotation) {
-
-    var speeds = DifferentialDrive.arcadeDriveIK(xSpeed, zRotation, true);
-
-    double leftSpeed = speeds.left;
-    double rightSpeed = speeds.right;
-
-    leftSpeed = leftSpeed * leftMult;
-    rightSpeed = rightSpeed * rightMult;
-
-    drive.tankDrive(leftSpeed, rightSpeed, false);
-
-    System.out.println(xSpeed);
-
-  }
-
-  public void changeRightSpeed(double change) {
-    rightMult += change;
-  }
-
-  public void changeLeftSpeed(double change) {
-    leftMult += change;
+    drive.arcadeDrive(xSpeed, zRotation);
   }
 
 }

@@ -56,6 +56,9 @@ public final class Constants
   }
 
     public static final class DriveConstants {
+
+    public static final double deadband = 0.2;
+
     // Motor controller IDs for drivetrain motors
     public static final int LEFT_LEADER_ID = 5  ;
     public static final int LEFT_FOLLOWER_ID = 2;
@@ -67,7 +70,7 @@ public final class Constants
     public static final int DRIVE_MOTOR_STALL_LIMIT = 25;
     public static final int DRIVE_MOTOR_FREE_LIMIT = 20;
     public static final int DRIVE_MOTOR_LIMIT_RPM = 5000;
-    public static final int DRIVE_MOTOR_RAMP_RATE = 15;
+    public static final int DRIVE_MOTOR_RAMP_RATE = 10;
 
     public static final double WHEEL_RADIUS = 2.0 * 0.0254; // meters * 0.98
     public static final double WHEEL_CIRCUMFERENCE = 2.0 * Math.PI * WHEEL_RADIUS; // meters/revolution
@@ -198,9 +201,9 @@ public final class Constants
       public static final int INTAKE_MOTOR_2_ID = 11;
       public static final int SHOOTER_MOTOR_ID = 12;
 
-      public static final PID MOTOR1PID = new PID(0,0,0);
-      public static final PID MOTOR2PID = new PID(0,0,0);
-      public static final PID MOTOR3PID = new PID(0,0,0);
+      public static final PID INTAKE_MOTOR_1_PID = new PID(0,0,0);
+      public static final PID INTAKE_MOTOR_2_PID = new PID(0,0,0);
+      public static final PID SHOOTER_MOTOR_PID = new PID(0,0,0);
 
       public static final int INTAKESPEED = 2000;
     }

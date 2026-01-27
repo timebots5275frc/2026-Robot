@@ -1,35 +1,35 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// // Copyright (c) FIRST and other WPILib contributors.
+// // Open Source Software; you can modify and/or share it under the terms of
+// // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+// package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.CANDriveSubsystem;
+// import edu.wpi.first.wpilibj2.command.InstantCommand;
+// import frc.robot.subsystems.CANDriveSubsystem;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ChangeMotorSpeed extends InstantCommand {
+// // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// // information, see:
+// // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+// public class ChangeMotorSpeed extends InstantCommand {
 
-  private CANDriveSubsystem drive;
-  private boolean rightMotor;
-  private double change;
+//   private CANDriveSubsystem drive;
+//   private boolean rightMotor;
+//   private double change;
 
-  public ChangeMotorSpeed(CANDriveSubsystem drive, double change, boolean rightMotor) {
-      this.drive = drive;
-      this.rightMotor = rightMotor;
-      this.change = change;
-      addRequirements(drive);
-  }
+//   public ChangeMotorSpeed(CANDriveSubsystem drive, double change, boolean rightMotor) {
+//       this.drive = drive;
+//       this.rightMotor = rightMotor;
+//       this.change = change;
+//       addRequirements(drive);
+//   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    if (rightMotor) {
-      drive.changeRightSpeed(change);
-      return;
-    }
-    drive.changeLeftSpeed(change);
-  }
-}
+//   // Called when the command is initially scheduled.
+//   @Override
+//   public void initialize() {
+//     if (rightMotor) {
+//       drive.changeRightSpeed(change);
+//       return;
+//     }
+//     drive.changeLeftSpeed(change);
+//   }
+// }

@@ -15,7 +15,7 @@ public class HubAimCommand extends Command {
     private FuelShooter fs;
     private CANDriveSubsystem drive;
     private Vision vision;
-    private SlewRateLimiter srl = new SlewRateLimiter(10);
+    // private SlewRateLimiter srl = new SlewRateLimiter(10);
     double tx = 0;
     double ty = 0;
 
@@ -46,6 +46,9 @@ public class HubAimCommand extends Command {
         double thetaRad = 0.977384; //launch angle in radians
         double thetaDeg = Math.toDegrees(thetaRad); //launch angle in degrees
         tx = vision.HorizontalOffsetFromAprilTag(); //target pose
+        
+        // if(vision.AprilTagRotInRobotSpace().y == null){ty = 0;} //doesnt work becuase cant  from double to null
+        // else if(vision.AprilTagRotInRobotSpace().y >= 0){ty = vision.AprilTagRotInRobotSpace().y;} //target pose
         ty = vision.AprilTagRotInRobotSpace().y; //target pose
         double targetRPM; //target rpm
 
@@ -57,9 +60,8 @@ public class HubAimCommand extends Command {
         if(vision.hasValidData() == true){
             System.out.println("See April tag " + vision.AprilTagID());
             targetRPM = fs.calculateRPMFromLimelight(tx,ty,thetaRad);
-            System.out.println(targetRPM);
-            rpm = srl.calculate(targetRPM);
-            fs.ShooterPID.setReference(rpm, ControlType.kVelocity);
+            fs.ShooterPID.setReference(targetRPM, ControlType.kVelocity);
+            //prints distance and target rpm
             SmartDashboard.putNumber("Shooter Distance", fs.dx);
             SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
         }
@@ -69,25 +71,27 @@ public class HubAimCommand extends Command {
             fs.ShooterPID.setReference(4000, ControlType.kVelocity);
         }
 
+        //dont need because tank drive
         //STOP to not have wiggles
-        if (Math.abs(tx) < allowedError) {
-            drive.driveArcade(0,0);
-            return;
-        }
+        // if (Math.abs(tx) < allowedError) {
+        //     drive.driveArcade(0,0);
+        //     return;
+        // }
 
-        double correctionDeg = tx * kP;
-        double correctionRad = Math.toRadians(correctionDeg);
+        // double correctionDeg = tx * kP;
+        // double correctionRad = Math.toRadians(correctionDeg);
 
-        correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
+        // correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
 
-        drive.driveArcade( 0, correctionRad);
+        // drive.driveArcade( 0, correctionRad);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         vision.setUsingLimelight(false);
-        drive.driveArcade(0, 0);
+        //dont need because tank drive
+        // drive.driveArcade(0, 0);
     }
 
     // Returns true when the command should end.
