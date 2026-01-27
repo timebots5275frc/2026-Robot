@@ -6,16 +6,15 @@ package frc.robot;
 
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.OperatorConstants;
-// import frc.robot.commands.ChangeMotorSpeed;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.HubAimCommand;
-// import frc.robot.commands.FuelShooterCommand;
-// import frc.robot.commands.HubAimCommand;
+import frc.robot.commands.ResetClimb;
 import frc.robot.commands.TeleopJoystickDrive;
 import frc.robot.commands.auto.AutoDrive;
 import frc.robot.subsystems.CANDriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.FuelShooter;
+import frc.robot.subsystems.Climb.ClimbStates;
 import frc.robot.subsystems.Input.Input;
 
 import frc.robot.subsystems.Vision.Vision;
@@ -38,7 +37,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
     Joystick joy;
     Input input;
@@ -47,6 +45,7 @@ public class RobotContainer {
     Vision vision;
     CANDriveSubsystem tankDrive;
     FuelShooter fs;
+    Climb climb;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -60,7 +59,6 @@ public class RobotContainer {
     tankDrive = new CANDriveSubsystem();
     fs = new FuelShooter();
     vision = new Vision();
-    
     // fuelShooter = new FuelShooter();
     
     
@@ -95,11 +93,11 @@ public class RobotContainer {
     /*tmp */
     //pigeon
     //new JoystickButton(joy, 8).onTrue(new InstantCommand(swerveDrive::resetPigeon, swerveDrive));
-
-    //new JoystickButton(joy, 4).whileTrue(new HubAimCommand(tankDrive, vision));
-    // new JoystickButton(joy, 1).whileTrue(new FuelShooterCommand(fuelShooter, vision));
-    new JoystickButton(joy, 1).onTrue((new HubAimCommand(tankDrive, vision, fs)));
-
+    
+    new JoystickButton(joy, 1).onTrue((new HubAimCommand(tankDrive, vision, fs))); //shoot with vision
+    new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1
+    new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.DRIVE)); //climb to drive
+    new JoystickButton(joy, 2).whileTrue(new ResetClimb(climb)); //reset climb
 
     // new JoystickButton(bBoard, Constants.ButtonConstants.INCREASE_LEFT_MOTOR).onTrue(new ChangeMotorSpeed(tankDrive, 0.1, false));
 

@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import com.fasterxml.jackson.databind.util.ClassUtil;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Climb.ClimbStates;
@@ -19,7 +17,7 @@ public class ResetClimb extends Command {
 
     @Override
     public void initialize() {
-        climb.setState(ClimbStates.Reset);
+        climb.setState(ClimbStates.RESET);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

@@ -7,7 +7,6 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
@@ -18,37 +17,29 @@ import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
 
-    private SparkMax motorLeft;
-    private SparkMax motorRight;
-
-    private AbsoluteEncoder encoder;
-
-    private SparkClosedLoopController rightPID;
-    private SparkClosedLoopController leftPID;
-
+    private SparkMax climbMotor;
+    private AbsoluteEncoder climbEncoder;
+    private SparkClosedLoopController climbPID;
     private SparkMaxConfig smc;
 
+    private double climbPose;
+
     private ClimbStates state;
-
-    public Climb() {
-        smc = new SparkMaxConfig();
-
-        motorLeft = new SparkMax(Constants.ClimbConstants.MOTOR1_ID, MotorType.kBrushless);
-        motorRight = new SparkMax(Constants.ClimbConstants.MOTOR2_ID, MotorType.kBrushless);
-
-        encoder = motorLeft.getAbsoluteEncoder();
-
-        smc.follow(motorLeft);
-        smc.inverted(true);
-        motorRight.configure(smc, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        leftPID = motorLeft.getClosedLoopController();
-
-    }
 
     public enum ClimbStates {
         DRIVE,
         L1,
-        Reset
+        RESET;
+    }
+
+    public Climb() {
+        smc = new SparkMaxConfig();
+
+        climbMotor = new SparkMax(Constants.ClimbConstants.MOTOR1_ID, MotorType.kBrushless);
+        climbEncoder = climbMotor.getAbsoluteEncoder();
+
+        climbMotor.configure(smc, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        climbPID = climbMotor.getClosedLoopController();
     }
 
     public void setState(ClimbStates state) {
@@ -59,12 +50,14 @@ public class Climb extends SubsystemBase {
 
     private void updateClimb(ClimbStates state) {
         switch (state) {
-            case DRIVE: leftPID.setReference(Constants.ClimbConstants.DRIVE, ControlType.kPosition);
-                break;
-            case L1: leftPID.setReference(Constants.ClimbConstants.L1, ControlType.kPosition);
-                break;
-            case Reset: leftPID.setReference(Constants.ClimbConstants.RESET, ControlType.kCurrent);
-                break;
+            case DRIVE: if(climbPose == Constants.ClimbConstants.DRIVE){climbPID.setReference(0, ControlType.kVoltage);}
+                        else{climbPID.setReference(Constants.ClimbConstants.DRIVE, ControlType.kPosition);}
+            break;
+            case L1: if(climbPose == Constants.ClimbConstants.L1){climbPID.setReference(0, ControlType.kVoltage);}
+                     else{climbPID.setReference(Constants.ClimbConstants.L1, ControlType.kPosition);}
+            break;
+            case RESET: climbPID.setReference(Constants.ClimbConstants.RESET, ControlType.kCurrent);
+            break;
             
         }
     }
@@ -73,8 +66,8 @@ public class Climb extends SubsystemBase {
 
     @Override
     public void periodic() {
-        encoder.getPosition();
-        SmartDashboard.putNumber("Climber pose", encoder.getPosition());
+        climbPose = climbEncoder.getPosition();
+        SmartDashboard.putNumber("Climber pose", climbEncoder.getPosition());
     }
 
 }

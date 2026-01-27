@@ -6,8 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.CustomTypes.PID;
-import frc.robot.CustomTypes.SwerveCanIDs;
-import frc.robot.CustomTypes.SwerveModuleLocations;
 import frc.robot.CustomTypes.Math.Vector2;
 
 /**
@@ -201,16 +199,11 @@ public final class Constants
       public static final int INTAKE_MOTOR_2_ID = 11;
       public static final int SHOOTER_MOTOR_ID = 12;
 
-      public static final PID INTAKE_MOTOR_1_PID = new PID(0,0,0);
-      public static final PID INTAKE_MOTOR_2_PID = new PID(0,0,0);
-      public static final PID SHOOTER_MOTOR_PID = new PID(0,0,0);
+      public static final PID INTAKE_MOTOR_1_PID = new PID(0.008,0,0);
+      public static final PID INTAKE_MOTOR_2_PID = new PID(0.008,0,0);
+      public static final PID SHOOTER_MOTOR_PID = new PID(0.0008,0,0);
 
       public static final int INTAKESPEED = 2000;
-    }
-
-    public static final class ClimberConstants{
-      public static final int CLIMBER_MOTOR_1_ID = 20;
-      public static final int CLIMBER_MOTOR_2_ID = 21;
     }
 
     public static final class CalculateShooterRpmConstants{
@@ -219,15 +212,15 @@ public final class Constants
       public static final double CAMERA_HEIGHT = 0.75;
       public static final double TARGET_HEIGHT = 2.64;
       public static final double MOUNTING_ANGLE = 25.0;
+      public static final double RPM_FUDGE_FACTOR = 1.10;
     } 
 
     public static final class ClimbConstants {
 
-        public static final int MOTOR1_ID = 0;
-        public static final int MOTOR2_ID = 0;
+        public static final int MOTOR1_ID = 20;
+        public static final int MOTOR2_ID = 21;
 
-        public static final PID MOTOR1PID = new PID(0,0 , 0);
-        public static final PID motor2PID = new PID(0,0 , 0);
+        public static final PID MOTOR1PID = new PID(0.008,0 , 0); //only one motor, remember feed forward for climb
         public static final double DRIVE = 0;
         public static final double L1 = 0;
         public static final double RESET = 3;

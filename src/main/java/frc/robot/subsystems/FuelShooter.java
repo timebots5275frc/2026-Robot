@@ -12,7 +12,6 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -117,38 +116,70 @@ public class FuelShooter extends SubsystemBase {
 
   //does the calculations in HubAimCommand
   public double calculateRPMFromLimelight(
-        double tx, 
+        double tx,
         double ty,
-        double thetaDeg
-        ) {
+        double shooterAngleDeg
+) {
 
-    // Convert angles to radians
-    double totalAngleRad = Math.toRadians(ty + Constants.CalculateShooterRpmConstants.MOUNTING_ANGLE);
-    double thetaRad = Math.toRadians(thetaDeg);
+    // --- Camera geometry (distance calculation) ---
+    double cameraAngleRad = Math.toRadians(
+            ty + Constants.CalculateShooterRpmConstants.MOUNTING_ANGLE
+    );
 
-    // Height difference
-    double deltaH = Constants.CalculateShooterRpmConstants.TARGET_HEIGHT - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
+    double deltaH =
+            Constants.CalculateShooterRpmConstants.TARGET_HEIGHT
+            - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
 
-    // Horizontal distance to target
-    // double dx = deltaH / Math.tan(totalAngleRad);
-    double dx = (deltaH / Math.tan(totalAngleRad)) * Math.cos(Math.toRadians(tx));
+    // Forward distance from camera to target
+    double forwardDistance = deltaH / Math.tan(cameraAngleRad);
 
+    // Compensate for Limelight yaw (tx)
+    double dx = forwardDistance / Math.cos(Math.toRadians(tx));
 
-    // Projectile motion denominator
+    // --- Shooter physics (ballistic calculation) ---
+    double thetaRad = Math.toRadians(shooterAngleDeg);
+
     double denominator =
-            2.0 * Math.pow(Math.cos(thetaRad), 2.0)
+            2.0
+            * Math.pow(Math.cos(thetaRad), 2.0)
             * (dx * Math.tan(thetaRad) - deltaH);
 
     if (denominator <= 0.0) {
-        throw new IllegalArgumentException("Target unreachable at this angle.");
+        throw new IllegalArgumentException(
+                "Target unreachable at this distance/angle"
+        );
     }
 
-    // Required exit velocity
-    double v0 = Math.sqrt(Constants.CalculateShooterRpmConstants.GRAVITY * dx * dx / denominator);
+    double v0 = Math.sqrt(
+            Constants.CalculateShooterRpmConstants.GRAVITY
+            * dx * dx
+            / denominator
+    );
 
-    // Convert linear velocity to wheel RPM
-    return (60.0 / (2.0 * Math.PI * Constants.CalculateShooterRpmConstants.WHEEL_RADIUS)) * v0;
+    // --- Convert linear velocity to wheel RPM ---
+    double rpm =
+            (60.0 / (2.0 * Math.PI
+            * Constants.CalculateShooterRpmConstants.WHEEL_RADIUS))
+            * v0;
+
+    // --- Empirical correction (tune this on the robot) ---
+    rpm *= Constants.CalculateShooterRpmConstants.RPM_FUDGE_FACTOR;
+
+    // --- Optional debugging ---
+    /*
+    System.out.println(
+        String.format(
+            "dx=%.2f m | shooterAngle=%.1f deg | rpm=%.0f",
+            dx,
+            shooterAngleDeg,
+            rpm
+        )
+    );
+    */
+
+    return rpm;
 }
+
 
   @Override
   public void periodic() {

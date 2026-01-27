@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import com.revrobotics.spark.SparkBase.ControlType;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CANDriveSubsystem;
@@ -71,19 +69,6 @@ public class HubAimCommand extends Command {
             fs.ShooterPID.setReference(4000, ControlType.kVelocity);
         }
 
-        //dont need because tank drive
-        //STOP to not have wiggles
-        // if (Math.abs(tx) < allowedError) {
-        //     drive.driveArcade(0,0);
-        //     return;
-        // }
-
-        // double correctionDeg = tx * kP;
-        // double correctionRad = Math.toRadians(correctionDeg);
-
-        // correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
-
-        // drive.driveArcade( 0, correctionRad);
     }
 
     // Called once the command ends or is interrupted.
