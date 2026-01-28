@@ -44,6 +44,8 @@ public class FuelShooter extends SubsystemBase {
         PersistMode.kPersistParameters);
 
     shooterPID = shooterMotor.getClosedLoopController();
+
+    
   }
 
   public void SetShooterState(FuelShooterState state){
@@ -136,10 +138,21 @@ public class FuelShooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+
+
     SmartDashboard.putNumber("rpm", shooterRPM);
     SmartDashboard.putNumber("tx", tx);
     SmartDashboard.putNumber("ty", ty);
     SmartDashboard.putNumber("shooter angle degree", shooterAngleDeg);
     SmartDashboard.putNumber("dx", dx);
+  }
+
+  public FuelShooterState getShooterState() {
+    return state;
+  }
+
+  public SparkMax getMotor() {
+    return shooterMotor;
   }
 }

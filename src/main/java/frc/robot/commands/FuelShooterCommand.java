@@ -4,37 +4,39 @@
 
 package frc.robot.commands;
 
+import com.revrobotics.spark.SparkBase.ControlType;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+
 import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.FuelShooter.FuelShooterState;
 import frc.robot.subsystems.Vision.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class FuelShooterCommand extends InstantCommand {
+public class FuelShooterCommand extends Command {
 
   
   private Vision vision;
 
   private boolean end = false;
 
-  /** Creates a new FuelErectorCommand. */
+  
 
   private FuelShooter shooter;
   private FuelShooterState shooterState;
   
 
-  public FuelShooterCommand(FuelShooter fs, FuelShooterState shooterState) {
+  public FuelShooterCommand(FuelShooter fs, Vision vision, FuelShooterState shooterState) {
     
     
     // Use addRequirements() here to declare subsystem dependencies.
 
-    // this.vision = vision;
+    this.vision = vision;
     this.shooterState = shooterState;
     this.shooter = fs;
 
     addRequirements(shooter);
-    // addRequirements(vision);
+     addRequirements(vision);
   }
 
   // Called when the command is initially scheduled.
@@ -46,7 +48,17 @@ public class FuelShooterCommand extends InstantCommand {
   
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
+  public void execute() { 
+    switch(shooterState){
+      case CHARGEMOTOR: 
+      break;
+      case NONE:
+      break;
+      case FEEDBALL: // move feeding motors
+        break;
+      case LOCKTOHUB: // lock on
+        break;
+    }
       
   }
 

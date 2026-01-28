@@ -9,13 +9,16 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.FuelShooterCommand;
 // import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.HubAimCommand;
+import frc.robot.commands.shoot.ChargeMotor;
+import frc.robot.commands.shoot.LockOnHub;
+import frc.robot.subsystems.CANDriveSubsystem;
 // import frc.robot.commands.ResetClimb;
 // import frc.robot.commands.TeleopJoystickDrive;
 // import frc.robot.commands.auto.AutoDrive;
 // import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.FuelShooter;
-import frc.robot.subsystems.Climb.ClimbStates;
+
 import frc.robot.subsystems.FuelShooter.FuelShooterState;
 import frc.robot.subsystems.Input.Input;
 
@@ -45,7 +48,7 @@ public class RobotContainer {
     // TeleopJoystickDrive teleJoyDrive;
     GenericHID bBoard;
     Vision vision;
-    // CANDriveSubsystem tankDrive;
+    CANDriveSubsystem tankDrive;
     FuelShooter fs;
     Climb climb;
 
@@ -96,7 +99,10 @@ public class RobotContainer {
     //pigeon
     //new JoystickButton(joy, 8).onTrue(new InstantCommand(swerveDrive::resetPigeon, swerveDrive));
     
-    new JoystickButton(joy, 1).onTrue(new FuelShooterCommand(fs, FuelShooterState.CHARGEMOTOR));
+    new JoystickButton(joy, 1).onTrue(new FuelShooterCommand(fs, vision, FuelShooterState.LOCKTOHUB));
+    
+
+    new JoystickButton(joy, 2).onTrue(new SequentialCommandGroup(new LockOnHub(tankDrive, vision), new ChargeMotor(fs, vision) )); // add feedfuel
     // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.DRIVE)); //climb to drive
