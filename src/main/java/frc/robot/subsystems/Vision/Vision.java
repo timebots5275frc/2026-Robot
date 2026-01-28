@@ -20,10 +20,10 @@ public class Vision extends SubsystemBase {
   private int aprilTagID = -1;
   private double horizontalOffsetFromAprilTag;
 
-  private Vector3 avgAprilTagPosInRobotSpace;
+  private Vector3 avgAprilTagPosInRobotSpace = Vector3.zero;
   private ArrayList<Vector3> aprilTagPosInRobotSpaceValues = new ArrayList<Vector3>();
 
-  private Vector3 avgAprilTagRotInRobotSpace;
+  private Vector3 avgAprilTagRotInRobotSpace = Vector3.zero;
   private ArrayList<Vector3> aprilTagRotInRobotSpaceValues = new ArrayList<Vector3>();
 
   private Vector3 avgRobotPosInFieldSpace;

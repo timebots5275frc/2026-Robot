@@ -1,188 +1,145 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
-
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class FuelShooter extends SubsystemBase {
-  /** Creates a new FuelErector. */
 
-  SparkMax IntakeMotor1;
-  private SparkClosedLoopController IntakePIDOne;
-  SparkMax IntakeMotor2;
-  private SparkClosedLoopController IntakePIDTwo;
-  SparkMax shooterMotor;
-  public SparkClosedLoopController ShooterPID; //shooter pid is null design way around for limelight testing
-                                               //add shooter motor controller and motor on tuesday to get around this problem
-  private AbsoluteEncoder ShooterEncoder;
-  
-  private Shooter shooterState = Shooter.NONE;
-  private double shooterRPM = 4000;
-  private boolean feedingFuel = false;
-  public double dx;
+  private SparkMax shooterMotor;
+  public SparkClosedLoopController shooterPID;
 
-  public enum Shooter{
-    // INTAKE,
-    // OUTTAKE,
-    SHOOT,
-    NONE;
+  private double shooterRPM = 0.0;
+
+  private double tx, ty, shooterAngleDeg;
+
+  private FuelShooterState state;
+
+  /** Distance to target (meters) for dashboard/debug */
+  public double dx = 0.0;
+
+  public enum FuelShooterState{
+    CHARGEMOTOR,
+    NONE,
+    FEEDBALL,
+    LOCKTOHUB
   }
 
   public FuelShooter() {
-    
-    // IntakeMotor1 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, SparkLowLevel.MotorType.kBrushless);
-    // Constants.FuelShooterConstants.motor1PID.setSparkMaxPID(IntakeMotor1, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    //IntakePIDOne = IntakeMotor1.getClosedLoopController();
+    shooterMotor =
+        new SparkMax(
+            Constants.FuelShooterConstants.SHOOTER_MOTOR_ID,
+            SparkLowLevel.MotorType.kBrushless);
 
-    // IntakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, SparkLowLevel.MotorType.kBrushless);
-    // Constants.FuelShooterConstants.motor2PID.setSparkMaxPID(IntakeMotor2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    // IntakePIDTwo = IntakeMotor2.getClosedLoopController();
+    Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setSparkMaxPID(
+        shooterMotor,
+        ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
-    shooterMotor = new SparkMax(Constants.FuelShooterConstants.SHOOTER_MOTOR_ID, SparkLowLevel.MotorType.kBrushless);
-    Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setSparkMaxPID(shooterMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    ShooterPID = shooterMotor.getClosedLoopController();
-    
+    shooterPID = shooterMotor.getClosedLoopController();
   }
 
-  public void Shooter(){
+  public void SetShooterState(FuelShooterState state){
+    this.state = state;
+    UpdateShooterState(state);
+  }
 
-    switch (shooterState) {
-      case NONE: feedingFuel = false;
-                 ShooterPID.setReference(0, ControlType.kCurrent);
+  public void UpdateShooterState(FuelShooterState state){
+    switch(state){
+      case CHARGEMOTOR: shooterPID.setReference(500, ControlType.kVelocity);
       break;
-      // case INTAKE: feedingFuel = true;
-
-      // break;
-      // case OUTTAKE: IntakePIDOne.setReference(-Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
-      //               IntakePIDTwo.setReference(-Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
-      //               ShooterPID.setReference(0, ControlType.kVelocity);
-      // break;
-      case SHOOT: IntakePIDOne.setReference(0, ControlType.kVelocity);
-                  IntakePIDTwo.setReference(0, ControlType.kVelocity);
-                  ShooterPID.setReference(shooterRPM, ControlType.kVelocity);
+      case NONE: shooterPID.setReference(0, ControlType.kCurrent);
       break;
-      default: ShooterPID.setReference(0, ControlType.kCurrent);
-               IntakePIDOne.setReference(0, ControlType.kCurrent);
-               IntakePIDTwo.setReference(0, ControlType.kCurrent);
-      
+      case FEEDBALL: // move feeding motors
+        break;
+      case LOCKTOHUB: // lock on
+        break;
     }
-
   }
 
-//   public void feedFuel() {
-//     if (feedingFuel == true) return;
-//       IntakePIDOne.setReference(Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
-//       IntakePIDTwo.setReference(-Constants.FuelShooterConstants.IntakeSpeed, ControlType.kVelocity);
-//       feedingFuel = true;
-//     }
-
-//   public void stopFeedingFuel() {
-//     if (feedingFuel == false) return;
-//       IntakePIDOne.setReference(0, ControlType.kCurrent);
-//       IntakePIDTwo.setReference(0, ControlType.kCurrent);
-//       feedingFuel = false;
-//     }
-
-  
-
-  public void setState(Shooter state) {
-    shooterState = state;
-    Shooter();
+  /** Set shooter velocity in RPM */
+  public void setShooterRPM(double rpm) {
+    shooterRPM = rpm;
+    shooterPID.setReference(rpm, ControlType.kVelocity);
   }
 
-//   public void setShooterRPM(double rpm) {
-//     shooterRPM = rpm;
-//     Shooter();
-//   } 
+  /** Stop shooter safely */
+  public void stopShooter() {
+    shooterRPM = 0.0;
+    shooterPID.setReference(0.0, ControlType.kVelocity);
+  }
 
-//   public boolean shooterAtTargetRPM() {
-//       if(shooterMotor.getEncoder().getVelocity() == shooterRPM && shooterRPM != 0) {
-//         return true;
-//       }
-//       return false;
-//   }
-
-  //does the calculations in HubAimCommand
   public double calculateRPMFromLimelight(
-        double tx,
-        double ty,
-        double shooterAngleDeg
-) {
-
-    // --- Camera geometry (distance calculation) ---
+      double tx,
+      double ty,
+      double shooterAngleDeg
+  ) {
+    this.tx = tx;
+    this.ty = ty;
+    this.shooterAngleDeg = shooterAngleDeg;
+    // --- Camera geometry ---
     double cameraAngleRad = Math.toRadians(
-            ty + Constants.CalculateShooterRpmConstants.MOUNTING_ANGLE
+        ty + Constants.CalculateShooterRpmConstants.MOUNTING_ANGLE
     );
 
     double deltaH =
-            Constants.CalculateShooterRpmConstants.TARGET_HEIGHT
-            - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
+        Constants.CalculateShooterRpmConstants.TARGET_HEIGHT
+        - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
 
-    // Forward distance from camera to target
+    // Distance straight ahead
     double forwardDistance = deltaH / Math.tan(cameraAngleRad);
 
-    // Compensate for Limelight yaw (tx)
-    double dx = forwardDistance / Math.cos(Math.toRadians(tx));
+    // Compensate for Limelight yaw
+    this.dx =
+        forwardDistance / Math.cos(Math.toRadians(tx));
 
-    // --- Shooter physics (ballistic calculation) ---
+    // --- Ballistics ---
     double thetaRad = Math.toRadians(shooterAngleDeg);
 
     double denominator =
-            2.0
-            * Math.pow(Math.cos(thetaRad), 2.0)
-            * (dx * Math.tan(thetaRad) - deltaH);
+        2.0
+        * Math.pow(Math.cos(thetaRad), 2.0)
+        * (dx * Math.tan(thetaRad) - deltaH)
+        * -1;
 
+    // If unreachable, return last RPM instead of crashing
     if (denominator <= 0.0) {
-        throw new IllegalArgumentException(
-                "Target unreachable at this distance/angle"
-        );
+      return shooterRPM;
     }
 
-    double v0 = Math.sqrt(
+    double v0 =
+        Math.sqrt(
             Constants.CalculateShooterRpmConstants.GRAVITY
             * dx * dx
             / denominator
-    );
+        );
 
-    // --- Convert linear velocity to wheel RPM ---
+    // --- Convert to wheel RPM ---
     double rpm =
-            (60.0 / (2.0 * Math.PI
+        (60.0
+            / (2.0 * Math.PI
             * Constants.CalculateShooterRpmConstants.WHEEL_RADIUS))
             * v0;
 
-    // --- Empirical correction (tune this on the robot) ---
+    // Empirical tuning
     rpm *= Constants.CalculateShooterRpmConstants.RPM_FUDGE_FACTOR;
 
-    // --- Optional debugging ---
-    /*
-    System.out.println(
-        String.format(
-            "dx=%.2f m | shooterAngle=%.1f deg | rpm=%.0f",
-            dx,
-            shooterAngleDeg,
-            rpm
-        )
-    );
-    */
-
     return rpm;
-}
-
+  }
 
   @Override
   public void periodic() {
-
+    SmartDashboard.putNumber("rpm", shooterRPM);
+    SmartDashboard.putNumber("tx", tx);
+    SmartDashboard.putNumber("ty", ty);
+    SmartDashboard.putNumber("shooter angle degree", shooterAngleDeg);
+    SmartDashboard.putNumber("dx", dx);
   }
 }

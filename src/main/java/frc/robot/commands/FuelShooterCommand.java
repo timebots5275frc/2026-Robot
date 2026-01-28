@@ -1,74 +1,67 @@
-// // Copyright (c) FIRST and other WPILib contributors.
-// // Open Source Software; you can modify and/or share it under the terms of
-// // the WPILib BSD license file in the root directory of this project.
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 
-// package frc.robot.commands;
+package frc.robot.commands;
 
-// import edu.wpi.first.wpilibj2.command.Command;
-// import frc.robot.subsystems.FuelShooter;
-// import frc.robot.subsystems.FuelShooter.Shooter;
-// // import frc.robot.subsystems.FuelShooter.Shooter;
-// import frc.robot.subsystems.Vision.Vision;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.FuelShooter;
+import frc.robot.subsystems.FuelShooter.FuelShooterState;
+import frc.robot.subsystems.Vision.Vision;
 
-// /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-// public class FuelShooterCommand extends Command {
+/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+public class FuelShooterCommand extends InstantCommand {
 
   
-//   private Vision vision;
+  private Vision vision;
 
-//   private boolean end = false;
+  private boolean end = false;
 
-//   /** Creates a new FuelErectorCommand. */
+  /** Creates a new FuelErectorCommand. */
 
-//   private FuelShooter shooter;
+  private FuelShooter shooter;
+  private FuelShooterState shooterState;
   
 
-//   public FuelShooterCommand(FuelShooter fs, Vision vision) {
+  public FuelShooterCommand(FuelShooter fs, FuelShooterState shooterState) {
     
     
-//     // Use addRequirements() here to declare subsystem dependencies.
+    // Use addRequirements() here to declare subsystem dependencies.
 
-//     this.vision = vision;
-//     this.shooter = fs;
+    // this.vision = vision;
+    this.shooterState = shooterState;
+    this.shooter = fs;
 
-//     addRequirements(shooter);
-//     addRequirements(vision);
-//   }
+    addRequirements(shooter);
+    // addRequirements(vision);
+  }
 
-//   // Called when the command is initially scheduled.
-//   @Override
-//   public void initialize() {
-//     double distance = vision.AprilTagPosInRobotSpace().magnitude();
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    shooter.SetShooterState(shooterState);
+  }
 
-//     double RPM = 4000;
-//     double r = 4;
-//     double velocity = (2*3.14*r*RPM)/60; //meters per second
+  
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+      
+  }
 
-//     shooter.setState(Shooter.SHOOT);
-//     shooter.setShooterRPM(RPM);
-//   }
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
 
-//   // Called every time the scheduler runs while the command is scheduled.
-//   @Override
-//   public void execute() {
-//       if (shooter.shooterAtTargetRPM()) {
-//         shooter.feedFuel();
-//       } else {
-//         shooter.stopFeedingFuel();
-//       }
-//   }
+    // shooter.setShooterRPM(0);
+    // shooter.setState(Shooter.NONE);
+  }
 
-//   // Called once the command ends or is interrupted.
-//   @Override
-//   public void end(boolean interrupted) {
-
-//     // shooter.setShooterRPM(0);
-//     // shooter.setState(Shooter.NONE);
-//   }
-
-//   // Returns true when the command should end.
-//   @Override
-//   public boolean isFinished() {
-//     return end;
-//   }
-// }
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return end;
+  }
+    
+}

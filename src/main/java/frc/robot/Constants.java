@@ -201,7 +201,7 @@ public final class Constants
 
       public static final PID INTAKE_MOTOR_1_PID = new PID(0.008,0,0);
       public static final PID INTAKE_MOTOR_2_PID = new PID(0.008,0,0);
-      public static final PID SHOOTER_MOTOR_PID = new PID(0.0008,0,0);
+      public static final PID SHOOTER_MOTOR_PID = new PID(0.0005,0,0.00001);
 
       public static final int INTAKESPEED = 2000;
     }

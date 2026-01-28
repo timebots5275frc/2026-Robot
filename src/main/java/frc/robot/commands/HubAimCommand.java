@@ -4,25 +4,25 @@ import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CANDriveSubsystem;
+// import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.Vision.Vision;
 
 public class HubAimCommand extends Command {
 
     private FuelShooter fs;
-    private CANDriveSubsystem drive;
+    // private CANDriveSubsystem drive;
     private Vision vision;
     // private SlewRateLimiter srl = new SlewRateLimiter(10);
     double tx = 0;
     double ty = 0;
 
-    public HubAimCommand(CANDriveSubsystem drive, Vision vision, FuelShooter fs) {
-        this.drive = drive;
+    public HubAimCommand(Vision vision, FuelShooter fs) {
+        // this.drive = drive;
         this.vision = vision;
         this.fs = fs;
 
-        addRequirements(drive);
+        // addRequirements(drive);
         addRequirements(vision);
         addRequirements(fs);
     }
@@ -45,7 +45,7 @@ public class HubAimCommand extends Command {
         double thetaDeg = Math.toDegrees(thetaRad); //launch angle in degrees
         tx = vision.HorizontalOffsetFromAprilTag(); //target pose
         
-        // if(vision.AprilTagRotInRobotSpace().y == null){ty = 0;} //doesnt work becuase cant  from double to null
+        // if(vision.AprilTagRotInRobotSpace() == null){ty = 0;} //doesnt work becuase cant  from double to null
         // else if(vision.AprilTagRotInRobotSpace().y >= 0){ty = vision.AprilTagRotInRobotSpace().y;} //target pose
         ty = vision.AprilTagRotInRobotSpace().y; //target pose
         double targetRPM; //target rpm
@@ -56,17 +56,28 @@ public class HubAimCommand extends Command {
         // double tx = vision.HorizontalOffsetFromAprilTag(); 
 
         if(vision.hasValidData() == true){
-            System.out.println("See April tag " + vision.AprilTagID());
-            targetRPM = fs.calculateRPMFromLimelight(tx,ty,thetaRad);
-            fs.ShooterPID.setReference(targetRPM, ControlType.kVelocity);
-            //prints distance and target rpm
-            SmartDashboard.putNumber("Shooter Distance", fs.dx);
-            SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
+            // System.out.println("See April tag " + vision.AprilTagID());
+            //18,27,26,25,21,24 - blue hub
+            //5,8,9,10,11,2 - red hub
+            if(
+                vision.AprilTagID() == 18 || vision.AprilTagID() == 27 || vision.AprilTagID() == 26 || //blue
+                vision.AprilTagID() == 25 || vision.AprilTagID() == 21 || vision.AprilTagID() == 24 || //blue
+                vision.AprilTagID() == 5  || vision.AprilTagID() == 8  || vision.AprilTagID() == 9  || //red
+                vision.AprilTagID() == 10 || vision.AprilTagID() == 11 || vision.AprilTagID() == 2  // //red
+              ){
+                //  System.out.println("See April tag " + vision.AprilTagID());
+                 targetRPM = fs.calculateRPMFromLimelight(tx,ty,thetaRad);
+                 fs.shooterPID.setReference(targetRPM, ControlType.kVelocity);
+                 //prints distance and target rpm
+                 SmartDashboard.putNumber("Shooter Distance", fs.dx);
+                 SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
+                 System.out.println("target RPM " + targetRPM);
+               }
         }
         if(vision.hasValidData() == false){
-            System.out.println("No valid data");
-            drive.driveArcade(0, 0);
-            fs.ShooterPID.setReference(4000, ControlType.kVelocity);
+            // System.out.println(vision.AprilTagID() + "no valid data");
+            // drive.driveArcade(0, 0);
+            fs.shooterPID.setReference(100, ControlType.kVelocity);
         }
 
     }

@@ -6,15 +6,17 @@ package frc.robot;
 
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.FuelShooterCommand;
+// import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.HubAimCommand;
-import frc.robot.commands.ResetClimb;
-import frc.robot.commands.TeleopJoystickDrive;
-import frc.robot.commands.auto.AutoDrive;
-import frc.robot.subsystems.CANDriveSubsystem;
+// import frc.robot.commands.ResetClimb;
+// import frc.robot.commands.TeleopJoystickDrive;
+// import frc.robot.commands.auto.AutoDrive;
+// import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.Climb.ClimbStates;
+import frc.robot.subsystems.FuelShooter.FuelShooterState;
 import frc.robot.subsystems.Input.Input;
 
 import frc.robot.subsystems.Vision.Vision;
@@ -40,10 +42,10 @@ public class RobotContainer {
 
     Joystick joy;
     Input input;
-    TeleopJoystickDrive teleJoyDrive;
+    // TeleopJoystickDrive teleJoyDrive;
     GenericHID bBoard;
     Vision vision;
-    CANDriveSubsystem tankDrive;
+    // CANDriveSubsystem tankDrive;
     FuelShooter fs;
     Climb climb;
 
@@ -56,7 +58,7 @@ public class RobotContainer {
     bBoard = new GenericHID(1);
     joy = new Joystick(0);
     input = new Input(joy);
-    tankDrive = new CANDriveSubsystem();
+    // tankDrive = new CANDriveSubsystem();
     fs = new FuelShooter();
     vision = new Vision();
     // fuelShooter = new FuelShooter();
@@ -65,7 +67,7 @@ public class RobotContainer {
 
     autonChooser.setDefaultOption("Drive ONLY", new SequentialCommandGroup(
       //new AutoDrive(MathConstants.INCH_TO_METER*22,1,tankDrive)
-      new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22, 1)
+      // new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22, 1)
     ));
 
     SmartDashboard.putData(autonChooser);
@@ -85,8 +87,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true);
-    tankDrive.setDefaultCommand(teleJoyDrive);
+    // teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true);
+    // tankDrive.setDefaultCommand(teleJoyDrive);
     
     
     //new JoystickButton(joy, 7).onTrue(new InstantCommand(tankDrive::flipFieldRelative ,tankDrive));
@@ -94,10 +96,11 @@ public class RobotContainer {
     //pigeon
     //new JoystickButton(joy, 8).onTrue(new InstantCommand(swerveDrive::resetPigeon, swerveDrive));
     
-    new JoystickButton(joy, 1).onTrue((new HubAimCommand(tankDrive, vision, fs))); //shoot with vision
-    new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1
-    new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.DRIVE)); //climb to drive
-    new JoystickButton(joy, 2).whileTrue(new ResetClimb(climb)); //reset climb
+    new JoystickButton(joy, 1).onTrue(new FuelShooterCommand(fs, FuelShooterState.CHARGEMOTOR));
+    // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
+    // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1
+    // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.DRIVE)); //climb to drive
+    // new JoystickButton(joy, 2).whileTrue(new ResetClimb(climb)); //reset climb
 
     // new JoystickButton(bBoard, Constants.ButtonConstants.INCREASE_LEFT_MOTOR).onTrue(new ChangeMotorSpeed(tankDrive, 0.1, false));
 
