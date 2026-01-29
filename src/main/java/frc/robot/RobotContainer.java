@@ -4,11 +4,8 @@
 
 package frc.robot;
 
-import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.FuelShooterCommand;
-// import frc.robot.commands.ClimbCommand;
-import frc.robot.commands.HubAimCommand;
 import frc.robot.commands.shoot.ChargeMotor;
 import frc.robot.commands.shoot.LockOnHub;
 import frc.robot.subsystems.CANDriveSubsystem;
@@ -28,7 +25,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -102,6 +98,11 @@ public class RobotContainer {
     new JoystickButton(joy, 1).onTrue(new FuelShooterCommand(fs, vision, FuelShooterState.LOCKTOHUB));
     
 
+    /*
+     * 1.Locks onto hub
+     * 2.Finds nescasarry RPM & charges motor
+     * 3.feeds fuel into shooter
+     */
     new JoystickButton(joy, 2).onTrue(new SequentialCommandGroup(new LockOnHub(tankDrive, vision), new ChargeMotor(fs, vision) )); // add feedfuel
     // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1

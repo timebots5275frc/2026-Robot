@@ -49,10 +49,6 @@ public class HubAimCommand extends Command {
         // else if(vision.AprilTagRotInRobotSpace().y >= 0){ty = vision.AprilTagRotInRobotSpace().y;} //target pose
         ty = vision.AprilTagRotInRobotSpace().y; //target pose
         double targetRPM; //target rpm
-
-        double allowedError = 1.0; //degrees //TODO 
-        double kP = 0.1; // TODO
-        double maxRot = 1; //TODO
         // double tx = vision.HorizontalOffsetFromAprilTag(); 
 
         if(vision.hasValidData() == true){
