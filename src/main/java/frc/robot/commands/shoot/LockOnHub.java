@@ -1,9 +1,7 @@
 package frc.robot.commands.shoot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.Vision.Vision;
 
@@ -37,26 +35,35 @@ public class LockOnHub extends Command {
             drive.driveArcade(0, 0);
             return;
         }
-        double allowedError = 1.0; //degrees //TODO 
-        double kP = 0.1; // TODO
-        double maxRot = 1; //TODO
-        double tx = vision.HorizontalOffsetFromAprilTag(); 
+        if(
+            vision.AprilTagID() == 18 || vision.AprilTagID() == 27 || vision.AprilTagID() == 26 || //blue
+            vision.AprilTagID() == 25 || vision.AprilTagID() == 21 || vision.AprilTagID() == 24 || //blue
+            vision.AprilTagID() == 5  || vision.AprilTagID() == 8  || vision.AprilTagID() == 9  || //red
+            vision.AprilTagID() == 10 || vision.AprilTagID() == 11 || vision.AprilTagID() == 2  // //red
+        ) {
+            double allowedError = 0.5; //degrees //TODO 
+            double kP = 0.1; // TODO is this neccasary
+            double maxRot = 1; //TODO
+            double tx = vision.HorizontalOffsetFromAprilTag(); 
 
 
-        //STOP to not have wiggles
-        if (Math.abs(tx) < allowedError) {
-            drive.driveArcade(0, 0);
-            lockedOn = true;
-            return;
+            //STOP to not have wiggles
+            if (Math.abs(tx) < allowedError) {
+                drive.driveArcade(0, 0);
+                lockedOn = true;
+                return;
+            }
+            lockedOn = false;
+
+            double correctionDeg = tx * kP;
+            double correctionRad = Math.toRadians(correctionDeg);
+
+            correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
+
+            drive.driveArcade(0, correctionRad);
         }
-        lockedOn = false;
 
-        double correctionDeg = tx * kP;
-        double correctionRad = Math.toRadians(correctionDeg);
-
-        correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
-
-        drive.driveArcade(0, correctionRad);
+        
     }
 
     // Called once the command ends or is interrupted.
