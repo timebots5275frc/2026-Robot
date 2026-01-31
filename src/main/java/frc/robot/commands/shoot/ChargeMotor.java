@@ -65,6 +65,7 @@ public class ChargeMotor extends Command {
 
 
                  //prints distance and target rpm
+                 
                  SmartDashboard.putNumber("Shooter Distance", shooter.dx);
                  SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
                  System.out.println("target RPM " + targetRPM);
@@ -75,13 +76,13 @@ public class ChargeMotor extends Command {
             // drive.driveArcade(0, 0);
             shooter.shooterPID.setReference(100, ControlType.kVelocity);
         }
-
+        SmartDashboard.putBoolean("Charging Motor", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    SmartDashboard.putNumber("Encoder Velocity", shooter.getMotor().getEncoder().getVelocity());
   }
 
   // Called once the command ends or is interrupted.
@@ -92,12 +93,12 @@ public class ChargeMotor extends Command {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() { //TODO should i use the encoder or absolute encoder
+  public boolean isFinished() { 
     if (targetRPM == 0) {
       return false;
     }
-
-    if (shooter.getMotor().getEncoder().getVelocity() >= targetRPM - allowedError && shooter.getMotor().getEncoder().getVelocity() <= targetRPM + allowedError) {
+     SmartDashboard.putBoolean("Charging Motor", true);
+    if (shooter.getMotor().getEncoder().getVelocity() >= targetRPM - allowedError && shooter.getMotor().getAbsoluteEncoder().getVelocity() <= targetRPM + allowedError) {
       return true;
     } 
     return false;

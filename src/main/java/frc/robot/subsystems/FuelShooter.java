@@ -34,7 +34,9 @@ public class FuelShooter extends SubsystemBase {
     CHARGEMOTOR,
     NONE,
     FEEDBALL,
-    LOCKTOHUB
+    LOCKTOHUB;
+
+    
   }
 
   public FuelShooter() {
@@ -58,7 +60,7 @@ public class FuelShooter extends SubsystemBase {
 
   public void UpdateShooterState(FuelShooterState state){
     switch(state){
-      case CHARGEMOTOR: shooterPID.setReference(500, ControlType.kVelocity);
+      case CHARGEMOTOR: 
       break;
       case NONE: shooterPID.setReference(0, ControlType.kCurrent);
       break;
@@ -109,6 +111,7 @@ public class FuelShooter extends SubsystemBase {
     // Empirical tuning
     rpm *= Constants.CalculateShooterRpmConstants.RPM_FUDGE_FACTOR;
     //returns final rpm
+    SmartDashboard.putNumber("rpm", rpm);
     return rpm;
   }
 
@@ -119,6 +122,7 @@ public class FuelShooter extends SubsystemBase {
     SmartDashboard.putNumber("ty", ty);
     SmartDashboard.putNumber("shooter angle degree", shooterAngleDeg);
     SmartDashboard.putNumber("dx", dx);
+    
   }
 
   public FuelShooterState getShooterState() {
