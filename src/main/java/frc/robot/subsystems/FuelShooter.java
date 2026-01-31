@@ -17,9 +17,9 @@ public class FuelShooter extends SubsystemBase {
   private SparkMax shooterMotor;
   public SparkClosedLoopController shooterPID;
   private SparkMax intakeMotor1;
-  private SparkClosedLoopController intakePID1;
+  //private SparkClosedLoopController intakePID1;
   private SparkMax intakeMotor2;
-  private SparkClosedLoopController intakePID2;
+ // private SparkClosedLoopController intakePID2;
 
   private double shooterRPM = 0.0;
 
@@ -44,14 +44,14 @@ public class FuelShooter extends SubsystemBase {
     Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setSparkMaxPID(shooterMotor,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     shooterPID = shooterMotor.getClosedLoopController();
 
-    intakeMotor1 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID,SparkLowLevel.MotorType.kBrushless);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkMaxPID(intakeMotor1, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    intakePID1 = intakeMotor1.getClosedLoopController();
+  //   intakeMotor1 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID,SparkLowLevel.MotorType.kBrushless);
+  //   Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkMaxPID(intakeMotor1, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  //   intakePID1 = intakeMotor1.getClosedLoopController();
 
-    intakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, SparkLowLevel.MotorType.kBrushless);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkMaxPID(intakeMotor2, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-    intakePID2 = intakeMotor2.getClosedLoopController();
-  }
+  //   //intakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, SparkLowLevel.MotorType.kBrushless);
+  //   Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkMaxPID(intakeMotor2, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+  //   intakePID2 = intakeMotor2.getClosedLoopController();
+   }
 
   public void SetShooterState(FuelShooterState state){
     this.state = state;
@@ -64,8 +64,7 @@ public class FuelShooter extends SubsystemBase {
       break;
       case NONE: shooterPID.setReference(0, ControlType.kCurrent);
       break;
-      case FEEDBALL: intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
-                     intakePID2.setReference(-Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
+      case FEEDBALL: 
       break;
       case LOCKTOHUB: Vision.usingLimelight = true;
       break;
@@ -99,13 +98,13 @@ public class FuelShooter extends SubsystemBase {
     // --- Ballistics ---
     double thetaRad = Math.toRadians(shooterAngleDeg);
     //denominator
-    double denominator = 2.0 * Math.pow(Math.cos(thetaRad), 2.0) * (dx * Math.tan(thetaRad) - deltaH);
+    double denominator = (2.0 * Math.pow(Math.cos(thetaRad), 2.0) * (dx * Math.tan(thetaRad) - deltaH) * -1);
     //denominator checks
-    if (denominator < 0){return denominator*-1;} //converts denominator to positive
-    if (denominator > 0){return denominator;} //returns denominator as normal
+    // if (denominator < 0){return denominator*-1;} //converts denominator to positive
+    // if (denominator > 0){return denominator;} //returns denominator as normal
     if (denominator <= 0.0) {return shooterRPM;} // If unreachable, return last RPM instead of crashing
     //solves for velocity initial
-    double v0 = Math.sqrt(Constants.CalculateShooterRpmConstants.GRAVITY * dx * dx / denominator);
+    double v0 = Math.sqrt(Constants.CalculateShooterRpmConstants.GRAVITY * Math.pow(dx, 2) / denominator);
     // --- Convert to wheel RPM ---
     double rpm = (60.0 / (2.0 * Math.PI * Constants.CalculateShooterRpmConstants.WHEEL_RADIUS)) * v0;
     // Empirical tuning

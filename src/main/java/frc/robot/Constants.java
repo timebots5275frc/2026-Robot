@@ -209,9 +209,9 @@ public final class Constants
     public static final class CalculateShooterRpmConstants{
       public static final double GRAVITY = 9.8;
       public static final double WHEEL_RADIUS = 0.1016; //4 inch wheel radius 
-      public static final double CAMERA_HEIGHT = 0.0; //.75
-      public static final double TARGET_HEIGHT = 2.64;
-      public static final double MOUNTING_ANGLE = 25.0;
+      public static final double CAMERA_HEIGHT = 29.5 * 0.0254; //.75
+      public static final double TARGET_HEIGHT = 38 * 0.0254;
+      public static final double MOUNTING_ANGLE = 0.001;
       public static final double RPM_FUDGE_FACTOR = 1.10;
     } 
 
