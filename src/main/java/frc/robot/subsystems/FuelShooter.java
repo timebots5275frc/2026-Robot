@@ -92,16 +92,19 @@ public class FuelShooter extends SubsystemBase {
     //change in height from camera to target
     double deltaH = Constants.CalculateShooterRpmConstants.TARGET_HEIGHT - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
     // Distance straight ahead
-    double forwardDistance = deltaH / Math.tan(cameraAngleRad);
+    double forwardDistance = 51 * 0.0254 /*deltaH / Math.tan(cameraAngleRad) */;
     // Compensate for Limelight yaw
     this.dx = forwardDistance / Math.cos(Math.toRadians(tx));
     // --- Ballistics ---
     double thetaRad = Math.toRadians(shooterAngleDeg);
     //denominator
-    double denominator = (2.0 * Math.pow(Math.cos(thetaRad), 2.0) * (dx * Math.tan(thetaRad) - deltaH) * -1);
+    double denominator = (2.0 * dx * dx * (dx * Math.tan(thetaRad) - deltaH));
     //denominator checks
-    // if (denominator < 0){return denominator*-1;} //converts denominator to positive
-    // if (denominator > 0){return denominator;} //returns denominator as normal
+    if (denominator <= 0){ 
+     // denominator *= -1;
+      return 0;
+    } //converts denominator to positive
+   //  if (denominator > 0){return denominator;} //returns denominator as normal
     if (denominator <= 0.0) {return shooterRPM;} // If unreachable, return last RPM instead of crashing
     //solves for velocity initial
     double v0 = Math.sqrt(Constants.CalculateShooterRpmConstants.GRAVITY * Math.pow(dx, 2) / denominator);

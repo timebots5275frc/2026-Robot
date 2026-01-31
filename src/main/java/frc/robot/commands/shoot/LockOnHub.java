@@ -42,7 +42,7 @@ public class LockOnHub extends Command {
             vision.AprilTagID() == 5  || vision.AprilTagID() == 8  || vision.AprilTagID() == 9  || //red
             vision.AprilTagID() == 10 || vision.AprilTagID() == 11 || vision.AprilTagID() == 2  // //red
         ) {
-            double allowedError = 10; //degrees //TODO 
+            double allowedError = 100; //degrees //TODO 
             double kP = 0.1; // TODO is this neccasary
             double maxRot = 1; //TODO
             double tx = vision.HorizontalOffsetFromAprilTag(); 
@@ -79,6 +79,7 @@ public class LockOnHub extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
+        SmartDashboard.putBoolean("Locked in", lockedOn);
         return lockedOn;
     }
 
