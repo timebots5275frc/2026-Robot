@@ -62,7 +62,7 @@ public class HubAimCommand extends Command {
                 vision.AprilTagID() == 10 || vision.AprilTagID() == 11 || vision.AprilTagID() == 2  // //red
               ){
                 //  System.out.println("See April tag " + vision.AprilTagID());
-                 targetRPM = fs.calculateRPMFromLimelight(tx,ty,thetaRad);
+                 targetRPM = fs.calculateRPMFromLimelight(tx,ty,thetaRad, 1);
                  fs.shooterPID.setReference(targetRPM, ControlType.kVelocity);
                  //prints distance and target rpm
                  SmartDashboard.putNumber("Shooter Distance", fs.dx);

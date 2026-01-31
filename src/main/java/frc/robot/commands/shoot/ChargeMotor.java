@@ -44,6 +44,7 @@ public class ChargeMotor extends Command {
         double thetaDeg = Math.toDegrees(thetaRad); //launch angle in degrees
         double tx = vision.HorizontalOffsetFromAprilTag(); //target pose
         double ty = vision.AprilTagRotInRobotSpace().y;
+        double dx = vision.AprilTagPosInRobotSpace().magnitude();
         
 
         if(vision.hasValidData() == true){
@@ -58,7 +59,7 @@ public class ChargeMotor extends Command {
               ){
                 //  System.out.println("See April tag " + vision.AprilTagID());
 
-                 targetRPM = shooter.calculateRPMFromLimelight(tx,ty,thetaRad);
+                 targetRPM = shooter.calculateRPMFromLimelight(tx,ty,thetaRad,dx);
 
 
                  shooter.shooterPID.setReference(targetRPM, ControlType.kVelocity);

@@ -83,31 +83,39 @@ public class FuelShooter extends SubsystemBase {
     shooterPID.setReference(0.0, ControlType.kVelocity);
   }
 
-  public double calculateRPMFromLimelight(double tx, double ty, double shooterAngleDeg) {
+  public double calculateRPMFromLimelight(double tx, double ty, double shooterAngleDeg, double dx) {
     this.tx = tx;
     this.ty = ty;
     this.shooterAngleDeg = shooterAngleDeg;
+    
+
     // --- Camera geometry ---
-    double cameraAngleRad = Math.toRadians(ty + Constants.CalculateShooterRpmConstants.MOUNTING_ANGLE);
+    //double cameraAngleRad = Math.toRadians(ty+ Constants.CalculateShooterRpmConstants.MOUNTING_ANGLE);
     //change in height from camera to target
     double deltaH = Constants.CalculateShooterRpmConstants.TARGET_HEIGHT - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
     // Distance straight ahead
-    double forwardDistance = 51 * 0.0254 /*deltaH / Math.tan(cameraAngleRad) */;
+    //double forwardDistance = deltaH / Math.tan(cameraAngleRad);
+    //SmartDashboard.putNumber("foward distance", forwardDistance);
     // Compensate for Limelight yaw
-    this.dx = forwardDistance / Math.cos(Math.toRadians(tx));
+    //this.dx =  forwardDistance / Math.cos(Math.toRadians(tx));
+    this.dx = dx;
     // --- Ballistics ---
     double thetaRad = Math.toRadians(shooterAngleDeg);
+    double cosTheta = Math.cos(thetaRad);
     //denominator
-    double denominator = (2.0 * dx * dx * (dx * Math.tan(thetaRad) - deltaH));
+    double denominator =
+    2.0 * cosTheta * cosTheta * (deltaH - dx * Math.tan(thetaRad));
     //denominator checks
-    if (denominator <= 0){ 
-     // denominator *= -1;
-      return 0;
-    } //converts denominator to positive
+    // if (denominator <= 0){ 
+    //  // denominator *= -1;
+    //   return 0;
+    // } //converts denominator to positive
    //  if (denominator > 0){return denominator;} //returns denominator as normal
-    if (denominator <= 0.0) {return shooterRPM;} // If unreachable, return last RPM instead of crashing
+    SmartDashboard.putNumber("dx * tan(theta)", dx * Math.tan(thetaRad));
+    SmartDashboard.putNumber("deltaH", deltaH);
+     if (denominator <= 0.0) {return shooterRPM;} // If unreachable, return last RPM instead of crashing
     //solves for velocity initial
-    double v0 = Math.sqrt(Constants.CalculateShooterRpmConstants.GRAVITY * Math.pow(dx, 2) / denominator);
+    double v0 = Math.sqrt(Constants.CalculateShooterRpmConstants.GRAVITY * dx * dx / denominator);
     // --- Convert to wheel RPM ---
     double rpm = (60.0 / (2.0 * Math.PI * Constants.CalculateShooterRpmConstants.WHEEL_RADIUS)) * v0;
     // Empirical tuning
