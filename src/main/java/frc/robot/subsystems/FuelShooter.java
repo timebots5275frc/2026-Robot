@@ -82,61 +82,33 @@ public class FuelShooter extends SubsystemBase {
     shooterPID.setReference(0.0, ControlType.kVelocity);
   }
 
-  public double calculateRPMFromLimelight(
-      double tx,
-      double ty,
-      double shooterAngleDeg
-  ) {
+  public double calculateRPMFromLimelight(double tx, double ty, double shooterAngleDeg) {
     this.tx = tx;
     this.ty = ty;
     this.shooterAngleDeg = shooterAngleDeg;
     // --- Camera geometry ---
-    double cameraAngleRad = Math.toRadians(
-        ty + Constants.CalculateShooterRpmConstants.MOUNTING_ANGLE
-    );
-
-    double deltaH =
-        Constants.CalculateShooterRpmConstants.TARGET_HEIGHT
-        - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
-
+    double cameraAngleRad = Math.toRadians(ty + Constants.CalculateShooterRpmConstants.MOUNTING_ANGLE);
+    //change in height from camera to target
+    double deltaH = Constants.CalculateShooterRpmConstants.TARGET_HEIGHT - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
     // Distance straight ahead
     double forwardDistance = deltaH / Math.tan(cameraAngleRad);
-
     // Compensate for Limelight yaw
-    this.dx =
-        forwardDistance / Math.cos(Math.toRadians(tx));
-
+    this.dx = forwardDistance / Math.cos(Math.toRadians(tx));
     // --- Ballistics ---
     double thetaRad = Math.toRadians(shooterAngleDeg);
-
-    double denominator =
-        2.0
-        * Math.pow(Math.cos(thetaRad), 2.0)
-        * (dx * Math.tan(thetaRad) - deltaH)
-        * -1;
-
-    // If unreachable, return last RPM instead of crashing
-    if (denominator <= 0.0) {
-      return shooterRPM;
-    }
-
-    double v0 =
-        Math.sqrt(
-            Constants.CalculateShooterRpmConstants.GRAVITY
-            * dx * dx
-            / denominator
-        );
-
+    //denominator
+    double denominator = 2.0 * Math.pow(Math.cos(thetaRad), 2.0) * (dx * Math.tan(thetaRad) - deltaH);
+    //denominator checks
+    if (denominator < 0){return denominator*-1;} //converts denominator to positive
+    if (denominator > 0){return denominator;} //returns denominator as normal
+    if (denominator <= 0.0) {return shooterRPM;} // If unreachable, return last RPM instead of crashing
+    //solves for velocity initial
+    double v0 = Math.sqrt(Constants.CalculateShooterRpmConstants.GRAVITY * dx * dx / denominator);
     // --- Convert to wheel RPM ---
-    double rpm =
-        (60.0
-            / (2.0 * Math.PI
-            * Constants.CalculateShooterRpmConstants.WHEEL_RADIUS))
-            * v0;
-
+    double rpm = (60.0 / (2.0 * Math.PI * Constants.CalculateShooterRpmConstants.WHEEL_RADIUS)) * v0;
     // Empirical tuning
     rpm *= Constants.CalculateShooterRpmConstants.RPM_FUDGE_FACTOR;
-
+    //returns final rpm
     return rpm;
   }
 
