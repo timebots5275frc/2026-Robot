@@ -17,9 +17,9 @@ public class FuelShooter extends SubsystemBase {
   private SparkMax shooterMotor;
   public SparkClosedLoopController shooterPID;
   private SparkMax intakeMotor1;
-  //private SparkClosedLoopController intakePID1;
+  private SparkClosedLoopController intakePID1;
   private SparkMax intakeMotor2;
- // private SparkClosedLoopController intakePID2;
+ private SparkClosedLoopController intakePID2;
 
   private double shooterRPM = 0.0;
 
@@ -44,13 +44,13 @@ public class FuelShooter extends SubsystemBase {
     Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setSparkMaxPID(shooterMotor,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     shooterPID = shooterMotor.getClosedLoopController();
 
-  //   intakeMotor1 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID,SparkLowLevel.MotorType.kBrushless);
-  //   Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkMaxPID(intakeMotor1, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  //   intakePID1 = intakeMotor1.getClosedLoopController();
+     intakeMotor1 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID,SparkLowLevel.MotorType.kBrushless);
+     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkMaxPID(intakeMotor1, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+     intakePID1 = intakeMotor1.getClosedLoopController();
 
-  //   //intakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, SparkLowLevel.MotorType.kBrushless);
-  //   Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkMaxPID(intakeMotor2, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-  //   intakePID2 = intakeMotor2.getClosedLoopController();
+     //intakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, SparkLowLevel.MotorType.kBrushless);
+     Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkMaxPID(intakeMotor2, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+     intakePID2 = intakeMotor2.getClosedLoopController();
    }
 
   public void SetShooterState(FuelShooterState state){
@@ -63,8 +63,11 @@ public class FuelShooter extends SubsystemBase {
       case CHARGEMOTOR: 
       break;
       case NONE: shooterPID.setReference(0, ControlType.kCurrent);
+        intakePID1.setReference(0, ControlType.kCurrent);
+        intakePID2.setReference(0, ControlType.kCurrent);
       break;
-      case FEEDBALL: 
+      case FEEDBALL: intakePID1.setReference(Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
+        intakePID2.setReference(Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
       break;
       case LOCKTOHUB: Vision.usingLimelight = true;
       break;

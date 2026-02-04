@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.FuelShooter;
+import frc.robot.subsystems.FuelShooter.FuelShooterState;
 import frc.robot.subsystems.Vision.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -30,6 +31,15 @@ public class ChargeMotor extends Command {
     addRequirements(shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
+  public ChargeMotor(FuelShooter shooter, Vision vision, int RPM) {
+    this.vision = vision;
+    this.shooter = shooter;
+    this.targetRPM = RPM;
+
+    addRequirements(vision);
+    addRequirements(shooter);
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
 
   // Called when the command is initially scheduled.
   @Override
@@ -37,7 +47,8 @@ public class ChargeMotor extends Command {
 
         vision.setUsingLimelight(true);
 
-        
+        if(targetRPM != 0) return;
+
         // double x0 = vision.RobotPosInFieldSpace().x; // robot X pose
         // double y0 = vision.RobotPosInFieldSpace().y; // robot Y pose
         double thetaRad = 0.977384; //launch angle in radians
@@ -90,6 +101,9 @@ public class ChargeMotor extends Command {
   @Override
   public void end(boolean interrupted) {
     vision.setUsingLimelight(false);
+    if(interrupted) {
+      shooter.SetShooterState(FuelShooterState.NONE);
+    }
   }
 
   // Returns true when the command should end.

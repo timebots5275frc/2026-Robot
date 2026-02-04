@@ -25,6 +25,7 @@ public final class Constants
   public static final double ALGAE_INTAKE_PIVOT_ROTATIONS_PER_DEGREE =1;//((double)(150*36/(double)24)/360);
   public static final double CLIMBER_ROTATIONS_PER_DEGREE = 125/(double)360;
 
+
   //Operator Constants
   public static final class OperatorConstants {
     // Port constants for driver and operator controllers. These should match the
@@ -204,6 +205,8 @@ public final class Constants
       public static final PID SHOOTER_MOTOR_PID = new PID(0.0006,0,0.0000003);
 
       public static final int INTAKESPEED = 2000;
+      public static final double FEEDSPEED = 500; 
+      public static final int DEFAULT_SHOOTER_RPM = 4000;
     }
 
     public static final class CalculateShooterRpmConstants{
