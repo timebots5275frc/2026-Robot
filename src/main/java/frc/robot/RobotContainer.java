@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.FuelShooterCommand;
+import frc.robot.commands.TeleopJoystickDrive;
 import frc.robot.commands.shoot.ChargeMotor;
 import frc.robot.commands.shoot.FeedFuel;
 import frc.robot.commands.shoot.LockOnHub;
@@ -42,7 +43,7 @@ public class RobotContainer {
 
     Joystick joy;
     Input input;
-    // TeleopJoystickDrive teleJoyDrive;
+    TeleopJoystickDrive teleJoyDrive;
     GenericHID bBoard;
     Vision vision;
     CANDriveSubsystem tankDrive;
@@ -87,8 +88,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    // teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true);
-    // tankDrive.setDefaultCommand(teleJoyDrive);
+     teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true);
+     tankDrive.setDefaultCommand(teleJoyDrive);
     
     
     //new JoystickButton(joy, 7).onTrue(new InstantCommand(tankDrive::flipFieldRelative ,tankDrive));
