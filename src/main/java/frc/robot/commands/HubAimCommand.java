@@ -63,7 +63,7 @@ public class HubAimCommand extends Command {
               ){
                 //  System.out.println("See April tag " + vision.AprilTagID());
                  targetRPM = fs.calculateRPMFromLimelight(tx,ty,thetaRad, 1);
-                 fs.shooterPID.setReference(targetRPM, ControlType.kVelocity);
+                 fs.shooterMotorPID.setReference(targetRPM, ControlType.kVelocity);
                  //prints distance and target rpm
                  SmartDashboard.putNumber("Shooter Distance", fs.dx);
                  SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
@@ -73,7 +73,7 @@ public class HubAimCommand extends Command {
         if(vision.hasValidData() == false){
             // System.out.println(vision.AprilTagID() + "no valid data");
             // drive.driveArcade(0, 0);
-            fs.shooterPID.setReference(100, ControlType.kVelocity);
+            fs.shooterMotorPID.setReference(100, ControlType.kVelocity);
         }
 
     }

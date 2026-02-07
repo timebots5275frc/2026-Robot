@@ -49,16 +49,7 @@ public class FuelShooterCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    switch(shooterState){
-      case CHARGEMOTOR: 
-      break;
-      case NONE:
-      break;
-      case FEEDBALL: // move feeding motors
-        break;
-      case LOCKTOHUB: // lock on
-        break;
-    }
+    
       
   }
 

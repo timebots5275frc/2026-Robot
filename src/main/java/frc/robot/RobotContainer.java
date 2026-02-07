@@ -108,7 +108,7 @@ public class RobotContainer {
     new JoystickButton(joy, 1).onTrue(new SequentialCommandGroup(new LockOnHub(tankDrive, vision), new ChargeMotor(fs, vision), new FeedFuel(fs)));
     
     //shoot without vision
-    new JoystickButton(joy, 2).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, vision, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(fs)));
+    new JoystickButton(joy, 3).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(fs)));
 
     // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1

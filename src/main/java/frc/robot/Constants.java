@@ -197,16 +197,16 @@ public final class Constants
 
     public static final class FuelShooterConstants{
       public static final int INTAKE_MOTOR_1_ID = 10;
-      public static final int INTAKE_MOTOR_2_ID = 11;
+      public static final int INTAKE_MOTOR_2_ID = 11; 
       public static final int SHOOTER_MOTOR_ID = 12;
 
-      public static final PID INTAKE_MOTOR_1_PID = new PID(0.008,0,0);
-      public static final PID INTAKE_MOTOR_2_PID = new PID(0.008,0,0);
-      public static final PID SHOOTER_MOTOR_PID = new PID(0.0006,0,0.0000003);
+      public static final PID INTAKE_MOTOR_2_PID = new PID(0.0001,0.000001,0.0005);
+      public static final PID INTAKE_MOTOR_1_PID = new PID(0.01,0.00000001,0.0005);
+      public static final PID SHOOTER_MOTOR_PID = new PID(0.0001,0.002,0.04);
 
       public static final int INTAKESPEED = 2000;
       public static final double FEEDSPEED = 500; 
-      public static final int DEFAULT_SHOOTER_RPM = 4000;
+      public static final int DEFAULT_SHOOTER_RPM = 500;
     }
 
     public static final class CalculateShooterRpmConstants{
@@ -221,7 +221,6 @@ public final class Constants
     public static final class ClimbConstants {
 
         public static final int MOTOR1_ID = 20;
-        public static final int MOTOR2_ID = 21;
 
         public static final PID MOTOR1PID = new PID(0.008,0 , 0); //only one motor, remember feed forward for climb
         public static final double DRIVE = 0;

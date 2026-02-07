@@ -21,22 +21,27 @@ public class ChargeMotor extends Command {
   FuelShooter shooter;
   double targetRPM;
 
-  int allowedError = 5;
+  boolean usingVision = false;
+
+  int allowedError = 20;
 
   public ChargeMotor(FuelShooter shooter, Vision vision) {
     this.vision = vision;
     this.shooter = shooter;
 
+    usingVision  = true;
+
     addRequirements(vision);
     addRequirements(shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
-  public ChargeMotor(FuelShooter shooter, Vision vision, int RPM) {
-    this.vision = vision;
+  public ChargeMotor(FuelShooter shooter, int RPM) {
+   // this.vision = vision;
     this.shooter = shooter;
-    this.targetRPM = RPM;
+    this.targetRPM = -RPM;
+    usingVision = false;
 
-    addRequirements(vision);
+   // addRequirements(vision);
     addRequirements(shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -45,9 +50,11 @@ public class ChargeMotor extends Command {
   @Override
   public void initialize() {
 
+        if(!usingVision) {
+          shooter.shooterMotorPID.setReference(targetRPM, ControlType.kVelocity);
+          return;
+        };
         vision.setUsingLimelight(true);
-
-        if(targetRPM != 0) return;
 
         // double x0 = vision.RobotPosInFieldSpace().x; // robot X pose
         // double y0 = vision.RobotPosInFieldSpace().y; // robot Y pose
@@ -70,10 +77,10 @@ public class ChargeMotor extends Command {
               ){
                 //  System.out.println("See April tag " + vision.AprilTagID());
 
-                 targetRPM = shooter.calculateRPMFromLimelight(tx,ty,thetaRad,dx);
+                 targetRPM = -shooter.calculateRPMFromLimelight(tx,ty,thetaRad,dx);
 
 
-                 shooter.shooterPID.setReference(targetRPM, ControlType.kVelocity);
+                 shooter.shooterMotorPID.setReference(targetRPM, ControlType.kVelocity);
 
 
                  //prints distance and target rpm
@@ -86,7 +93,7 @@ public class ChargeMotor extends Command {
         if(vision.hasValidData() == false){
             // System.out.println(vision.AprilTagID() + "no valid data");
             // drive.driveArcade(0, 0);
-            shooter.shooterPID.setReference(100, ControlType.kVelocity);
+            shooter.shooterMotorPID.setReference(-100, ControlType.kVelocity);
         }
         SmartDashboard.putBoolean("Charging Motor", true);
   }
@@ -100,7 +107,7 @@ public class ChargeMotor extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    vision.setUsingLimelight(false);
+    if(usingVision) vision.setUsingLimelight(false);
     if(interrupted) {
       shooter.SetShooterState(FuelShooterState.NONE);
     }
@@ -113,7 +120,9 @@ public class ChargeMotor extends Command {
       return false;
     }
      SmartDashboard.putBoolean("Charging Motor", true);
-    if (shooter.getMotor().getEncoder().getVelocity() >= targetRPM - allowedError && shooter.getMotor().getAbsoluteEncoder().getVelocity() <= targetRPM + allowedError) {
+    
+    if (shooter.getMotor().getEncoder().getVelocity() >= targetRPM - allowedError && shooter.getMotor().getEncoder().getVelocity() <= targetRPM + allowedError) {
+      SmartDashboard.putBoolean("Charging Motor", false);
       return true;
     } 
     return false;
