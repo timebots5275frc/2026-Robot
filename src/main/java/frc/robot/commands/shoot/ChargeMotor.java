@@ -6,6 +6,7 @@ package frc.robot.commands.shoot;
 
 import com.revrobotics.spark.SparkBase.ControlType;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 

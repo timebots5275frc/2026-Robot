@@ -200,13 +200,17 @@ public final class Constants
       public static final int INTAKE_MOTOR_2_ID = 11; 
       public static final int SHOOTER_MOTOR_ID = 12;
 
-      public static final PID INTAKE_MOTOR_2_PID = new PID(0.0001,0.000001,0.0005);
-      public static final PID INTAKE_MOTOR_1_PID = new PID(0.01,0.00000001,0.0005);
-      public static final PID SHOOTER_MOTOR_PID = new PID(0.0001,0.002,0.04);
+      public static final PID INTAKE_MOTOR_2_PID = new PID(0.0001,0.0000017,0.0005);
+      public static final PID INTAKE_MOTOR_1_PID = new PID(0.0003,0.0000006,0.01);
+      // public static final PID SHOOTER_MOTOR_PID = new PID(0.25,0.0001,0.00);
+      // public static final PID SHOOTER_MOTOR_PID = new PID(0.01,0.0001,0.008);
+      // public static final PID SHOOTER_MOTOR_PID = new PID(0.009,0.000002,0.002);
+      // public static final PID SHOOTER_MOTOR_PID = new PID(0.16,0.0001,0.0058);
+      public static final PID SHOOTER_MOTOR_PID = new PID(0.0005,0.0000004,0.0007);
 
       public static final int INTAKESPEED = 2000;
-      public static final double FEEDSPEED = 500; 
-      public static final int DEFAULT_SHOOTER_RPM = 500;
+      public static final double FEEDSPEED = 550; 
+      public static final int DEFAULT_SHOOTER_RPM = 3750;
     }
 
     public static final class CalculateShooterRpmConstants{

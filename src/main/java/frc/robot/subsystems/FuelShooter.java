@@ -54,7 +54,7 @@ public class FuelShooter extends SubsystemBase {
     intakePID1 = intakeMotor1.getClosedLoopController();
 
     shooterMotor = new SparkFlex(Constants.FuelShooterConstants.SHOOTER_MOTOR_ID, MotorType.kBrushless);
-    Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setSparkFlexPID(shooterMotor,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
+    Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setSparkFlexPID(shooterMotor,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters, IdleMode.kCoast);
     shooterMotorPID = shooterMotor.getClosedLoopController(); 
 
    }
@@ -72,8 +72,8 @@ public class FuelShooter extends SubsystemBase {
                  intakePID1.setReference(0, ControlType.kCurrent);
                  intakePID2.setReference(0, ControlType.kCurrent);
       break;
-      case FEEDBALL: //intakePID1.setReference(-Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
-                     //intakePID2.setReference(Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
+      case FEEDBALL: intakePID1.setReference(-Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
+                    intakePID2.setReference(Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
       break;
       case LOCKTOHUB: Vision.usingLimelight = true;
       break;
