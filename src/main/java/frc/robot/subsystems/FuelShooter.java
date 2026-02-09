@@ -102,24 +102,15 @@ public class FuelShooter extends SubsystemBase {
     //double cameraAngleRad = Math.toRadians(ty+ Constants.CalculateShooterRpmConstants.MOUNTING_ANGLE);
     //change in height from camera to target
     double deltaH = Constants.CalculateShooterRpmConstants.TARGET_HEIGHT - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
-    // Distance straight ahead
-    //double forwardDistance = deltaH / Math.tan(cameraAngleRad);
-    //SmartDashboard.putNumber("foward distance", forwardDistance);
-    // Compensate for Limelight yaw
-    //this.dx =  forwardDistance / Math.cos(Math.toRadians(tx));
+
     this.dx = dx;
     // --- Ballistics ---
     double thetaRad = Math.toRadians(shooterAngleDeg);
     double cosTheta = Math.cos(thetaRad);
     //denominator
     double denominator =
-    2.0 * cosTheta * cosTheta * (deltaH - dx * Math.tan(thetaRad));
-    //denominator checks
-    // if (denominator <= 0){ 
-    //  // denominator *= -1;
-    //   return 0;
-    // } //converts denominator to positive
-   //  if (denominator > 0){return denominator;} //returns denominator as normal
+    2.0 * cosTheta * cosTheta * (dx * Math.tan(thetaRad) - deltaH);
+
     SmartDashboard.putNumber("dx * tan(theta)", dx * Math.tan(thetaRad));
     SmartDashboard.putNumber("deltaH", deltaH);
      if (denominator <= 0.0) {return shooterRPM;} // If unreachable, return last RPM instead of crashing
