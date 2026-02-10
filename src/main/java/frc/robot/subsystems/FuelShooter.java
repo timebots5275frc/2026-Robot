@@ -39,7 +39,8 @@ public class FuelShooter extends SubsystemBase {
     CHARGEMOTOR,
     NONE,
     FEEDBALL,
-    LOCKTOHUB;
+    LOCKTOHUB,
+    OUTTAKE;
   }
 
   public FuelShooter() {
@@ -77,6 +78,9 @@ public class FuelShooter extends SubsystemBase {
       break;
       case LOCKTOHUB: Vision.usingLimelight = true;
       break;
+      case OUTTAKE: intakePID1.setReference(Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
+                    intakePID2.setReference(-Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
+        break;
     }
   }
 
