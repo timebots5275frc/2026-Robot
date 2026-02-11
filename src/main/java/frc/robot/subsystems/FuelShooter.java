@@ -40,7 +40,7 @@ public class FuelShooter extends SubsystemBase {
     NONE,
     FEEDBALL,
     LOCKTOHUB,
-    OUTTAKE;
+    INTAKE;
   }
 
   public FuelShooter() {
@@ -78,8 +78,8 @@ public class FuelShooter extends SubsystemBase {
       break;
       case LOCKTOHUB: Vision.usingLimelight = true;
       break;
-      case OUTTAKE: intakePID1.setReference(Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
-                    intakePID2.setReference(-Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
+      case INTAKE: intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
+                    intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
         break;
     }
   }
@@ -139,6 +139,11 @@ public class FuelShooter extends SubsystemBase {
 
     SmartDashboard.putNumber("Intake 1 rpm", intakeMotor1.getEncoder().getVelocity());
     SmartDashboard.putNumber("Intake 2 rpm", intakeMotor2.getEncoder().getVelocity());
+
+    SmartDashboard.putNumber("Intake 1 Current", intakeMotor1.getOutputCurrent());
+    SmartDashboard.putNumber("Intake 2 Current", intakeMotor2.getOutputCurrent());
+
+    
     
   }
 

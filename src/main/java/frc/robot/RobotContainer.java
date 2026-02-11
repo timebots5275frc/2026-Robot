@@ -6,7 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.FuelShooterCommand;
-import frc.robot.commands.Outtake;
+import frc.robot.commands.Intake;
+
 import frc.robot.commands.TeleopJoystickDrive;
 import frc.robot.commands.shoot.ChargeMotor;
 import frc.robot.commands.shoot.FeedFuel;
@@ -47,7 +48,7 @@ public class RobotContainer {
     TeleopJoystickDrive teleJoyDrive;
     GenericHID bBoard;
     Vision vision;
-    CANDriveSubsystem tankDrive;
+   // CANDriveSubsystem tankDrive;
     FuelShooter fs;
     Climb climb;
 
@@ -60,7 +61,7 @@ public class RobotContainer {
     bBoard = new GenericHID(1);
     joy = new Joystick(0);
     input = new Input(joy);
-     tankDrive = new CANDriveSubsystem();
+    // tankDrive = new CANDriveSubsystem();
     fs = new FuelShooter();
     vision = new Vision();
     // fuelShooter = new FuelShooter();
@@ -89,8 +90,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-     teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true);
-     tankDrive.setDefaultCommand(teleJoyDrive);
+    // teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true);
+    // tankDrive.setDefaultCommand(teleJoyDrive);
     
     
     //new JoystickButton(joy, 7).onTrue(new InstantCommand(tankDrive::flipFieldRelative ,tankDrive));
@@ -106,13 +107,13 @@ public class RobotContainer {
      * 2.Finds nescasarry RPM & charges motor
      * 3.feeds fuel into shooter
      */
-    new JoystickButton(joy, 1).onTrue(new SequentialCommandGroup(new LockOnHub(tankDrive, vision), new ChargeMotor(fs, vision), new FeedFuel(fs)));
+    new JoystickButton(joy, 1).onTrue(new SequentialCommandGroup(/*new LockOnHub(tankDrive, vision),*/ new ChargeMotor(fs, vision), new FeedFuel(fs)));
     
     //shoot without vision
     new JoystickButton(joy, 3).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(fs)));
 
-    new JoystickButton(joy, 5).whileTrue(new Outtake(fs));
-    
+    new JoystickButton(joy, 5).onTrue(new Intake(fs));
+
     // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.DRIVE)); //climb to drive

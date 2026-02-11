@@ -9,11 +9,11 @@ import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.FuelShooter.FuelShooterState;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class Outtake extends Command {
+public class Intake extends Command {
   FuelShooter fuelShooter;
   /** Creates a new Outtake. */
 
-  public Outtake(FuelShooter fuelShooter) {
+  public Intake(FuelShooter fuelShooter) {
     this.fuelShooter = fuelShooter;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -23,7 +23,7 @@ public class Outtake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    fuelShooter.SetShooterState(FuelShooterState.OUTTAKE);
+    fuelShooter.SetShooterState(FuelShooterState.INTAKE);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
