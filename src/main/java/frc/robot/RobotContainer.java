@@ -4,11 +4,13 @@
 
 package frc.robot;
 
+import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.FuelShooterCommand;
 import frc.robot.commands.Intake;
-
+import frc.robot.commands.Outtake;
 import frc.robot.commands.TeleopJoystickDrive;
+import frc.robot.commands.auto.AutoDrive;
 import frc.robot.commands.shoot.ChargeMotor;
 import frc.robot.commands.shoot.FeedFuel;
 import frc.robot.commands.shoot.LockOnHub;
@@ -48,7 +50,7 @@ public class RobotContainer {
     TeleopJoystickDrive teleJoyDrive;
     GenericHID bBoard;
     Vision vision;
-   // CANDriveSubsystem tankDrive;
+   CANDriveSubsystem tankDrive;
     FuelShooter fs;
     Climb climb;
 
@@ -61,17 +63,25 @@ public class RobotContainer {
     bBoard = new GenericHID(1);
     joy = new Joystick(0);
     input = new Input(joy);
-    // tankDrive = new CANDriveSubsystem();
+    //tankDrive = new CANDriveSubsystem();
     fs = new FuelShooter();
     vision = new Vision();
     // fuelShooter = new FuelShooter();
     
     
 
-    autonChooser.setDefaultOption("Drive ONLY", new SequentialCommandGroup(
-      //new AutoDrive(MathConstants.INCH_TO_METER*22,1,tankDrive)
-      // new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22, 1)
-    ));
+    // autonChooser.setDefaultOption("Drive ONLY", new SequentialCommandGroup(
+    //   new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22,1),
+    //   new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22, 1)
+    // ));
+
+    // autonChooser.addOption("LIMELIGHT SHOOT", new SequentialCommandGroup(
+    //   new AutoDrive(tankDrive, 0, 0), 
+    //   new LockOnHub(tankDrive, vision),
+    //   new ChargeMotor(fs, vision),
+    //   new FeedFuel(fs)
+    // ));
+
 
     SmartDashboard.putData(autonChooser);
 
@@ -114,6 +124,8 @@ public class RobotContainer {
 
     new JoystickButton(joy, 5).onTrue(new Intake(fs));
 
+    new JoystickButton(joy, 4).onTrue(new Outtake(fs));
+
     // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.DRIVE)); //climb to drive
@@ -130,6 +142,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand(SendableChooser<Command> autonChooser) 
   {
+
     return autonChooser.getSelected(); 
   }
 }
