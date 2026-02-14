@@ -82,7 +82,7 @@ public class FuelShooter extends SubsystemBase {
                     intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
         break;
       case OUTTAKE:
-                    intakePID1.setReference(-Constants.FuelShooterConstants.INTAKESPEED + 1000, ControlType.kVelocity);
+                    //intakePID1.setReference(-Constants.FuelShooterConstants.INTAKESPEED + 1000, ControlType.kVelocity);
                     intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
         break;
     }

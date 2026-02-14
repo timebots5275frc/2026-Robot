@@ -124,7 +124,7 @@ public class RobotContainer {
 
     new JoystickButton(joy, 5).onTrue(new Intake(fs));
 
-    new JoystickButton(joy, 4).onTrue(new Outtake(fs));
+    new JoystickButton(joy, 4).onTrue(new Outtake(fs)); 
 
     // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1
