@@ -137,7 +137,7 @@ public class FuelShooter extends SubsystemBase {
     double cosTheta = Math.cos(thetaRad);
     //denominator
     double denominator =
-    2.0 * cosTheta * cosTheta * (dx * Math.tan(thetaRad) - deltaH);
+    (2.0 * cosTheta * cosTheta * (dx * Math.tan(thetaRad) - deltaH))*-1;
 
     SmartDashboard.putNumber("dx * tan(theta)", dx * Math.tan(thetaRad));
     SmartDashboard.putNumber("deltaH", deltaH);

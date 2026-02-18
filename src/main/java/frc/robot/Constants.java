@@ -200,11 +200,11 @@ public final class Constants
       public static final int INTAKE_MOTOR_2_ID = 11; 
       public static final int SHOOTER_MOTOR_ID = 12;
 
-      public static final int SHOOTER_FREE_LIMIT = 20;
-      public static final int SHOOTER_STALL_LIMIT = 30;
+      public static final int SHOOTER_FREE_LIMIT = 35;
+      public static final int SHOOTER_STALL_LIMIT = 40;
 
-      public static final int INTAKE_FREE_LIMIT = 20;
-      public static final int INTAKE_STALL_LIMIT = 20;
+      public static final int INTAKE_FREE_LIMIT = 25;
+      public static final int INTAKE_STALL_LIMIT = 30;
 
       public static final PID INTAKE_MOTOR_2_PID = new PID(0.00012,0.0000004,0.00001);
       public static final PID INTAKE_MOTOR_1_PID = new PID(0.0003,0.0000006,0.01);
@@ -222,9 +222,9 @@ public final class Constants
     public static final class CalculateShooterRpmConstants{
       public static final double GRAVITY = 9.8;
       public static final double WHEEL_RADIUS = 0.1016; //4 inch wheel radius 
-      public static final double CAMERA_HEIGHT = 29.5 * 0.0254; //.75
-      public static final double TARGET_HEIGHT = 78 * 0.0254;
-      public static final double MOUNTING_ANGLE = 15;
+      public static final double CAMERA_HEIGHT = 20.5 * 0.0254; //.75
+      public static final double TARGET_HEIGHT = 41.25 * 0.0254;
+      public static final double MOUNTING_ANGLE = 10;
       public static final double RPM_FUDGE_FACTOR = 1.1;
     } 
 
