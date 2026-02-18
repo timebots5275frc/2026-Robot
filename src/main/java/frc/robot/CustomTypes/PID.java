@@ -24,6 +24,8 @@ public class PID {
     private IdleMode _imode;
     private PersistMode _pmode;
     private ResetMode _rmode;
+    private int stallLimit = 20; //Defaults
+    private int freeLimit = 20;  //Defaults
 
     public SparkMaxConfig setSparkMaxPID(SparkMax spm, ResetMode rm, PersistMode pm)
     {
@@ -68,6 +70,7 @@ public class PID {
       c.iZone(iz);
       SparkMaxConfig sc = new SparkMaxConfig();
       sc.apply(c);
+      sc.smartCurrentLimit(stallLimit,freeLimit);
       sc.idleMode( (_imode!= null)?(_imode):(_imode_default) );
       sp.configure(sc, (_rmode != null)?(_rmode):(_rmode_default), (_pmode!= null)?(_pmode):(_pmode_default));
       return sc;
@@ -78,9 +81,17 @@ public class PID {
       c.pidf(p,i,d,kS);
       c.iZone(iz);
       SparkFlexConfig sc = new SparkFlexConfig();
+      sc.smartCurrentLimit(stallLimit,freeLimit);
       sc.apply(c);
       sc.idleMode( (_imode!= null)?(_imode):(_imode_default) );
       sp.configure(sc, (_rmode != null)?(_rmode):(_rmode_default), (_pmode!= null)?(_pmode):(_pmode_default));
       return sc;
+    }
+
+    public void setFreeLimit(int freeLimit) {
+      this.freeLimit = freeLimit;
+    }
+     public void setStallLimit(int stallLimit) {
+      this.stallLimit = stallLimit;
     }
 }

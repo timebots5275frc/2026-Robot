@@ -63,7 +63,7 @@ public class RobotContainer {
     bBoard = new GenericHID(1);
     joy = new Joystick(0);
     input = new Input(joy);
-    //tankDrive = new CANDriveSubsystem();
+    tankDrive = new CANDriveSubsystem();
     fs = new FuelShooter();
     vision = new Vision();
     // fuelShooter = new FuelShooter();
@@ -100,8 +100,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    // teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true);
-    // tankDrive.setDefaultCommand(teleJoyDrive);
+     teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true);
+     tankDrive.setDefaultCommand(teleJoyDrive);
     
     
     //new JoystickButton(joy, 7).onTrue(new InstantCommand(tankDrive::flipFieldRelative ,tankDrive));
