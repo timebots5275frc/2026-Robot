@@ -102,7 +102,7 @@ public class FuelShooter extends SubsystemBase {
                     intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
         break;
       case OUTTAKE:
-                    //intakePID1.setReference(-Constants.FuelShooterConstants.INTAKESPEED + 1000, ControlType.kVelocity);
+                    intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED + 1000, ControlType.kVelocity);
                     intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
         break;
     }
@@ -120,45 +120,33 @@ public class FuelShooter extends SubsystemBase {
     shooterMotorPID.setReference(0.0, ControlType.kVelocity);
   }
 
-  public double calculateRPMFromLimelight(double tx, double ty, double shooterAngleDeg, double dx) {
+  public double calculateRPMFromLimelight(double tx, double ty, double dx) {
     this.tx = tx;
     this.ty = ty;
-    this.shooterAngleDeg = shooterAngleDeg;
+    this.dx = dx + Constants.CalculateShooterRpmConstants.CAMERA_OFFSET;
     
-
-    // --- Camera geometry ---
-    //double cameraAngleRad = Math.toRadians(ty+ Constants.CalculateShooterRpmConstants.MOUNTING_ANGLE);
-    //change in height from camera to target
+    double rpm = 0;
+    
     double deltaH = Constants.CalculateShooterRpmConstants.TARGET_HEIGHT - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
-
-    this.dx = dx;
-    // --- Ballistics ---
-    double thetaRad = Math.toRadians(shooterAngleDeg);
+    double thetaRad = Math.toRadians(Constants.CalculateShooterRpmConstants.SHOOTER_ANGLE);
     double cosTheta = Math.cos(thetaRad);
-    //denominator
-    double denominator =
-    (2.0 * cosTheta * cosTheta * (dx * Math.tan(thetaRad) - deltaH))*-1;
-
-    SmartDashboard.putNumber("dx * tan(theta)", dx * Math.tan(thetaRad));
-    SmartDashboard.putNumber("deltaH", deltaH);
-     if (denominator <= 0.0) {return shooterRPM;} // If unreachable, return last RPM instead of crashing
-    //solves for velocity initial
+    double denominator = (2.0 * cosTheta * cosTheta * (dx * Math.tan(thetaRad) - deltaH));
+     if (denominator <= 0.0) {return rpm+1000;}
     double v0 = Math.sqrt(Constants.CalculateShooterRpmConstants.GRAVITY * dx * dx / denominator);
-    // --- Convert to wheel RPM ---
-    double rpm = (60.0 / (2.0 * Math.PI * Constants.CalculateShooterRpmConstants.WHEEL_RADIUS)) * v0;
-    // Empirical tuning
+    rpm = (v0 * 60)/2*Math.PI*4.5;
     rpm *= Constants.CalculateShooterRpmConstants.RPM_FUDGE_FACTOR;
-    //returns final rpm
-    SmartDashboard.putNumber("rpm", rpm);
+    // SmartDashboard.putNumber("rpm", rpm);
+    // SmartDashboard.putNumber("den", denominator);
+
     return rpm;
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("rpm", shooterRPM);
-    SmartDashboard.putNumber("tx", tx);
-    SmartDashboard.putNumber("ty", ty);
-    SmartDashboard.putNumber("shooter angle degree", shooterAngleDeg);
+    // SmartDashboard.putNumber("tx", tx);
+    // SmartDashboard.putNumber("ty", ty);
+    // SmartDashboard.putNumber("shooter angle degree", shooterAngleDeg);
     SmartDashboard.putNumber("dx", dx);
 
     SmartDashboard.putNumber("Intake 1 rpm", intakeMotor1.getEncoder().getVelocity());

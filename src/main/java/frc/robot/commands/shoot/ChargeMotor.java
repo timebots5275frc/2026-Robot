@@ -9,7 +9,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import frc.robot.Constants;
 import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.FuelShooter.FuelShooterState;
 import frc.robot.subsystems.Vision.Vision;
@@ -36,7 +36,7 @@ public class ChargeMotor extends Command {
     addRequirements(shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
-  public ChargeMotor(FuelShooter shooter, int RPM) {
+  public ChargeMotor(FuelShooter shooter, double RPM) {
    // this.vision = vision;
     this.shooter = shooter;
     this.targetRPM = -RPM;
@@ -78,7 +78,7 @@ public class ChargeMotor extends Command {
               ){
                 //  System.out.println("See April tag " + vision.AprilTagID());
 
-                 targetRPM = -shooter.calculateRPMFromLimelight(tx,ty,thetaRad,dx);
+                 targetRPM = -shooter.calculateRPMFromLimelight(tx,ty,dx);
 
 
                  shooter.shooterMotorPID.setReference(targetRPM, ControlType.kVelocity);
@@ -86,15 +86,15 @@ public class ChargeMotor extends Command {
 
                  //prints distance and target rpm
                  
-                 SmartDashboard.putNumber("Shooter Distance", shooter.dx);
-                 SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
-                 System.out.println("target RPM " + targetRPM);
+                //  SmartDashboard.putNumber("Shooter Distance", shooter.dx);
+                  SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
+                //  System.out.println("target RPM " + targetRPM);
                }
         }
         if(vision.hasValidData() == false){
             // System.out.println(vision.AprilTagID() + "no valid data");
             // drive.driveArcade(0, 0);
-            shooter.shooterMotorPID.setReference(-100, ControlType.kVelocity);
+            shooter.shooterMotorPID.setReference(-Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM, ControlType.kVelocity);
         }
         SmartDashboard.putBoolean("Charging Motor", true);
   }
@@ -102,7 +102,7 @@ public class ChargeMotor extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Encoder Velocity", shooter.getMotor().getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Encoder Velocity", shooter.getMotor().getEncoder().getVelocity());
   }
 
   // Called once the command ends or is interrupted.

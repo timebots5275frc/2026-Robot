@@ -9,6 +9,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.FuelShooterCommand;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Outtake;
+import frc.robot.commands.StopShooter;
 import frc.robot.commands.TeleopJoystickDrive;
 import frc.robot.commands.auto.AutoDrive;
 import frc.robot.commands.shoot.ChargeMotor;
@@ -125,6 +126,9 @@ public class RobotContainer {
     new JoystickButton(joy, 5).onTrue(new Intake(fs));
 
     new JoystickButton(joy, 4).onTrue(new Outtake(fs)); 
+
+    new JoystickButton(joy, 6).onTrue(new StopShooter(fs)); 
+
 
     // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1

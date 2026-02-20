@@ -43,7 +43,7 @@ public class LockOnHub extends Command {
             vision.AprilTagID() == 5  || vision.AprilTagID() == 8  || vision.AprilTagID() == 9  || //red
             vision.AprilTagID() == 10 || vision.AprilTagID() == 11 || vision.AprilTagID() == 2  // //red
         ) {
-            double allowedError = 15; //degrees //TODO 
+            double allowedError = 10; //degrees //TODO 
             double kP = 0.1; // TODO is this neccasary
             double maxRot = 1; //TODO
             double tx = vision.HorizontalOffsetFromAprilTag(); 
@@ -74,7 +74,7 @@ public class LockOnHub extends Command {
     @Override
     public void end(boolean interrupted) {
         vision.setUsingLimelight(false);
-        drive.driveArcade(0, 0);
+       // drive.driveArcade(0, 0);
     }
 
     // Returns true when the command should end.
