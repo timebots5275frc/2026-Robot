@@ -27,9 +27,12 @@ public class FuelShooter extends SubsystemBase {
   private SparkMax intakeMotor2; // this is spark max dont forget
   private SparkClosedLoopController intakePID2;
 
-  private double shooterRPM = 0.0;
+  private double shooterRPMMult = 1.0;
+  private double intakeRPMMult = 1.0;
 
   private double tx, ty, shooterAngleDeg;
+
+  private double shootRPM = 1.0;
 
   private FuelShooterState state;
 
@@ -48,16 +51,16 @@ public class FuelShooter extends SubsystemBase {
     
 
     intakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID,SparkLowLevel.MotorType.kBrushless);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT);
+    Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT2);
+    Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT2);
     Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkMaxPID(intakeMotor2,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     intakePID2 = intakeMotor2.getClosedLoopController();
     
 
 
     intakeMotor1 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT);
+    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT1);
+    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT1);
     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkFlexPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     intakePID1 = intakeMotor1.getClosedLoopController();
 
@@ -93,30 +96,30 @@ public class FuelShooter extends SubsystemBase {
                  intakePID1.setReference(0, ControlType.kCurrent);
                  intakePID2.setReference(0, ControlType.kCurrent);
       break;
-      case FEEDBALL: intakePID1.setReference(-Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
-                    intakePID2.setReference(Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
+      case FEEDBALL: intakePID1.setReference(-Constants.FuelShooterConstants.FEEDSPEED * intakeRPMMult, ControlType.kVelocity);
+                    intakePID2.setReference(Constants.FuelShooterConstants.FEEDSPEED* intakeRPMMult, ControlType.kVelocity);
       break;
       case LOCKTOHUB: Vision.usingLimelight = true;
       break;
-      case INTAKE: intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
-                    intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
+      case INTAKE: intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED1* intakeRPMMult, ControlType.kVelocity);
+                    intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2* intakeRPMMult, ControlType.kVelocity);
         break;
       case OUTTAKE:
-                    intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED + 1000, ControlType.kVelocity);
-                    intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED, ControlType.kVelocity);
+                    intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED1* intakeRPMMult, ControlType.kVelocity);
+                    intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2* intakeRPMMult, ControlType.kVelocity);
         break;
     }
   }
 
   /** Set shooter velocity in RPM */
-  public void setShooterRPM(double rpm) {
-    shooterRPM = rpm;
+  public void setShooterRPMMult(double rpm) {
+    shooterRPMMult = rpm;
     shooterMotorPID.setReference(rpm, ControlType.kVelocity);
   }
 
   /** Stop shooter safely */
   public void stopShooter() {
-    shooterRPM = 0.0;
+    shooterRPMMult = 0.0;
     shooterMotorPID.setReference(0.0, ControlType.kVelocity);
   }
 
@@ -143,7 +146,7 @@ public class FuelShooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("rpm", shooterRPM);
+    SmartDashboard.putNumber("rpm", shooterRPMMult);
     // SmartDashboard.putNumber("tx", tx);
     // SmartDashboard.putNumber("ty", ty);
     // SmartDashboard.putNumber("shooter angle degree", shooterAngleDeg);
@@ -158,6 +161,30 @@ public class FuelShooter extends SubsystemBase {
     SmartDashboard.putNumber("shooter Current", shooterMotor.getOutputCurrent());
     SmartDashboard.putNumber("shooter rpm ", shooterMotor.getEncoder().getVelocity());
     
+  }
+
+  public double getShooterRPMMult() {
+    return shooterRPMMult;
+  }
+
+  public void increaseShooterRPM() {
+    shooterRPMMult *= 1.05;
+  }
+
+  public void decreaseShooterRPM() {
+    shooterRPMMult *= 0.95;
+  }
+
+  public double getIntakeRPMMult() {
+    return intakeRPMMult;
+  }
+
+  public void increaseIntakeRPM() {
+    intakeRPMMult *= 1.05;
+  }
+
+  public void decreaseIntakeRPM() {
+    intakeRPMMult *= 0.95;
   }
 
   public FuelShooterState getShooterState() {

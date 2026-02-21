@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.config.FeedForwardConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -66,8 +67,13 @@ public class PID {
     }
     private SparkMaxConfig setPIDBase(SparkMax sp) {
       ClosedLoopConfig c = new ClosedLoopConfig();
-      c.pidf(p,i,d,kS);
-      c.iZone(iz);
+      FeedForwardConfig fc = new FeedForwardConfig();
+      c.pidf(p,i,d, kS);
+      fc.kV(kV);
+      fc.kS(kS);
+      fc.kA(kA);
+      fc.kG(kG);
+      c.feedForward.apply(fc);
       SparkMaxConfig sc = new SparkMaxConfig();
       sc.apply(c);
       sc.smartCurrentLimit(stallLimit,freeLimit);
@@ -78,7 +84,13 @@ public class PID {
 
     private SparkFlexConfig setPIDBaseFlex(SparkFlex sp) {
       ClosedLoopConfig c = new ClosedLoopConfig();
-      c.pidf(p,i,d,kS);
+      FeedForwardConfig fc = new FeedForwardConfig();
+      c.pidf(p,i,d, kS);
+      fc.kV(kV);
+      fc.kS(kS);
+      fc.kA(kA);
+      fc.kG(kG);
+      c.feedForward.apply(fc);
       c.iZone(iz);
       SparkFlexConfig sc = new SparkFlexConfig();
       sc.smartCurrentLimit(stallLimit,freeLimit);

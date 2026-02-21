@@ -201,17 +201,21 @@ public final class Constants
       public static final int SHOOTER_MOTOR_ID = 12;
 
       public static final int SHOOTER_FREE_LIMIT = 35;
-      public static final int SHOOTER_STALL_LIMIT = 80;
+      public static final int SHOOTER_STALL_LIMIT = 60;
 
-      public static final int INTAKE_FREE_LIMIT = 30;
-      public static final int INTAKE_STALL_LIMIT = 40;
+      public static final int INTAKE_FREE_LIMIT1 = 30;
+      public static final int INTAKE_STALL_LIMIT1 = 60;
 
-      public static final PID INTAKE_MOTOR_2_PID = new PID(0.00012,0.0000004,0.00001);
-      public static final PID INTAKE_MOTOR_1_PID = new PID(0.0003,0.0000006,0.01);
+      public static final int INTAKE_FREE_LIMIT2 = 30;
+      public static final int INTAKE_STALL_LIMIT2 = 40;
+
+      public static final PID INTAKE_MOTOR_2_PID = new PID(0.0001,0.0,0.0, 0.00, 0.0012, 0, 0);
+      public static final PID INTAKE_MOTOR_1_PID = new PID(0.00015,0.0,0.0, 0.00, 0.0018, 0, 0);
       // public static final PID SHOOTER_MOTOR_PID = new PID(0.0005,0.0000005,0.0007);
-      public static final PID SHOOTER_MOTOR_PID = new PID(0.0007,0.0000007,0.0007, 0.002);
+      public static final PID SHOOTER_MOTOR_PID = new PID(0.0007,0.00000000,0.0, 0.00, 0.0018, 0, 0);
      // public static final PID SHOOTER_MOTOR_PID = new PID(0.0005,0.0000005,0.0007, 0.0014);
-      public static final int INTAKESPEED = 3000;
+      public static final int INTAKESPEED1 = 3000;
+      public static final int INTAKESPEED2 = 4500;
       public static final double FEEDSPEED = 1000; 
       public static final int DEFAULT_SHOOTER_RPM = 3500;
     }
@@ -224,7 +228,7 @@ public final class Constants
       public static final double TARGET_HEIGHT = 1.8542;
       public static final double MOUNTING_ANGLE = 10;
       public static final double SHOOTER_ANGLE = 75;
-      public static final double RPM_FUDGE_FACTOR = 1.1;
+      public static final double RPM_FUDGE_FACTOR = 1.12;
     } 
 
     public static final class ClimbConstants {

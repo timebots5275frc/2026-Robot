@@ -6,6 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ChangeIntakeRPM;
+import frc.robot.commands.ChangeMotorRPM;
 import frc.robot.commands.FuelShooterCommand;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Outtake;
@@ -33,6 +35,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -71,17 +74,18 @@ public class RobotContainer {
     
     
 
-    // autonChooser.setDefaultOption("Drive ONLY", new SequentialCommandGroup(
-    //   new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22,1),
-    //   new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22, 1)
-    // ));
+    autonChooser.setDefaultOption("Drive ONLY", new SequentialCommandGroup(
+      // new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22,0),
+      new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22, 0)
+    ));
 
-    // autonChooser.addOption("LIMELIGHT SHOOT", new SequentialCommandGroup(
-    //   new AutoDrive(tankDrive, 0, 0), 
-    //   new LockOnHub(tankDrive, vision),
-    //   new ChargeMotor(fs, vision),
-    //   new FeedFuel(fs)
-    // ));
+    autonChooser.addOption("LIMELIGHT SHOOT", new SequentialCommandGroup(
+      new AutoDrive(tankDrive, -.5, 0).withTimeout(.5),
+      new WaitCommand(1),
+      // new LockOnHub(tankDrive, vision),
+      new ChargeMotor(fs, vision),
+      new FeedFuel(fs)
+    ));
 
 
     SmartDashboard.putData(autonChooser);
@@ -121,13 +125,21 @@ public class RobotContainer {
     new JoystickButton(joy, 1).onTrue(new SequentialCommandGroup(/*new LockOnHub(tankDrive, vision),*/ new ChargeMotor(fs, vision), new FeedFuel(fs)));
     
     //shoot without vision
-    new JoystickButton(joy, 3).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(fs)));
+    new JoystickButton(bBoard, 8).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(fs)));
 
-    new JoystickButton(joy, 5).onTrue(new Intake(fs));
+    new JoystickButton(bBoard, 5).onTrue(new Intake(fs));
 
-    new JoystickButton(joy, 4).onTrue(new Outtake(fs)); 
+    new JoystickButton(bBoard, 7).onTrue(new Outtake(fs)); 
 
-    new JoystickButton(joy, 6).onTrue(new StopShooter(fs)); 
+    new JoystickButton(bBoard, 4).onTrue(new StopShooter(fs)); 
+
+    new JoystickButton(bBoard, 12).onTrue(new ChangeMotorRPM(fs, true));
+    new JoystickButton(bBoard, 10).onTrue(new ChangeMotorRPM(fs, false));
+
+    new JoystickButton(bBoard, 11).onTrue(new ChangeIntakeRPM(fs, true));
+    new JoystickButton(bBoard, 9).onTrue(new ChangeIntakeRPM(fs, false));
+    
+    
 
 
     // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision

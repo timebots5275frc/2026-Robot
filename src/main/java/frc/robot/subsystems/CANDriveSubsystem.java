@@ -16,7 +16,7 @@ import frc.robot.Constants;
 import static frc.robot.Constants.DriveConstants.*;
 
  public class CANDriveSubsystem extends SubsystemBase {
-   private final SparkFlex leftLeader;
+   public final SparkFlex leftLeader;
    private final SparkFlex leftFollower;
    private final SparkFlex rightLeader;
    private final SparkFlex rightFollower;
