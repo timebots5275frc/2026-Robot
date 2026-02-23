@@ -21,6 +21,7 @@ public class TeleopJoystickDrive extends Command {
     //private Joystick driveStick;
     public boolean fieldRelative;
     private boolean usingJoystick;
+    public int front;
     private double C;
 
     /**
@@ -29,10 +30,11 @@ public class TeleopJoystickDrive extends Command {
      * @param subsystem The drive subsystem this command wil run on.
      * @param joystick  The control input for driving
      */
-    public TeleopJoystickDrive(CANDriveSubsystem drive, Input input_, boolean _fieldRelative) {
+    public TeleopJoystickDrive(CANDriveSubsystem drive, Input input_, boolean _fieldRelative, int front) {
         this.drivetrain = drive;
         this.input = input_;
         this.fieldRelative = _fieldRelative;
+        this.front = front;
         usingJoystick = this.input.usingJoystick;
         addRequirements(drive);
 
@@ -86,7 +88,7 @@ public class TeleopJoystickDrive extends Command {
 
         System.out.println(moveInput.x);
 
-        drivetrain.driveArcade(-inputVelocity.x, inputRotationVelocity);
+        drivetrain.driveArcade(inputVelocity.x * front, inputRotationVelocity);
     }
 
     @Override

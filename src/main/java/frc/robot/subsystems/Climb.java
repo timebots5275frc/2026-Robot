@@ -19,6 +19,8 @@ public class Climb extends SubsystemBase {
 
     private SparkMax climbMotor;
     private AbsoluteEncoder climbEncoder;
+    private SparkMax climbMotor2;
+    private AbsoluteEncoder climbEncoder2;
     private SparkClosedLoopController climbPID;
     private SparkMaxConfig smc;
 
@@ -36,10 +38,15 @@ public class Climb extends SubsystemBase {
         smc = new SparkMaxConfig();
 
         climbMotor = new SparkMax(Constants.ClimbConstants.MOTOR1_ID, MotorType.kBrushless);
-        climbEncoder = climbMotor.getAbsoluteEncoder();
-
         climbMotor.configure(smc, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         climbPID = climbMotor.getClosedLoopController();
+        climbEncoder = climbMotor.getAbsoluteEncoder();
+
+        smc.follow(climbMotor);
+        climbMotor2 = new SparkMax(Constants.ClimbConstants.MOTOR1_ID, MotorType.kBrushless);
+        climbMotor2.configure(smc, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        climbEncoder2 = climbMotor.getAbsoluteEncoder();
+
     }
 
     public void setState(ClimbStates state) {

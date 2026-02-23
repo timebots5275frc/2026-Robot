@@ -39,6 +39,9 @@ public class FuelShooter extends SubsystemBase {
   /** Distance to target (meters) for dashboard/debug */
   public double dx = 0.0;
 
+  private double iS = 0;
+  CANDriveSubsystem cs;
+
   public enum FuelShooterState{
     CHARGEMOTOR,
     NONE,
@@ -49,14 +52,11 @@ public class FuelShooter extends SubsystemBase {
 
   public FuelShooter() {
     
-
     intakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID,SparkLowLevel.MotorType.kBrushless);
     Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT2);
     Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT2);
     Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkMaxPID(intakeMotor2,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     intakePID2 = intakeMotor2.getClosedLoopController();
-    
-
 
     intakeMotor1 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT1);
@@ -101,8 +101,8 @@ public class FuelShooter extends SubsystemBase {
       break;
       case LOCKTOHUB: Vision.usingLimelight = true;
       break;
-      case INTAKE: intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED1* intakeRPMMult, ControlType.kVelocity);
-                    intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2* intakeRPMMult, ControlType.kVelocity);
+      case INTAKE: intakePID1.setReference(iS , ControlType.kVelocity);
+                    intakePID2.setReference(iS , ControlType.kVelocity);
         break;
       case OUTTAKE:
                     intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED1* intakeRPMMult, ControlType.kVelocity);
@@ -146,20 +146,30 @@ public class FuelShooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("rpm", shooterRPMMult);
+
+    if(cs.leftLeader.getEncoder().getVelocity() <= 1000){
+      iS = 1250;
+    }
+    if(cs.leftLeader.getEncoder().getVelocity() > 1000 && cs.leftLeader.getEncoder().getVelocity() <= 2250){
+      iS = cs.leftLeader.getEncoder().getVelocity() * 2;
+    }
+    if(cs.leftLeader.getEncoder().getVelocity() > 2250){
+      iS = 4500;
+    }
+    // SmartDashboard.putNumber("rpm", shooterRPMMult);
     // SmartDashboard.putNumber("tx", tx);
     // SmartDashboard.putNumber("ty", ty);
     // SmartDashboard.putNumber("shooter angle degree", shooterAngleDeg);
-    SmartDashboard.putNumber("dx", dx);
+    // SmartDashboard.putNumber("dx", dx);
 
-    SmartDashboard.putNumber("Intake 1 rpm", intakeMotor1.getEncoder().getVelocity());
-    SmartDashboard.putNumber("Intake 2 rpm", intakeMotor2.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Intake 1 rpm", intakeMotor1.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Intake 2 rpm", intakeMotor2.getEncoder().getVelocity());
 
-    SmartDashboard.putNumber("Intake 1 Current", intakeMotor1.getOutputCurrent());
-    SmartDashboard.putNumber("Intake 2 Current", intakeMotor2.getOutputCurrent());
+    // SmartDashboard.putNumber("Intake 1 Current", intakeMotor1.getOutputCurrent());
+    // SmartDashboard.putNumber("Intake 2 Current", intakeMotor2.getOutputCurrent());
 
-    SmartDashboard.putNumber("shooter Current", shooterMotor.getOutputCurrent());
-    SmartDashboard.putNumber("shooter rpm ", shooterMotor.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("shooter Current", shooterMotor.getOutputCurrent());
+    // SmartDashboard.putNumber("shooter rpm ", shooterMotor.getEncoder().getVelocity());
     
   }
 

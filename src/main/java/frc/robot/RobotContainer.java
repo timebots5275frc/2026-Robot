@@ -31,6 +31,7 @@ import frc.robot.subsystems.Input.Input;
 import frc.robot.subsystems.Vision.Vision;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -105,7 +106,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-     teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true);
+     new JoystickButton(joy, 0).whileFalse(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true, -1));
+     new JoystickButton(joy, 0).whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, 1));
      tankDrive.setDefaultCommand(teleJoyDrive);
     
     
