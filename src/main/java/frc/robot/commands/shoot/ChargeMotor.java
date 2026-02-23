@@ -39,7 +39,7 @@ public class ChargeMotor extends Command {
   public ChargeMotor(FuelShooter shooter, double RPM) {
    // this.vision = vision;
     this.shooter = shooter;
-    this.targetRPM = -RPM * shooter.getShooterRPMMult();
+    this.targetRPM = -RPM /* shooter.getShooterRPMMult()*/;
     usingVision = false;
 
    // addRequirements(vision);
@@ -78,7 +78,7 @@ public class ChargeMotor extends Command {
               ){
                 //  System.out.println("See April tag " + vision.AprilTagID());
 
-                 targetRPM = -shooter.calculateRPMFromLimelight(tx,ty,dx) * shooter.getShooterRPMMult();
+                 targetRPM = -shooter.calculateRPMFromLimelight(tx,ty,dx)/*   shooter.getShooterRPMMult()*/;
                  SmartDashboard.putNumber("target rpm", targetRPM);
 
 

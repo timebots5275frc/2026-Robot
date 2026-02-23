@@ -66,8 +66,8 @@ public final class Constants
 
     // Current limit for drivetrain motors. 60A is a reasonable maximum to reduce
     // likelihood of tripping breakers or damaging CIM motors
-    public static final int DRIVE_MOTOR_STALL_LIMIT = 25;
-    public static final int DRIVE_MOTOR_FREE_LIMIT = 20;
+    public static final int DRIVE_MOTOR_STALL_LIMIT = 60;
+    public static final int DRIVE_MOTOR_FREE_LIMIT = 35;
     public static final int DRIVE_MOTOR_LIMIT_RPM = 5000;
     public static final int DRIVE_MOTOR_RAMP_RATE = 10;
 
@@ -214,9 +214,9 @@ public final class Constants
       // public static final PID SHOOTER_MOTOR_PID = new PID(0.0005,0.0000005,0.0007);
       public static final PID SHOOTER_MOTOR_PID = new PID(0.0007,0.00000000,0.0, 0.00, 0.0018, 0, 0);
      // public static final PID SHOOTER_MOTOR_PID = new PID(0.0005,0.0000005,0.0007, 0.0014);
-      public static final int INTAKESPEED1 = 3000;
-      public static final int INTAKESPEED2 = 4500;
-      public static final double FEEDSPEED = 1000; 
+      public static final int INTAKESPEED1 = 3250;
+      public static final int INTAKESPEED2 = 4750;
+      public static final double FEEDSPEED = 1250; 
       public static final int DEFAULT_SHOOTER_RPM = 3500;
     }
 

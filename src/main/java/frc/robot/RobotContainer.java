@@ -81,7 +81,7 @@ public class RobotContainer {
 
     autonChooser.addOption("LIMELIGHT SHOOT", new SequentialCommandGroup(
       new AutoDrive(tankDrive, -.5, 0).withTimeout(.5),
-      new WaitCommand(1),
+      new WaitCommand(2.25),
       // new LockOnHub(tankDrive, vision),
       new ChargeMotor(fs, vision),
       new FeedFuel(fs)

@@ -11,6 +11,7 @@
  import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import static frc.robot.Constants.DriveConstants.*;
@@ -73,6 +74,7 @@ import static frc.robot.Constants.DriveConstants.*;
 
    @Override
    public void periodic() {
+    SmartDashboard.putNumber("Drive Current", leftLeader.getOutputCurrent());
    }
 
    public void driveArcade(double xSpeed, double zRotation) {

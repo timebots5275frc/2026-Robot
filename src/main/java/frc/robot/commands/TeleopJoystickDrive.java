@@ -86,7 +86,7 @@ public class TeleopJoystickDrive extends Command {
 
         System.out.println(moveInput.x);
 
-        drivetrain.driveArcade(inputVelocity.x, inputRotationVelocity);
+        drivetrain.driveArcade(-inputVelocity.x, inputRotationVelocity);
     }
 
     @Override
