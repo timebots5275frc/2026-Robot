@@ -216,7 +216,7 @@ public final class Constants
      // public static final PID SHOOTER_MOTOR_PID = new PID(0.0005,0.0000005,0.0007, 0.0014);
       public static final int INTAKESPEED1 = 3250;
       public static final int INTAKESPEED2 = 4750;
-      public static final double FEEDSPEED = 1250; 
+      public static final double FEEDSPEED = 1500; 
       public static final int DEFAULT_SHOOTER_RPM = 3500;
     }
 

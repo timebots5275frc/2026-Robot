@@ -22,7 +22,7 @@ import frc.robot.subsystems.CANDriveSubsystem;
 // import frc.robot.commands.TeleopJoystickDrive;
 // import frc.robot.commands.auto.AutoDrive;
 // import frc.robot.subsystems.CANDriveSubsystem;
-import frc.robot.subsystems.Climb;
+// import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.FuelShooter;
 
 import frc.robot.subsystems.FuelShooter.FuelShooterState;
@@ -57,7 +57,7 @@ public class RobotContainer {
     Vision vision;
    CANDriveSubsystem tankDrive;
     FuelShooter fs;
-    Climb climb;
+    // Climb climb;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
