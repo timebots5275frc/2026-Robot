@@ -81,8 +81,7 @@ public class RobotContainer {
     ));
 
     autonChooser.addOption("LIMELIGHT SHOOT", new SequentialCommandGroup(
-      new AutoDrive(tankDrive, -.5, 0).withTimeout(.5),
-      new WaitCommand(2.25),
+      new AutoDrive(tankDrive, -.5, 0),
       // new LockOnHub(tankDrive, vision),
       new ChargeMotor(fs, vision),
       new FeedFuel(fs)
@@ -106,10 +105,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-     new JoystickButton(joy, 0).whileFalse(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, true, -1));
-     new JoystickButton(joy, 0).whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, 1));
+     new JoystickButton(joy, 2).whileFalse(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1));
+     new JoystickButton(joy, 2).whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, 1));
      tankDrive.setDefaultCommand(teleJoyDrive);
-    
     
     //new JoystickButton(joy, 7).onTrue(new InstantCommand(tankDrive::flipFieldRelative ,tankDrive));
     /*tmp */
@@ -117,7 +115,6 @@ public class RobotContainer {
     //new JoystickButton(joy, 8).onTrue(new InstantCommand(swerveDrive::resetPigeon, swerveDrive));
     
     //new JoystickButton(joy, 1).onTrue(new FuelShooterCommand(fs, vision, FuelShooterState.LOCKTOHUB));
-    
 
     /*
      * 1.Locks onto hub
@@ -140,9 +137,6 @@ public class RobotContainer {
 
     new JoystickButton(bBoard, 11).onTrue(new ChangeIntakeRPM(fs, true));
     new JoystickButton(bBoard, 9).onTrue(new ChangeIntakeRPM(fs, false));
-    
-    
-
 
     // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1

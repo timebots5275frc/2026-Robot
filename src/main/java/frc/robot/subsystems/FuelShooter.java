@@ -97,7 +97,7 @@ public class FuelShooter extends SubsystemBase {
                  intakePID2.setReference(0, ControlType.kCurrent);
       break;
       case FEEDBALL: intakePID1.setReference(-Constants.FuelShooterConstants.FEEDSPEED * intakeRPMMult, ControlType.kVelocity);
-                    intakePID2.setReference(Constants.FuelShooterConstants.FEEDSPEED* intakeRPMMult, ControlType.kVelocity);
+                    intakePID2.setReference(Constants.FuelShooterConstants.FEEDSPEED * intakeRPMMult, ControlType.kVelocity);
       break;
       case LOCKTOHUB: Vision.usingLimelight = true;
       break;
@@ -105,8 +105,8 @@ public class FuelShooter extends SubsystemBase {
                     intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2 , ControlType.kVelocity);
         break;
       case OUTTAKE:
-                    intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED1* intakeRPMMult, ControlType.kVelocity);
-                    intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2* intakeRPMMult, ControlType.kVelocity);
+                    intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED1 * intakeRPMMult, ControlType.kVelocity);
+                    intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2 * intakeRPMMult, ControlType.kVelocity);
         break;
     }
   }

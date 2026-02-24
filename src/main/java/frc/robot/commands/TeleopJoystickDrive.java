@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -19,6 +20,8 @@ public class TeleopJoystickDrive extends Command {
     private Input input;
 
     //private Joystick driveStick;
+    public SlewRateLimiter srlX = new SlewRateLimiter(3.0);
+    public SlewRateLimiter srlY = new SlewRateLimiter(3.0);
     public boolean fieldRelative;
     private boolean usingJoystick;
     public int front;
@@ -88,7 +91,7 @@ public class TeleopJoystickDrive extends Command {
 
         System.out.println(moveInput.x);
 
-        drivetrain.driveArcade(inputVelocity.x * front, inputRotationVelocity);
+        drivetrain.driveArcade(srlX.calculate(inputVelocity.x * front), srlY.calculate(inputRotationVelocity));
     }
 
     @Override

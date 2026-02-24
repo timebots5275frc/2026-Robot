@@ -80,5 +80,8 @@ import static frc.robot.Constants.DriveConstants.*;
    public void driveArcade(double xSpeed, double zRotation) {
      drive.arcadeDrive(xSpeed, zRotation);
    }
+    public void curvatureDrive(double xSpeed, double zRotation, boolean allowTurnInPlace) {
+     drive.curvatureDrive(xSpeed, zRotation, allowTurnInPlace);
+   }
 
 }
