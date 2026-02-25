@@ -94,9 +94,9 @@ public class FuelShooter extends SubsystemBase {
                    
 
       break;
-      case NONE: shooterMotorPID.setReference(0, ControlType.kCurrent);
-                 intakePID1.setReference(0, ControlType.kCurrent);
-                 intakePID2.setReference(0, ControlType.kCurrent);
+      case NONE: shooterMotorPID.setReference(Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
+                 intakePID1.setReference(Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
+                 intakePID2.setReference(Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
       break;
       case FEEDBALL: intakePID1.setReference(-Constants.FuelShooterConstants.FEEDSPEED * intakeRPMMult, ControlType.kVelocity);
                     intakePID2.setReference(Constants.FuelShooterConstants.FEEDSPEED * intakeRPMMult, ControlType.kVelocity);
@@ -136,7 +136,7 @@ public class FuelShooter extends SubsystemBase {
     double thetaRad = Math.toRadians(Constants.CalculateShooterRpmConstants.SHOOTER_ANGLE);
     double cosTheta = Math.cos(thetaRad);
     double denominator = (2.0 * cosTheta * cosTheta * (dx * Math.tan(thetaRad) - deltaH));
-     if (denominator <= 0.0) {return rpm+1000;}
+     if (denominator <= 0.0) {return rpm;}
     double v0 = Math.sqrt(Constants.CalculateShooterRpmConstants.GRAVITY * dx * dx / denominator);
     rpm = (v0 * 60)/2*Math.PI*4.5;
     rpm *= Constants.CalculateShooterRpmConstants.RPM_FUDGE_FACTOR;
@@ -149,15 +149,6 @@ public class FuelShooter extends SubsystemBase {
   @Override
   public void periodic() {
 
-    // if(cs.leftLeader.getEncoder().getVelocity() <= 1000){
-    //   iS = 1250;
-    // }
-    // if(cs.leftLeader.getEncoder().getVelocity() > 1000 && cs.leftLeader.getEncoder().getVelocity() <= 2250){
-    //   iS = cs.leftLeader.getEncoder().getVelocity() * 2;
-    // }
-    // if(cs.leftLeader.getEncoder().getVelocity() > 2250){
-    //   iS = 4500;
-    // }
     // SmartDashboard.putNumber("rpm", shooterRPMMult);
     // SmartDashboard.putNumber("tx", tx);
     // SmartDashboard.putNumber("ty", ty);

@@ -20,8 +20,8 @@ public class TeleopJoystickDrive extends Command {
     private Input input;
 
     //private Joystick driveStick;
-    public SlewRateLimiter srlX = new SlewRateLimiter(3.0);
-    public SlewRateLimiter srlY = new SlewRateLimiter(3.0);
+    public SlewRateLimiter srlX = new SlewRateLimiter(Constants.JoystickConstants.JOY_X_RATE_LIMIT);
+    public SlewRateLimiter srlTurn = new SlewRateLimiter(Constants.JoystickConstants.JOY_TURN_RATE_LIMIT);
     public boolean fieldRelative;
     private boolean usingJoystick;
     public int front = -1;
@@ -76,8 +76,8 @@ public class TeleopJoystickDrive extends Command {
         turnInput = MathUtil.applyDeadband(turnInput, Constants.DriveConstants.deadband);
 
         
-        Vector2 inputVelocity = moveInput.times((speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED));
-        double inputRotationVelocity = (turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE)*.25; //rot. vel.
+        Vector2 inputVelocity = moveInput.times(((speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED) * Constants.JoystickConstants.JOY_INPUT_VELOCITY_MULT));
+        double inputRotationVelocity = (turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE)*Constants.JoystickConstants.JOY_INPUT_ROTATION_VELOCITY_MULT; //rot. vel.
                                                                                                                //remove last multiplied number for max results
         
         int rot_sign = (int)(inputRotationVelocity / Math.abs(inputRotationVelocity));
@@ -91,7 +91,7 @@ public class TeleopJoystickDrive extends Command {
 
         System.out.println(moveInput.x);
 
-        drivetrain.driveArcade(srlX.calculate(inputVelocity.x * front), srlY.calculate(inputRotationVelocity));
+        drivetrain.driveArcade(srlX.calculate(inputVelocity.x * front), srlTurn.calculate(inputRotationVelocity));
     }
 
     @Override

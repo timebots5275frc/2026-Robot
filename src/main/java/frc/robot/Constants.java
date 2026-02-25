@@ -48,10 +48,18 @@ public final class Constants
   public static class ButtonConstants
   {
     //9,10,11,12
-    public static final int INCREASE_LEFT_MOTOR = 10;
-    public static final int INCREASE_RIGHT_MOTOR = 12;
-    public static final int DECREASE_LEFT_MOTOR = 9;
-    public static final int DECREASE_RIGHT_MOTOR = 11;
+    public static final int INCREASE_LEFT_MOTOR_BUTTON_ID = 10;
+    public static final int INCREASE_RIGHT_MOTOR_BUTTON_ID = 12;
+    public static final int DECREASE_LEFT_MOTOR_BUTTON_ID = 9;
+    public static final int DECREASE_RIGHT_MOTOR_BUTTON_ID = 11;
+
+    public static final int FLIP_FRONT_BUTTON_ID = 2;
+    public static final int SHOOT_LIMELIGHT_BUTTON_ID = 1;
+    public static final int SHOOT_NO_LIMELIGHT_BUTTON_ID = 8;
+    public static final int INTAKE_BUTTON_ID = 5;
+    public static final int OUTTAKE_BUTTON_ID = 7;
+    public static final int STOP_SHOOTER_BUTTON_ID = 4;
+    public static final int SHAKE_ROBOT_BUTTON_ID = 12;
   }
 
     public static final class DriveConstants {
@@ -186,6 +194,14 @@ public final class Constants
       // public static boolean isAmpTag(AprilTagData tag) { return tag == AprilTagData.Hub_Front_Left || tag == AprilTagData.Hub_Front_Right; }
     }
   }
+    public static final class JoystickConstants
+    {
+      public static final double JOY_X_RATE_LIMIT = 3;
+      public static final double JOY_TURN_RATE_LIMIT = 5;
+
+      public static final double JOY_INPUT_VELOCITY_MULT = 1;
+      public static final double JOY_INPUT_ROTATION_VELOCITY_MULT = .25;
+    }
 
     public static final class ControllerConstants 
     {
@@ -208,6 +224,8 @@ public final class Constants
 
       public static final int INTAKE_FREE_LIMIT2 = 30;
       public static final int INTAKE_STALL_LIMIT2 = 40;
+
+      public static final int MOTOR_SPEED_NONE = 0;
 
       public static final PID INTAKE_MOTOR_2_PID = new PID(0.0001,0.0,0.0, 0.00, 0.0012, 0, 0);
       public static final PID INTAKE_MOTOR_1_PID = new PID(0.00015,0.0,0.0, 0.00, 0.0018, 0, 0);

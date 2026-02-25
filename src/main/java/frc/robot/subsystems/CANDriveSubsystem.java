@@ -9,6 +9,7 @@
  import com.revrobotics.spark.SparkLowLevel.MotorType;
  import com.revrobotics.spark.SparkFlex;
  import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,6 +49,7 @@ import static frc.robot.Constants.DriveConstants.*;
      // battery). The current limit helps prevent tripping
      // breakers.
      SparkFlexConfig config = new SparkFlexConfig();
+     config.idleMode(IdleMode.kBrake);
      config.voltageCompensation(12);
      config.smartCurrentLimit(Constants.DriveConstants.DRIVE_MOTOR_STALL_LIMIT, 
                               Constants.DriveConstants.DRIVE_MOTOR_FREE_LIMIT

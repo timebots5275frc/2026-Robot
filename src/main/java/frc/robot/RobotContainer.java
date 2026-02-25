@@ -105,8 +105,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-     new JoystickButton(joy, 2).whileFalse(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1));
-     new JoystickButton(joy, 2).whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, 1));
+     new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileFalse(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1));
+     new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, 1));
     // teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1);
      tankDrive.setDefaultCommand(teleJoyDrive);
     
@@ -122,18 +122,18 @@ public class RobotContainer {
      * 2.Finds nescasarry RPM & charges motor
      * 3.feeds fuel into shooter
      */
-    new JoystickButton(joy, 1).onTrue(new SequentialCommandGroup(/*new LockOnHub(tankDrive, vision),*/ new ChargeMotor(fs, vision), new FeedFuel(fs)));
+    new JoystickButton(joy, Constants.ButtonConstants.SHOOT_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup(/*new LockOnHub(tankDrive, vision),*/ new ChargeMotor(fs, vision), new FeedFuel(fs)));
     
     //shoot without vision
-    new JoystickButton(bBoard, 8).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(fs)));
+    new JoystickButton(bBoard, Constants.ButtonConstants.SHOOT_NO_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(fs)));
 
-    new JoystickButton(bBoard, 5).onTrue(new Intake(fs));
+    new JoystickButton(bBoard, Constants.ButtonConstants.INTAKE_BUTTON_ID).onTrue(new Intake(fs));
 
-    new JoystickButton(bBoard, 7).onTrue(new Outtake(fs)); 
+    new JoystickButton(bBoard, Constants.ButtonConstants.OUTTAKE_BUTTON_ID).onTrue(new Outtake(fs)); 
 
-    new JoystickButton(bBoard, 4).onTrue(new StopShooter(fs)); 
+    new JoystickButton(bBoard, Constants.ButtonConstants.STOP_SHOOTER_BUTTON_ID).onTrue(new StopShooter(fs)); 
 
-    new JoystickButton(bBoard,12).onTrue(new SequentialCommandGroup(new AutoDrive(tankDrive, -2, 0).withTimeout(.1), new AutoDrive(tankDrive, 2, 0).withTimeout(.1)/* , teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1)*/));
+    new JoystickButton(bBoard,Constants.ButtonConstants.SHAKE_ROBOT_BUTTON_ID).onTrue(new SequentialCommandGroup(new AutoDrive(tankDrive, -2, 0).withTimeout(.1), new AutoDrive(tankDrive, 2, 0).withTimeout(.2)/* , teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1)*/));
 
     // new JoystickButton(bBoard, 12).onTrue(new ChangeMotorRPM(fs, true));
     // new JoystickButton(bBoard, 10).onTrue(new ChangeMotorRPM(fs, false));
