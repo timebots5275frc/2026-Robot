@@ -24,7 +24,7 @@ public class TeleopJoystickDrive extends Command {
     public SlewRateLimiter srlY = new SlewRateLimiter(3.0);
     public boolean fieldRelative;
     private boolean usingJoystick;
-    public int front;
+    public int front = -1;
     private double C;
 
     /**
@@ -77,7 +77,7 @@ public class TeleopJoystickDrive extends Command {
 
         
         Vector2 inputVelocity = moveInput.times((speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED));
-        double inputRotationVelocity = (turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE)*.35; //rot. vel.
+        double inputRotationVelocity = (turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE)*.25; //rot. vel.
                                                                                                                //remove last multiplied number for max results
         
         int rot_sign = (int)(inputRotationVelocity / Math.abs(inputRotationVelocity));

@@ -90,7 +90,9 @@ public class FuelShooter extends SubsystemBase {
 
   public void UpdateShooterState(FuelShooterState state){
     switch(state){
-      case CHARGEMOTOR: 
+      case CHARGEMOTOR: //intakePID1.setReference(500, ControlType.kVelocity);
+                   
+
       break;
       case NONE: shooterMotorPID.setReference(0, ControlType.kCurrent);
                  intakePID1.setReference(0, ControlType.kCurrent);

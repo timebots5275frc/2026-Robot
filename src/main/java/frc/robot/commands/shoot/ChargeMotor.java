@@ -50,7 +50,7 @@ public class ChargeMotor extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+      shooter.SetShooterState(FuelShooterState.CHARGEMOTOR);
         if(!usingVision) {
           shooter.shooterMotorPID.setReference(targetRPM, ControlType.kVelocity);
           return;
