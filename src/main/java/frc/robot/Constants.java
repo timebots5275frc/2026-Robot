@@ -60,6 +60,7 @@ public final class Constants
     public static final int OUTTAKE_BUTTON_ID = 7;
     public static final int STOP_SHOOTER_BUTTON_ID = 4;
     public static final int SHAKE_ROBOT_BUTTON_ID = 12;
+    public static final int STOP_INTAKE_BUTTON_ID = 11; //TODO set it to something else
   }
 
     public static final class DriveConstants {
