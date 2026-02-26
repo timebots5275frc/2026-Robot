@@ -22,7 +22,7 @@ import frc.robot.subsystems.CANDriveSubsystem;
 // import frc.robot.subsystems.CANDriveSubsystem;
 // import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.FuelShooter;
-
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.FuelShooter.FuelShooterState;
 import frc.robot.subsystems.Input.Input;
 
@@ -55,6 +55,7 @@ public class RobotContainer {
     Vision vision;
    CANDriveSubsystem tankDrive;
     FuelShooter fs;
+    IntakeSubsystem intake;
     // Climb climb;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -68,8 +69,9 @@ public class RobotContainer {
     input = new Input(joy);
     tankDrive = new CANDriveSubsystem();
     fs = new FuelShooter();
+    intake = new IntakeSubsystem();
     vision = new Vision();
-    // fuelShooter = new FuelShooter();
+    
     
     
 
@@ -82,7 +84,7 @@ public class RobotContainer {
       new AutoDrive(tankDrive, -.5, 0),
       // new LockOnHub(tankDrive, vision),
       new ChargeMotor(fs, vision),
-      new FeedFuel(fs)
+      new FeedFuel(intake)
     ));
 
 
@@ -120,14 +122,14 @@ public class RobotContainer {
      * 2.Finds nescasarry RPM & charges motor
      * 3.feeds fuel into shooter
      */
-    new JoystickButton(joy, Constants.ButtonConstants.SHOOT_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup(/*new LockOnHub(tankDrive, vision),*/ new ChargeMotor(fs, vision), new FeedFuel(fs)));
+    new JoystickButton(joy, Constants.ButtonConstants.SHOOT_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup(/*new LockOnHub(tankDrive, vision),*/ new ChargeMotor(fs, vision), new FeedFuel(intake)));
     
     //shoot without vision
-    new JoystickButton(bBoard, Constants.ButtonConstants.SHOOT_NO_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(fs)));
+    new JoystickButton(bBoard, Constants.ButtonConstants.SHOOT_NO_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(intake)));
 
-    new JoystickButton(bBoard, Constants.ButtonConstants.INTAKE_BUTTON_ID).onTrue(new Intake(fs));
+    new JoystickButton(bBoard, Constants.ButtonConstants.INTAKE_BUTTON_ID).onTrue(new Intake(intake));
 
-    new JoystickButton(bBoard, Constants.ButtonConstants.OUTTAKE_BUTTON_ID).onTrue(new Outtake(fs)); 
+    new JoystickButton(bBoard, Constants.ButtonConstants.OUTTAKE_BUTTON_ID).onTrue(new Outtake(intake)); 
 
     new JoystickButton(bBoard, Constants.ButtonConstants.STOP_SHOOTER_BUTTON_ID).onTrue(new StopShooter(fs)); 
 

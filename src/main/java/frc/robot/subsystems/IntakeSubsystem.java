@@ -68,7 +68,9 @@ public class IntakeSubsystem extends SubsystemBase {
     }
   }
 
-  
+  public IntakeState getIntakeState(){
+    return state;
+  } 
 
   @Override
   public void periodic() {
