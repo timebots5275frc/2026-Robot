@@ -36,16 +36,6 @@ public class Vision extends SubsystemBase {
     public boolean getAsBoolean() { return hasValidData(); };
   };
 
-  //change to Looking at Hub Front Right Tag
-  // public BooleanSupplier LookingAtSpeakerTag = new BooleanSupplier() {
-  //   public boolean getAsBoolean() { return aprilTagID != -1 && AprilTagData.isSpeakerTag(AprilTagData.getTag(aprilTagID)); }
-  // };
-
-  //Change to Looking at Hub Front Left Tag
-  // public BooleanSupplier LookingAtAmpTag = new BooleanSupplier() {
-  //   public boolean getAsBoolean() { return aprilTagID != -1 && AprilTagData.isAmpTag(AprilTagData.getTag(aprilTagID)); }
-  // };
-
   public static Vision Instance;
   public static boolean usingLimelight = false;
 

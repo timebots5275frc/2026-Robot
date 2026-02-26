@@ -41,14 +41,7 @@ public class AutoDrive extends Command {
   // arcade drive object
   @Override
   public void execute() {
-    // if (driveSubsystem.leftLeader.getEncoder().getPosition() != 20) {
-    //  driveSubsystem.driveArcade(xSpeed, zRotation); 
-    // }
-    // if(driveSubsystem.leftLeader.getEncoder().getPosition() == 20){
-    //   driveSubsystem.driveArcade(0, 0);
-    // }
     driveSubsystem.driveArcade(xSpeed, zRotation);
-    // driveSubsystem.curvatureDrive(xSpeed, zRotation, curvatureDrive);
   }
 
   // Called once the command ends or is interrupted.

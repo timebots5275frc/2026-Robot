@@ -130,7 +130,7 @@ public class FuelShooter extends SubsystemBase {
     this.ty = ty;
     this.dx = dx + Constants.CalculateShooterRpmConstants.CAMERA_OFFSET;
     
-    double rpm = 0;
+    double rpm = 3500;
     
     double deltaH = Constants.CalculateShooterRpmConstants.TARGET_HEIGHT - Constants.CalculateShooterRpmConstants.CAMERA_HEIGHT;
     double thetaRad = Math.toRadians(Constants.CalculateShooterRpmConstants.SHOOTER_ANGLE);
@@ -149,45 +149,6 @@ public class FuelShooter extends SubsystemBase {
   @Override
   public void periodic() {
 
-    // SmartDashboard.putNumber("rpm", shooterRPMMult);
-    // SmartDashboard.putNumber("tx", tx);
-    // SmartDashboard.putNumber("ty", ty);
-    // SmartDashboard.putNumber("shooter angle degree", shooterAngleDeg);
-    // SmartDashboard.putNumber("dx", dx);
-
-    // SmartDashboard.putNumber("Intake 1 rpm", intakeMotor1.getEncoder().getVelocity());
-    // SmartDashboard.putNumber("Intake 2 rpm", intakeMotor2.getEncoder().getVelocity());
-
-    // SmartDashboard.putNumber("Intake 1 Current", intakeMotor1.getOutputCurrent());
-    // SmartDashboard.putNumber("Intake 2 Current", intakeMotor2.getOutputCurrent());
-
-    // SmartDashboard.putNumber("shooter Current", shooterMotor.getOutputCurrent());
-    // SmartDashboard.putNumber("shooter rpm ", shooterMotor.getEncoder().getVelocity());
-    
-  }
-
-  public double getShooterRPMMult() {
-    return shooterRPMMult;
-  }
-
-  public void increaseShooterRPM() {
-    shooterRPMMult *= 1.05;
-  }
-
-  public void decreaseShooterRPM() {
-    shooterRPMMult *= 0.95;
-  }
-
-  public double getIntakeRPMMult() {
-    return intakeRPMMult;
-  }
-
-  public void increaseIntakeRPM() {
-    intakeRPMMult *= 1.05;
-  }
-
-  public void decreaseIntakeRPM() {
-    intakeRPMMult *= 0.95;
   }
 
   public FuelShooterState getShooterState() {

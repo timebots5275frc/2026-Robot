@@ -252,8 +252,12 @@ public final class Constants
     public static final class ClimbConstants {
 
         public static final int MOTOR1_ID = 20;
+        public static final int MOTOR2_ID = 21;
 
-        public static final PID MOTOR1PID = new PID(0.008,0 , 0); //only one motor, remember feed forward for climb
+        public static final PID CLIMB_MOTOR_PID = new PID(0.0,0.0 , 0.0); //two motors controlled the same
+        public static final int STALL_LIMIT = 30;
+        public static final int FREE_LIMIT = 25;
+
         public static final double DRIVE = 0;
         public static final double L1 = 0;
         public static final double RESET = 3;

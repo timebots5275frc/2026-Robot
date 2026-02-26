@@ -6,8 +6,6 @@ package frc.robot;
 
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ChangeIntakeRPM;
-import frc.robot.commands.ChangeMotorRPM;
 import frc.robot.commands.FuelShooterCommand;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Outtake;
@@ -134,12 +132,6 @@ public class RobotContainer {
     new JoystickButton(bBoard, Constants.ButtonConstants.STOP_SHOOTER_BUTTON_ID).onTrue(new StopShooter(fs)); 
 
     new JoystickButton(bBoard,Constants.ButtonConstants.SHAKE_ROBOT_BUTTON_ID).onTrue(new SequentialCommandGroup(new AutoDrive(tankDrive, -2, 0).withTimeout(.1), new AutoDrive(tankDrive, 2, 0).withTimeout(.2)/* , teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1)*/));
-
-    // new JoystickButton(bBoard, 12).onTrue(new ChangeMotorRPM(fs, true));
-    // new JoystickButton(bBoard, 10).onTrue(new ChangeMotorRPM(fs, false));
-
-    // new JoystickButton(bBoard, 11).onTrue(new ChangeIntakeRPM(fs, true));
-    // new JoystickButton(bBoard, 9).onTrue(new ChangeIntakeRPM(fs, false));
 
     // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1
