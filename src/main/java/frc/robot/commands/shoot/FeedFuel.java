@@ -6,25 +6,26 @@ package frc.robot.commands.shoot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.FuelShooter;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.FuelShooter.FuelShooterState;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class FeedFuel extends Command {
 
-  private FuelShooter shooter;
+  private IntakeSubsystem intake;
   /** Creates a new FeedFuel. */
-  public FeedFuel(FuelShooter shooter) {
+  public FeedFuel(IntakeSubsystem intake) {
 // will need feed subsystem and shooter
-    this.shooter = shooter;
+    this.intake = intake;
 
-    addRequirements(shooter);
+    addRequirements(intake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.SetShooterState(FuelShooterState.FEEDBALL);
+    intake.setIntakeState(IntakeSubsystem.IntakeState.FEED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,7 +37,7 @@ public class FeedFuel extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.SetShooterState(FuelShooterState.NONE);
+    intake.setIntakeState(IntakeSubsystem.IntakeState.NONE);
   }
 
   // Returns true when the command should end.

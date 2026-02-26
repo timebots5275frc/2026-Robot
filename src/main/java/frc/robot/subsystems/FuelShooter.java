@@ -45,24 +45,11 @@ public class FuelShooter extends SubsystemBase {
   public enum FuelShooterState{
     CHARGEMOTOR,
     NONE,
-    FEEDBALL,
-    LOCKTOHUB,
-    INTAKE, OUTTAKE;
+    
   }
 
   public FuelShooter() {
     
-    intakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID,SparkLowLevel.MotorType.kBrushless);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT2);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT2);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkMaxPID(intakeMotor2,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
-    intakePID2 = intakeMotor2.getClosedLoopController();
-
-    intakeMotor1 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT1);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT1);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkFlexPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
-    intakePID1 = intakeMotor1.getClosedLoopController();
 
 
 
@@ -98,18 +85,8 @@ public class FuelShooter extends SubsystemBase {
                  intakePID1.setReference(Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
                  intakePID2.setReference(Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
       break;
-      case FEEDBALL: intakePID1.setReference(-Constants.FuelShooterConstants.FEEDSPEED * intakeRPMMult, ControlType.kVelocity);
-                    intakePID2.setReference(Constants.FuelShooterConstants.FEEDSPEED * intakeRPMMult, ControlType.kVelocity);
-      break;
-      case LOCKTOHUB: Vision.usingLimelight = true;
-      break;
-      case INTAKE: intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED1 , ControlType.kVelocity);
-                    intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2 , ControlType.kVelocity);
-        break;
-      case OUTTAKE:
-                    intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED1 * intakeRPMMult, ControlType.kVelocity);
-                    intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2 * intakeRPMMult, ControlType.kVelocity);
-        break;
+    
+      
     }
   }
 
