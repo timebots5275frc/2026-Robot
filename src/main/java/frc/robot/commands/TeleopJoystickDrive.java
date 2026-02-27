@@ -72,27 +72,40 @@ public class TeleopJoystickDrive extends Command {
             MathUtil.applyDeadband(moveInput.x, Constants.DriveConstants.deadband),
             MathUtil.applyDeadband(moveInput.y, Constants.DriveConstants.deadband)
         );
-
+        // deadband -> square -> scale -> ratelimit -> drive
         turnInput = MathUtil.applyDeadband(turnInput, Constants.DriveConstants.deadband);
 
+        //Square input
+        moveInput.x = moveInput.x * Math.abs(moveInput.x);
+        turnInput = turnInput * Math.abs(turnInput);
         
+        //scale
         Vector2 inputVelocity = moveInput.times(((speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED) * Constants.JoystickConstants.JOY_INPUT_VELOCITY_MULT));
         double inputRotationVelocity = (turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE)*Constants.JoystickConstants.JOY_INPUT_ROTATION_VELOCITY_MULT; //rot. vel.
                                                                                                                //remove last multiplied number for max results
         
-        int rot_sign = (int)(inputRotationVelocity / Math.abs(inputRotationVelocity));
+        int rot_sign = (int)(inputRotationVelocity / Math.abs(inputRotationVelocity)); //returns 1 or -1
         
+        // if rotation is too high set rotation as max
         if(Math.abs(inputRotationVelocity)>Constants.DriveConstants.MAX_TWIST_RATE){
             System.out.println("IRV exceeds max twist rate");
             inputRotationVelocity=Constants.DriveConstants.MAX_TWIST_RATE*rot_sign;
         }
+
+
         SmartDashboard.putNumber("Throttle teleJoy", speedPercent);
         SmartDashboard.putNumber("Turn_speed", inputRotationVelocity);
 
         System.out.println(moveInput.x);
 
+        
+
+        //ratelimit and drive
+
         drivetrain.driveArcade(srlX.calculate(inputVelocity.x * front), srlTurn.calculate(inputRotationVelocity));
     }
+
+    
 
     @Override
     public void end(boolean interrupted) {
