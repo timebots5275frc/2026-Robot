@@ -1,34 +1,19 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Vision.Vision;
 
 public class FuelShooter extends SubsystemBase {
 
   private SparkFlex shooterMotor;
   public SparkClosedLoopController shooterMotorPID;
-  
-  private SparkFlex intakeMotor1;
-  private SparkClosedLoopController intakePID1;
-  
-  private SparkMax intakeMotor2; // this is spark max dont forget
-  private SparkClosedLoopController intakePID2;
-
-  private double shooterRPMMult = 1.0;
-  private double intakeRPMMult = 1.0;
 
   private double tx, ty, shooterAngleDeg;
 
@@ -45,28 +30,15 @@ public class FuelShooter extends SubsystemBase {
   public enum FuelShooterState{
     CHARGEMOTOR,
     NONE,
-    
   }
 
   public FuelShooter() {
-    
-
-
 
     shooterMotor = new SparkFlex(Constants.FuelShooterConstants.SHOOTER_MOTOR_ID, MotorType.kBrushless);
     Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setFreeLimit(Constants.FuelShooterConstants.SHOOTER_FREE_LIMIT);
     Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setStallLimit(Constants.FuelShooterConstants.SHOOTER_STALL_LIMIT);
     Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setSparkFlexPID(shooterMotor,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters, IdleMode.kCoast);
     shooterMotorPID = shooterMotor.getClosedLoopController(); 
-
-    // SparkFlexConfig configFlexIntake = new SparkFlexConfig();
-    // configFlexIntake.voltageCompensation(12);
-    // configFlexIntake.smartCurrentLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT, 
-    //                           Constants.FuelShooterConstants.INTAKE_FREE_LIMIT );
-    // intakeMotor2.configure(configFlexIntake, null, null);
-              
-
-
 
    }
 
@@ -77,28 +49,20 @@ public class FuelShooter extends SubsystemBase {
 
   public void UpdateShooterState(FuelShooterState state){
     switch(state){
-      case CHARGEMOTOR: //intakePID1.setReference(500, ControlType.kVelocity);
-                   
-
+      case CHARGEMOTOR:                
       break;
       case NONE: shooterMotorPID.setReference(Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
-                 intakePID1.setReference(Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
-                 intakePID2.setReference(Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
       break;
-    
-      
     }
   }
 
   /** Set shooter velocity in RPM */
   public void setShooterRPMMult(double rpm) {
-    shooterRPMMult = rpm;
     shooterMotorPID.setReference(rpm, ControlType.kVelocity);
   }
 
   /** Stop shooter safely */
   public void stopShooter() {
-    shooterRPMMult = 0.0;
     shooterMotorPID.setReference(0.0, ControlType.kVelocity);
   }
 

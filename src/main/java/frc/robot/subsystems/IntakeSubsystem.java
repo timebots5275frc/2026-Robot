@@ -14,7 +14,6 @@ import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-
   private SparkFlex intakeMotor1;
   private SparkClosedLoopController intakePID1;
   
@@ -35,8 +34,7 @@ public class IntakeSubsystem extends SubsystemBase {
     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT1);
     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT1);
     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkFlexPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
-    intakePID1 = intakeMotor1.getClosedLoopController();
-    
+    intakePID1 = intakeMotor1.getClosedLoopController();   
   }
 
   public enum IntakeState{

@@ -4,7 +4,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-// import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.Vision.Vision;
 

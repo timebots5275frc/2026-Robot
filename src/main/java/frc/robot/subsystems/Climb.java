@@ -38,8 +38,7 @@ public class Climb extends SubsystemBase {
     public Climb() {
         smc = new SparkMaxConfig();
         smc.idleMode(IdleMode.kBrake);
-        // smc.smartCurrentLimit(0,0,0); //free Limit, stall Limit, Limit RPM
-        smc.smartCurrentLimit(Constants.ClimbConstants.STALL_LIMIT, Constants.ClimbConstants.FREE_LIMIT);
+        smc.smartCurrentLimit(Constants.ClimbConstants.STALL_LIMIT, Constants.ClimbConstants.FREE_LIMIT); //stall limit, free limit
 
         climbMotor = new SparkMax(Constants.ClimbConstants.MOTOR1_ID, MotorType.kBrushless);
         Constants.ClimbConstants.CLIMB_MOTOR_PID.setSparkMaxPID(climbMotor, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -58,7 +57,6 @@ public class Climb extends SubsystemBase {
         updateClimb(state);
     }
 
-
     private void updateClimb(ClimbStates state) {
         switch (state) {
             case DRIVE: if(climbPose == Constants.ClimbConstants.DRIVE){climbPID.setReference(0, ControlType.kVoltage);}
@@ -68,12 +66,9 @@ public class Climb extends SubsystemBase {
                      else{climbPID.setReference(Constants.ClimbConstants.L1, ControlType.kPosition);}
             break;
             case RESET: climbPID.setReference(Constants.ClimbConstants.RESET, ControlType.kCurrent);
-            break;
-            
+            break;   
         }
     }
-
-    
 
     @Override
     public void periodic() {
