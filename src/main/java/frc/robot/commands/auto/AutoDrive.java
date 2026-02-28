@@ -13,6 +13,7 @@ public class AutoDrive extends Command {
   CANDriveSubsystem driveSubsystem;
   double xSpeed, zRotation;
   boolean curvatureDrive;
+  boolean done = false;
 
   public AutoDrive(CANDriveSubsystem driveSystem, double xSpeed, double zRotation) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -41,8 +42,8 @@ public class AutoDrive extends Command {
   // arcade drive object
   @Override
   public void execute() {
-    if(driveSubsystem.leftLeader.getEncoder().getPosition() >= 40){driveSubsystem.driveArcade(0, 0); /*or next part of drive routine*/}
-    else{driveSubsystem.driveArcade(xSpeed, zRotation);}
+   
+    driveSubsystem.driveArcade(xSpeed, zRotation);
   }
 
   // Called once the command ends or is interrupted.
@@ -54,6 +55,6 @@ public class AutoDrive extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return done;
   }
 }

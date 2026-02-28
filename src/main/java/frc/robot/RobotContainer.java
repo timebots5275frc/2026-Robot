@@ -70,8 +70,8 @@ public class RobotContainer {
     ));
 
     autonChooser.addOption("LIMELIGHT SHOOT", new SequentialCommandGroup(
-      new AutoDrive(tankDrive, -.5, 0),
-      // new LockOnHub(tankDrive, vision),
+      new AutoDrive(tankDrive, -.5, 0).withTimeout(1.0),
+    //  new LockOnHub(tankDrive, vision),
       new ChargeMotor(fs, vision),
       new FeedFuel(intake)
     ));
@@ -121,6 +121,7 @@ public class RobotContainer {
     new JoystickButton(bBoard, Constants.ButtonConstants.OUTTAKE_BUTTON_ID).onTrue(new SetIntakeState(intake, IntakeState.OUTTAKE)); 
 
     new JoystickButton(bBoard, Constants.ButtonConstants.STOP_INTAKE_BUTTON_ID).onTrue(new SetIntakeState(intake, IntakeState.NONE)); 
+    //new JoystickButton(bBoard, Constants.ButtonConstants.FEED_INTAKE_BUTTON_ID).onTrue(new SetIntakeState(intake, IntakeState.FEED)); 
 
     new JoystickButton(bBoard, Constants.ButtonConstants.STOP_SHOOTER_BUTTON_ID).onTrue(new StopShooter(fs)); 
 

@@ -76,8 +76,8 @@ public class TeleopJoystickDrive extends Command {
         turnInput = MathUtil.applyDeadband(turnInput, Constants.DriveConstants.deadband);
 
         //Square input
-        moveInput.x = moveInput.x * Math.abs(moveInput.x);
-        turnInput = turnInput * Math.abs(turnInput);
+        moveInput.x = moveInput.x * Math.abs(moveInput.x)* Math.abs(moveInput.x);
+        turnInput = turnInput * Math.abs(turnInput)* Math.abs(turnInput);
         
         //scale
         Vector2 inputVelocity = moveInput.times(((speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED) * Constants.JoystickConstants.JOY_INPUT_VELOCITY_MULT));

@@ -58,9 +58,10 @@ public final class Constants
     public static final int SHOOT_NO_LIMELIGHT_BUTTON_ID = 8;
     public static final int INTAKE_BUTTON_ID = 5;
     public static final int OUTTAKE_BUTTON_ID = 7;
-    public static final int STOP_SHOOTER_BUTTON_ID = 4;
+    public static final int STOP_SHOOTER_BUTTON_ID = 3;
     public static final int SHAKE_ROBOT_BUTTON_ID = 12;
-    public static final int STOP_INTAKE_BUTTON_ID = 11; //TODO set it to something else
+    public static final int STOP_INTAKE_BUTTON_ID = 4; //TODO set it to something else
+    public static final int FEED_INTAKE_BUTTON_ID = 9;
   }
 
     public static final class DriveConstants {
