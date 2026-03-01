@@ -33,7 +33,7 @@ public class LockOnHub extends Command {
     public void execute() {
 
         if (!vision.hasValidData()) { //SPIN
-            drive.driveArcade(0, 0.1); //TODO IDK
+            drive.driveArcade(0, 0.1); 
             
             return;
         }
@@ -43,9 +43,9 @@ public class LockOnHub extends Command {
             vision.AprilTagID() == 5  || vision.AprilTagID() == 8  || vision.AprilTagID() == 9  || //red
             vision.AprilTagID() == 10 || vision.AprilTagID() == 11 || vision.AprilTagID() == 2  // //red
         ) {
-            double allowedError = 10; //degrees //TODO 
-            double kP = 0.1; // TODO is this neccasary
-            double maxRot = 1; //TODO
+            double allowedError = 10; //degrees 
+            double kP = 0.1; 
+            double maxRot = 1; 
             double tx = vision.HorizontalOffsetFromAprilTag(); 
 
 

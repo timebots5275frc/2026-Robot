@@ -72,6 +72,8 @@ import static frc.robot.Constants.DriveConstants.*;
      // so that postive values drive both sides forward
      config.inverted(true);
      leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+     
    }
 
    @Override
@@ -85,5 +87,19 @@ import static frc.robot.Constants.DriveConstants.*;
     public void curvatureDrive(double xSpeed, double zRotation, boolean allowTurnInPlace) {
      drive.curvatureDrive(xSpeed, zRotation, allowTurnInPlace);
    }
+
+    public void resetEncoders() {
+      leftLeader.getEncoder().setPosition(0);
+      rightLeader.getEncoder().setPosition(0);
+    }
+
+    public double getAverageDistanceMeters() {
+      double leftMeters = leftLeader.getEncoder().getPosition() * METERS_PER_MOTOR_ROTATION;
+      double rightMeters = rightLeader.getEncoder().getPosition() * METERS_PER_MOTOR_ROTATION;
+      return (leftMeters + rightMeters) / 2.0;
+
+    }
+
+    
 
 }

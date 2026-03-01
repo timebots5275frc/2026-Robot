@@ -60,34 +60,39 @@ public final class Constants
     public static final int OUTTAKE_BUTTON_ID = 7;
     public static final int STOP_SHOOTER_BUTTON_ID = 3;
     public static final int SHAKE_ROBOT_BUTTON_ID = 12;
-    public static final int STOP_INTAKE_BUTTON_ID = 4; //TODO set it to something else
+    public static final int STOP_INTAKE_BUTTON_ID = 4; 
     public static final int FEED_INTAKE_BUTTON_ID = 9;
   }
 
     public static final class DriveConstants {
 
-    public static final double deadband = 0.2;
+      public static final double deadband = 0.2;
 
-    // Motor controller IDs for drivetrain motors
-    public static final int LEFT_LEADER_ID = 5  ;
-    public static final int LEFT_FOLLOWER_ID = 2;
-    public static final int RIGHT_LEADER_ID = 3;
-    public static final int RIGHT_FOLLOWER_ID = 4;
+      // Motor controller IDs for drivetrain motors
+      public static final int LEFT_LEADER_ID = 5  ;
+      public static final int LEFT_FOLLOWER_ID = 2;
+      public static final int RIGHT_LEADER_ID = 3;
+      public static final int RIGHT_FOLLOWER_ID = 4;
 
-    // Current limit for drivetrain motors. 60A is a reasonable maximum to reduce
-    // likelihood of tripping breakers or damaging CIM motors
-    public static final int DRIVE_MOTOR_STALL_LIMIT = 60;
-    public static final int DRIVE_MOTOR_FREE_LIMIT = 35;
-    public static final int DRIVE_MOTOR_LIMIT_RPM = 5000;
-    public static final int DRIVE_MOTOR_RAMP_RATE = 10;
+      // Current limit for drivetrain motors. 60A is a reasonable maximum to reduce
+      // likelihood of tripping breakers or damaging CIM motors
+      public static final int DRIVE_MOTOR_STALL_LIMIT = 60;
+      public static final int DRIVE_MOTOR_FREE_LIMIT = 35;
+      public static final int DRIVE_MOTOR_LIMIT_RPM = 5000;
+      public static final int DRIVE_MOTOR_RAMP_RATE = 10;
 
-    public static final double WHEEL_RADIUS = 2.0 * 0.0254; // meters * 0.98
-    public static final double WHEEL_CIRCUMFERENCE = 2.0 * Math.PI * WHEEL_RADIUS; // meters/revolution
+      public static final double WHEEL_RADIUS = 2.0 * 0.0254; // meters * 0.98
+      public static final double WHEEL_CIRCUMFERENCE = 2.0 * Math.PI * WHEEL_RADIUS; // meters/revolution
 
-    public static final double MAX_DRIVE_SPEED = 3.5; // meters/second
-    public static final double MAX_STEER_RATE = .5; // rotations/second of a wheel for steer.
-    public static final double MAX_TWIST_RATE = .6 * 2.0 * Math.PI; // radians/second of the robot rotation.
-    public static final double CONTROLLER_TWIST_RATE = 2; // constant turn rate for using controller
+      public static final double MAX_DRIVE_SPEED = 3.5; // meters/second
+      public static final double MAX_STEER_RATE = .5; // rotations/second of a wheel for steer.
+      public static final double MAX_TWIST_RATE = .6 * 2.0 * Math.PI; // radians/second of the robot rotation.
+      public static final double CONTROLLER_TWIST_RATE = 2; // constant turn rate for using controller
+
+      //DistanceDrive
+      public static final double GEAR_RATIO = 15; //TODO: find this out
+
+      public static final double METERS_PER_MOTOR_ROTATION = WHEEL_CIRCUMFERENCE / GEAR_RATIO;
 
     // #region <Misc CAN IDs>
       public static final int PIGEON_IMU_ID = 9;
