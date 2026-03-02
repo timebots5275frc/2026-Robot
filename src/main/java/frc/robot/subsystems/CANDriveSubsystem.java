@@ -100,6 +100,19 @@ import static frc.robot.Constants.DriveConstants.*;
 
     }
 
+    public double degreesTurned() {
+
+      double leftRotations = leftLeader.getEncoder().getPosition();
+
+      double rightRotations = rightLeader.getEncoder().getPosition();
+
+      double leftMeters = leftRotations * Constants.DriveConstants.WHEEL_CIRCUMFERENCE;
+      double rightMeters = rightRotations * Constants.DriveConstants.WHEEL_CIRCUMFERENCE;
+
+      double angleRad =(rightMeters - leftMeters)/ Constants.DriveConstants.TRACK_WIDTH;
+
+      return Math.toDegrees(angleRad);
+    }
     public DifferentialDrive getDifferentialDrive() {
       return drive;
     }

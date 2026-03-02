@@ -98,6 +98,8 @@ public final class Constants
       public static final int PIGEON_IMU_ID = 9;
       public static final int PIGEON_2_ID = 9;
     // #endregion
+
+    public static final double TRACK_WIDTH = 0;//TODO: Find this out, meters
   }
   public static final class MathConstants
   {

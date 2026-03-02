@@ -23,6 +23,7 @@ public class DistanceDrive extends Command {
     @Override
     public void initialize() {
         drive.resetEncoders();
+        
     }
 
     @Override
