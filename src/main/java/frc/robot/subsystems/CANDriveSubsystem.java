@@ -100,6 +100,9 @@ import static frc.robot.Constants.DriveConstants.*;
 
     }
 
+    public DifferentialDrive getDifferentialDrive() {
+      return drive;
+    }
     
 
 }

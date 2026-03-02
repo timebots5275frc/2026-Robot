@@ -48,6 +48,7 @@ public class TeleopJoystickDrive extends Command {
     public void initialize() {
         //AutoTargetStateManager.onStart();
         //drivetrain.resetPigeon();
+        drivetrain.getDifferentialDrive().setDeadband(Constants.DriveConstants.deadband);
     }
 
     @Override
@@ -68,12 +69,12 @@ public class TeleopJoystickDrive extends Command {
             speedPercent = input.getControllerSpeed();
         }
 
-        moveInput = new Vector2(
-            MathUtil.applyDeadband(moveInput.x, Constants.DriveConstants.deadband),
-            MathUtil.applyDeadband(moveInput.y, Constants.DriveConstants.deadband)
-        );
-        // deadband -> square -> scale -> ratelimit -> drive
-        turnInput = MathUtil.applyDeadband(turnInput, Constants.DriveConstants.deadband);
+        // moveInput = new Vector2(
+        //     MathUtil.applyDeadband(moveInput.x, Constants.DriveConstants.deadband),
+        //     MathUtil.applyDeadband(moveInput.y, Constants.DriveConstants.deadband)
+        // );
+        // // deadband -> square -> scale -> ratelimit -> drive
+        // turnInput = MathUtil.applyDeadband(turnInput, Constants.DriveConstants.deadband);
 
         //Square input
         moveInput.x = moveInput.x * Math.abs(moveInput.x)* Math.abs(moveInput.x);
