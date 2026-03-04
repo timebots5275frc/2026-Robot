@@ -9,9 +9,9 @@ import frc.robot.subsystems.CANDriveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DistanceDrive extends Command {
-    private final CANDriveSubsystem drive;
-    private final double distanceMeters;
-    private final double speed;
+    private  CANDriveSubsystem drive;
+    private  double distanceMeters;
+    private  double speed;
 
     public DistanceDrive(CANDriveSubsystem drive, double distanceMeters, double speed) {
         this.drive = drive;
@@ -28,12 +28,16 @@ public class DistanceDrive extends Command {
 
     @Override
     public void execute() {
-        drive.driveArcade(speed, 0);
+        
+
+         double direction = Math.signum(distanceMeters);
+         drive.driveArcade(Math.abs(speed) * direction, 0);
+        
     }
 
     @Override
     public boolean isFinished() {
-        return drive.getAverageDistanceMeters() >= distanceMeters;
+        return Math.abs(drive.getAverageDistanceMeters()) >= Math.abs(distanceMeters);
     }
 
     @Override

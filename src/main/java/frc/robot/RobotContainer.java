@@ -10,6 +10,7 @@ import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.StopShooter;
 import frc.robot.commands.TeleopJoystickDrive;
 import frc.robot.commands.auto.AutoDrive;
+import frc.robot.commands.auto.DistanceDrive;
 import frc.robot.commands.shoot.ChargeMotor;
 import frc.robot.commands.shoot.FeedFuel;
 import frc.robot.subsystems.CANDriveSubsystem;
@@ -70,7 +71,7 @@ public class RobotContainer {
     ));
 
     autonChooser.addOption("LIMELIGHT SHOOT", new SequentialCommandGroup(
-      new AutoDrive(tankDrive, -.5, 0).withTimeout(1.0),
+      new DistanceDrive(tankDrive,1.25, 0.5),
     //  new LockOnHub(tankDrive, vision),
       new ChargeMotor(fs, vision),
       new FeedFuel(intake)
