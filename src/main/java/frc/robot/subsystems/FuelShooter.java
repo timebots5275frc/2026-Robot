@@ -4,7 +4,10 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 
@@ -14,8 +17,11 @@ import frc.robot.Constants;
 
 public class FuelShooter extends SubsystemBase {
 
-  private SparkFlex shooterMotor;
+  private SparkFlex shooterMotor1;
   public SparkClosedLoopController shooterMotorPID;
+
+  private SparkFlex shooterMotor2;
+
 
   private double tx, ty, shooterAngleDeg;
 
@@ -29,6 +35,10 @@ public class FuelShooter extends SubsystemBase {
   // private double iS = 0;
   // CANDriveSubsystem cs;
 
+
+
+  //2 neo vortex motors 1 inverted f
+
   public enum FuelShooterState{
     CHARGEMOTOR,
     REVERSE,
@@ -37,12 +47,17 @@ public class FuelShooter extends SubsystemBase {
 
   public FuelShooter() {
 
-    shooterMotor = new SparkFlex(Constants.FuelShooterConstants.SHOOTER_MOTOR_ID, MotorType.kBrushless);
+    shooterMotor1 = new SparkFlex(Constants.FuelShooterConstants.SHOOTER_MOTOR_ID, MotorType.kBrushless);
     Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setFreeLimit(Constants.FuelShooterConstants.SHOOTER_FREE_LIMIT);
     Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setStallLimit(Constants.FuelShooterConstants.SHOOTER_STALL_LIMIT);
-    Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setSparkFlexPID(shooterMotor,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters, IdleMode.kCoast);
-    shooterMotorPID = shooterMotor.getClosedLoopController(); 
+    Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setSparkFlexPID(shooterMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters, IdleMode.kCoast);
+    shooterMotorPID = shooterMotor1.getClosedLoopController(); 
 
+    //follower
+    shooterMotor2 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, MotorType.kBrushless);
+    SparkFlexConfig motor2Config = Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkFlexPID(shooterMotor1);
+    motor2Config.follow(shooterMotor1, true);
+    shooterMotor2.configure(motor2Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
    }
 
   public void SetShooterState(FuelShooterState state){
@@ -94,7 +109,7 @@ public class FuelShooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("shooter rpm", shooterMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("shooter rpm", shooterMotor1.getEncoder().getVelocity());
   }
 
   public FuelShooterState getShooterState() {
@@ -102,6 +117,6 @@ public class FuelShooter extends SubsystemBase {
   }
 
   public SparkFlex getMotor() {
-    return shooterMotor;
+    return shooterMotor1;
   }
 }

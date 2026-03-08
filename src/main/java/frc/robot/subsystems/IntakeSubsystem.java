@@ -8,20 +8,24 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  private SparkFlex intakeMotor1;
+  private SparkMax intakeMotor1;
   private SparkClosedLoopController intakePID1;
   
   private SparkMax intakeMotor2; // this is spark max dont forget
   private SparkClosedLoopController intakePID2;
 
   private IntakeState state = IntakeState.NONE;
-    
+  
+  // 2 big neos
+
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
     intakeMotor2 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID,SparkLowLevel.MotorType.kBrushless);
@@ -30,11 +34,20 @@ public class IntakeSubsystem extends SubsystemBase {
     Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkMaxPID(intakeMotor2,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     intakePID2 = intakeMotor2.getClosedLoopController();
 
-    intakeMotor1 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
+    // intakeMotor1 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
+    // Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT1);
+    // Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT1);
+    // Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkFlexPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
+    // intakePID1 = intakeMotor1.getClosedLoopController();   
+
+    intakeMotor1 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT1);
     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT1);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkFlexPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
+    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkMaxPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     intakePID1 = intakeMotor1.getClosedLoopController();   
+
+    
+    
   }
 
   public enum IntakeState{
