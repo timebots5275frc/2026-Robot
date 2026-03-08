@@ -33,7 +33,7 @@ public class LockOnHub extends Command {
     public void execute() {
 
         if (!vision.hasValidData()) { //SPIN
-            drive.driveArcade(0, 0.1); 
+            drive.driveArcade(0, .5); 
             
             return;
         }
@@ -43,8 +43,8 @@ public class LockOnHub extends Command {
             vision.AprilTagID() == 5  || vision.AprilTagID() == 8  || vision.AprilTagID() == 9  || //red
             vision.AprilTagID() == 10 || vision.AprilTagID() == 11 || vision.AprilTagID() == 2  // //red
         ) {
-            double allowedError = 10; //degrees 
-            double kP = 0.1; 
+            double allowedError = 15; //degrees 
+            double kP = 0.5; 
             double maxRot = 1; 
             double tx = vision.HorizontalOffsetFromAprilTag(); 
 
@@ -57,14 +57,14 @@ public class LockOnHub extends Command {
             }
             lockedOn = false;
 
-             double correctionDeg = tx * kP;
-             double correctionRad = Math.toRadians(correctionDeg);
+             double correctionDeg = kP;
+             double correctionRad =correctionDeg;
 
              correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
 
              drive.driveArcade(0, correctionRad);
 
-            SmartDashboard.putBoolean("Locked in", lockedOn);
+           // SmartDashboard.putBoolean("Locked in", lockedOn);
          }
 
         
@@ -80,7 +80,7 @@ public class LockOnHub extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        SmartDashboard.putBoolean("Locked in", lockedOn);
+        //SmartDashboard.putBoolean("Locked in", lockedOn);
         return lockedOn;
     }
 
