@@ -1,30 +1,28 @@
-// Open Source Software; you can modify and/or share it under the terms of
 // Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
 
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
+//import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.CustomTypes.Math.Vector2;
-import frc.robot.subsystems.CANDriveSubsystem;
+
+
 import frc.robot.subsystems.Input.Input;
+import frc.robot.subsystems.Swerve.SwerveDrive;
+import frc.robot.CustomTypes.Math.Vector2;
 
 public class TeleopJoystickDrive extends Command {
 
-    private CANDriveSubsystem drivetrain;
+    private SwerveDrive drivetrain;
     private Input input;
 
     //private Joystick driveStick;
-    public SlewRateLimiter srlX = new SlewRateLimiter(Constants.JoystickConstants.JOY_X_RATE_LIMIT);
-    public SlewRateLimiter srlTurn = new SlewRateLimiter(Constants.JoystickConstants.JOY_TURN_RATE_LIMIT);
     public boolean fieldRelative;
     private boolean usingJoystick;
-    private int front = -1;
     private double C;
 
     /**
@@ -33,24 +31,22 @@ public class TeleopJoystickDrive extends Command {
      * @param subsystem The drive subsystem this command wil run on.
      * @param joystick  The control input for driving
      */
-    public TeleopJoystickDrive(CANDriveSubsystem drive, Input input_, boolean _fieldRelative, int front) {
-        this.drivetrain = drive;
+    public TeleopJoystickDrive(SwerveDrive _swerveDrive, Input input_, boolean _fieldRelative) {
+        this.drivetrain = _swerveDrive;
         this.input = input_;
         this.fieldRelative = _fieldRelative;
-        this.front = front;
         usingJoystick = this.input.usingJoystick;
-        addRequirements(drive);
+        addRequirements(_swerveDrive);
 
         C = 6;
-    } 
+    }
+
+    
 
     @Override
     public void initialize() {
         //AutoTargetStateManager.onStart();
         //drivetrain.resetPigeon();
-        drivetrain.getDifferentialDrive().setDeadband(0); // 0 so not applied twice
-
-        
     }
 
     @Override
@@ -58,7 +54,6 @@ public class TeleopJoystickDrive extends Command {
         Vector2 moveInput;
         double turnInput;
         double speedPercent = 0;
-
         if (usingJoystick) {
             moveInput = input.JoystickInput();
             turnInput = input.JoystickTwist();
@@ -70,80 +65,23 @@ public class TeleopJoystickDrive extends Command {
             turnInput = input.ControllerTurn();
             speedPercent = input.getControllerSpeed();
         }
-
-        // moveInput = new Vector2(
-        //     MathUtil.applyDeadband(moveInput.x, Constants.DriveConstants.DEAD_BAND_DRIVE),
-        //     MathUtil.applyDeadband(moveInput.y, Constants.DriveConstants.DEAD_BAND_DRIVE)
-        // );
-        // deadband -> square -> scale -> ratelimit -> drive
-       // turnInput = MathUtil.applyDeadband(turnInput, Constants.DriveConstants.DEAD_BAND_STEER);
-
-       //deadband
-        if(Math.abs(turnInput) > Constants.DriveConstants.DEAD_BAND_STEER) {
-            turnInput = turnInput - (Math.signum(turnInput) * Constants.DriveConstants.DEAD_BAND_STEER) / (1 - Constants.DriveConstants.DEAD_BAND_STEER);
-        } else {
-            turnInput = 0;
-        }
-
-        if(Math.abs(moveInput.x) > Constants.DriveConstants.DEAD_BAND_DRIVE) {
-            moveInput.x = moveInput.x - (Math.signum(moveInput.x) * Constants.DriveConstants.DEAD_BAND_DRIVE) / (1 - Constants.DriveConstants.DEAD_BAND_DRIVE);
-        } else {
-            moveInput.x = 0;
-        }
-
-        if(Math.abs(moveInput.y) > Constants.DriveConstants.DEAD_BAND_DRIVE) {
-            moveInput.y = moveInput.y - (Math.signum(moveInput.y) * Constants.DriveConstants.DEAD_BAND_DRIVE) / (1 - Constants.DriveConstants.DEAD_BAND_DRIVE);
-        } else {
-            moveInput.y = 0;
-        }
-
-
-        moveInput = new Vector2(
-           moveInput.x,
-           moveInput.y
-        );
-
-        //Square input
-        moveInput.x = (moveInput.x * Math.abs(moveInput.x) * Math.abs(moveInput.x)) * Constants.JoystickConstants.JOY_INPUT_VELOCITY_MULT;
-        turnInput = (turnInput * Math.abs(turnInput) * Math.abs(turnInput)) * Constants.JoystickConstants.JOY_INPUT_ROTATION_VELOCITY_MULT;
         
-        //scale
-        Vector2 inputVelocity = moveInput.times(((speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED)));
-        double inputRotationVelocity = (turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE); //rot. vel.
-                                                                                                               //remove last multiplied number for max results
+        Vector2 inputVelocity = moveInput.times(speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED);
+        double inputRotationVelocity = turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE;
         
-        int rot_sign = (int)(inputRotationVelocity / Math.abs(inputRotationVelocity)); //returns 1 or -1
+        int rot_sign = (int)(inputRotationVelocity / Math.abs(inputRotationVelocity));
         
-        // if rotation is too high set rotation as max
         if(Math.abs(inputRotationVelocity)>Constants.DriveConstants.MAX_TWIST_RATE){
             System.out.println("IRV exceeds max twist rate");
             inputRotationVelocity=Constants.DriveConstants.MAX_TWIST_RATE*rot_sign;
         }
+        SmartDashboard.putNumber("Throttle teleJoy", speedPercent);
+        SmartDashboard.putNumber("Turn_speed", inputRotationVelocity);
 
 
-        // SmartDashboard.putNumber("Throttle teleJoy", speedPercent);
-        // SmartDashboard.putNumber("Turn_speed", inputRotationVelocity);
-
-        System.out.println(moveInput.x);
-
+        drivetrain.drive(inputVelocity.x, inputVelocity.y, inputRotationVelocity, fieldRelative);
         
-
-        //ratelimit and drive
-
-        // inputVelocity.x = srlX.calculate(inputVelocity.x * front);
-        // inputRotationVelocity = srlTurn.calculate(inputRotationVelocity);
-        if (Math.abs(inputVelocity.x) > 0 || Math.abs(inputRotationVelocity) >0) {
-            drivetrain.driveArcade(srlX.calculate(inputVelocity.x * front), srlTurn.calculate(inputRotationVelocity));
-        } else {
-            drivetrain.driveArcade(0, 0);
-        }
-        
-
-        //SmartDashboard.putNumber("move", moveInput.x);
-       // SmartDashboard.putNumber("turn", turnInput);
     }
-
-    
 
     @Override
     public void end(boolean interrupted) {

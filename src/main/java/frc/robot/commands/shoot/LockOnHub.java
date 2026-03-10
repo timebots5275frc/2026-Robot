@@ -3,17 +3,18 @@ package frc.robot.commands.shoot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CANDriveSubsystem;
+
+import frc.robot.subsystems.Swerve.SwerveDrive;
 import frc.robot.subsystems.Vision.Vision;
 
 public class LockOnHub extends Command {
 
-    private CANDriveSubsystem drive;
+    private SwerveDrive drive;
     private Vision vision;
 
     private boolean lockedOn = false;
 
-    public LockOnHub(CANDriveSubsystem drive, Vision vision) {
+    public LockOnHub(SwerveDrive drive, Vision vision) {
        this.drive = drive;
         this.vision = vision;
 
@@ -33,7 +34,7 @@ public class LockOnHub extends Command {
     public void execute() {
 
         if (!vision.hasValidData()) { //SPIN
-            drive.driveArcade(0, .5); 
+            drive.drive(0, 0, 0.5, true);
             
             return;
         }
@@ -51,7 +52,7 @@ public class LockOnHub extends Command {
 
             //STOP to not have wiggles
             if (Math.abs(tx) < allowedError) {
-                drive.driveArcade(0, 0);
+                drive.drive(0, 0,0,true);
                 lockedOn = true;
                 return;
             }
@@ -62,7 +63,7 @@ public class LockOnHub extends Command {
 
              correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
 
-             drive.driveArcade(0, correctionRad);
+             drive.drive(0,0, correctionRad, true);
 
            // SmartDashboard.putBoolean("Locked in", lockedOn);
          }

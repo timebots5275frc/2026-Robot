@@ -11,16 +11,13 @@ import frc.robot.commands.Intake;
 import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.StopShooter;
 import frc.robot.commands.TeleopJoystickDrive;
-import frc.robot.commands.TeleopJoystickDriveSwerve;
+import frc.robot.commands.TeleopJoystickDrive;
 import frc.robot.commands.auto.AutoDrive;
-import frc.robot.commands.auto.AutoDriveSwerve;
-import frc.robot.commands.auto.DegreeTurn;
-import frc.robot.commands.auto.DistanceDrive;
+import frc.robot.commands.auto.AutoDrive;
 import frc.robot.commands.shoot.ChargeMotor;
 import frc.robot.commands.shoot.FeedFuel;
 import frc.robot.commands.shoot.LockOnHub;
-import frc.robot.commands.shoot.LockOnHubSwerve;
-import frc.robot.subsystems.CANDriveSubsystem;
+import frc.robot.commands.shoot.LockOnHub;
 import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.FuelShooter.FuelShooterState;
@@ -53,10 +50,9 @@ public class RobotContainer {
 
     Joystick joy;
     Input input;
-    TeleopJoystickDriveSwerve teleJoyDriveSwerve;
+    TeleopJoystickDrive teleJoyDriveSwerve;
     GenericHID bBoard;
     Vision vision;
-   //CANDriveSubsystem tankDrive;
     FuelShooter fs;
     IntakeSubsystem intake;
 
@@ -72,23 +68,22 @@ public class RobotContainer {
     bBoard = new GenericHID(1);
     joy = new Joystick(0);
     input = new Input(joy);
-    //tankDrive = new CANDriveSubsystem();
     fs = new FuelShooter();
     intake = new IntakeSubsystem();
     vision = new Vision();
     swerveDrive = new SwerveDrive();
 
     autonChooser.setDefaultOption("LIMELIGHT SHOOT with distance", new SequentialCommandGroup(
-      new AutoDriveSwerve( -.75, -0.5, swerveDrive),
-      new LockOnHubSwerve(swerveDrive, vision),
+      new AutoDrive( -.75, -0.5, swerveDrive),
+      new LockOnHub(swerveDrive, vision),
       new ChargeMotor(fs, vision),
       new FeedFuel(intake)
     ));
 
     autonChooser.addOption("LIMELIGHT SHOOT with distance LEFT", new SequentialCommandGroup(
-      new AutoDriveSwerve( -.75, -0.5, swerveDrive),
+      new AutoDrive( -.75, -0.5, swerveDrive),
       //new DegreeTurn(swerveDrive, 45, true, 1.5), //TODO: find how to rotate
-      new LockOnHubSwerve(swerveDrive, vision),
+      new LockOnHub(swerveDrive, vision),
       new ChargeMotor(fs, vision),
       new FeedFuel(intake)
     ));
