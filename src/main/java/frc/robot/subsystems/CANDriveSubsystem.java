@@ -78,7 +78,7 @@ import static frc.robot.Constants.DriveConstants.*;
 
    @Override
    public void periodic() {
-    //SmartDashboard.putNumber("Drive Current", leftLeader.getOutputCurrent());
+    SmartDashboard.putNumber("Drive Current", leftLeader.getOutputCurrent());
    }
 
    public void driveArcade(double xSpeed, double zRotation) {
@@ -96,7 +96,7 @@ import static frc.robot.Constants.DriveConstants.*;
     public double getAverageDistanceMeters() {
       double leftMeters = leftLeader.getEncoder().getPosition() * METERS_PER_MOTOR_ROTATION;
       double rightMeters = rightLeader.getEncoder().getPosition() * METERS_PER_MOTOR_ROTATION;
-      return (Math.abs(leftMeters) + Math.abs(rightMeters)) / 2.0;
+      return (leftMeters + rightMeters) / 2.0;
 
     }
 
@@ -106,10 +106,10 @@ import static frc.robot.Constants.DriveConstants.*;
 
       double rightRotations = rightLeader.getEncoder().getPosition();
 
-      double leftMeters = leftRotations * Constants.DriveConstants.METERS_PER_MOTOR_ROTATION;
-      double rightMeters = rightRotations * Constants.DriveConstants.METERS_PER_MOTOR_ROTATION;
+      double leftMeters = leftRotations * Constants.DriveConstants.WHEEL_CIRCUMFERENCE;
+      double rightMeters = rightRotations * Constants.DriveConstants.WHEEL_CIRCUMFERENCE;
 
-      double angleRad =(rightMeters + leftMeters)/ Constants.DriveConstants.TRACK_WIDTH;// + because one is opposite
+      double angleRad =(rightMeters - leftMeters)/ Constants.DriveConstants.TRACK_WIDTH;
 
       return Math.toDegrees(angleRad);
     }

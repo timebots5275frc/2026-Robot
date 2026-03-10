@@ -6,27 +6,25 @@ package frc.robot;
 
 import frc.robot.Constants.MathConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.FuelShooterCommand;
-import frc.robot.commands.Intake;
 import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.StopShooter;
 import frc.robot.commands.TeleopJoystickDrive;
-import frc.robot.commands.TeleopJoystickDriveSwerve;
+
 import frc.robot.commands.auto.AutoDrive;
-import frc.robot.commands.auto.AutoDriveSwerve;
+
 import frc.robot.commands.auto.DegreeTurn;
 import frc.robot.commands.auto.DistanceDrive;
 import frc.robot.commands.shoot.ChargeMotor;
 import frc.robot.commands.shoot.FeedFuel;
 import frc.robot.commands.shoot.LockOnHub;
-import frc.robot.commands.shoot.LockOnHubSwerve;
+import frc.robot.commands.auto.DistanceDrive;
+import frc.robot.commands.shoot.ChargeMotor;
+import frc.robot.commands.shoot.FeedFuel;
 import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.FuelShooter.FuelShooterState;
 import frc.robot.subsystems.IntakeSubsystem.IntakeState;
 import frc.robot.subsystems.Input.Input;
-import frc.robot.subsystems.Swerve.SwerveDrive;
 import frc.robot.subsystems.Vision.Vision;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -53,14 +51,14 @@ public class RobotContainer {
 
     Joystick joy;
     Input input;
-    TeleopJoystickDriveSwerve teleJoyDriveSwerve;
+    TeleopJoystickDrive teleJoyDrive;
     GenericHID bBoard;
     Vision vision;
-   //CANDriveSubsystem tankDrive;
+   CANDriveSubsystem tankDrive;
     FuelShooter fs;
     IntakeSubsystem intake;
 
-    SwerveDrive swerveDrive;
+    
     // Climb climb;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -72,83 +70,76 @@ public class RobotContainer {
     bBoard = new GenericHID(1);
     joy = new Joystick(0);
     input = new Input(joy);
-    //tankDrive = new CANDriveSubsystem();
+    tankDrive = new CANDriveSubsystem();
     fs = new FuelShooter();
     intake = new IntakeSubsystem();
     vision = new Vision();
-    swerveDrive = new SwerveDrive();
+    
+    
+    
+
+    autonChooser.setDefaultOption("Drive ONLY", new SequentialCommandGroup(
+      // new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22,0),
+      new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22, 0)
+    ));
+
 
     autonChooser.setDefaultOption("LIMELIGHT SHOOT with distance", new SequentialCommandGroup(
-      new AutoDriveSwerve( -.75, -0.5, swerveDrive),
-      new LockOnHubSwerve(swerveDrive, vision),
+      new DistanceDrive(tankDrive, -.75, -0.5),
+      //new LockOnHub(tankDrive, vision),
       new ChargeMotor(fs, vision),
       new FeedFuel(intake)
     ));
 
     autonChooser.addOption("LIMELIGHT SHOOT with distance LEFT", new SequentialCommandGroup(
-      new AutoDriveSwerve( -.75, -0.5, swerveDrive),
-      //new DegreeTurn(swerveDrive, 45, true, 1.5), //TODO: find how to rotate
-      new LockOnHubSwerve(swerveDrive, vision),
+      new DistanceDrive(tankDrive, -.75, -0.5),
+      new DegreeTurn(tankDrive, 45, true, 1.5),
+      new LockOnHub(tankDrive, vision),
       new ChargeMotor(fs, vision),
       new FeedFuel(intake)
     ));
 
-    // autonChooser.setDefaultOption("LIMELIGHT SHOOT with distance", new SequentialCommandGroup(
-    //   new DistanceDrive(tankDrive, -.75, -0.5),
-    //   //new LockOnHub(tankDrive, vision),
-    //   new ChargeMotor(fs, vision),
-    //   new FeedFuel(intake)
-    // ));
+    autonChooser.addOption("LIMELIGHT SHOOT with distance RIGHT", new SequentialCommandGroup(
+      new DistanceDrive(tankDrive, -1.25, -0.5),
+      new LockOnHub(tankDrive, vision),
+      new DegreeTurn(tankDrive, 45, false, 1.5),
+      new ChargeMotor(fs, vision),
+      new FeedFuel(intake)
+    ));
 
-    // autonChooser.addOption("LIMELIGHT SHOOT with distance LEFT", new SequentialCommandGroup(
-    //   new DistanceDrive(tankDrive, -.75, -0.5),
-    //   new DegreeTurn(tankDrive, 45, true, 1.5),
-    //   new LockOnHub(tankDrive, vision),
-    //   new ChargeMotor(fs, vision),
-    //   new FeedFuel(intake)
-    // ));
+    autonChooser.addOption("LIMELIGHT SHOOT with time", new SequentialCommandGroup(
+      new AutoDrive(tankDrive, -0.5, 0).withTimeout(1),
+      new LockOnHub(tankDrive, vision),
+      new ChargeMotor(fs, vision),
+      new FeedFuel(intake)
+    ));
 
-    // autonChooser.addOption("LIMELIGHT SHOOT with distance RIGHT", new SequentialCommandGroup(
-    //   new DistanceDrive(tankDrive, -1.25, -0.5),
-    //   new LockOnHub(tankDrive, vision),
-    //   new DegreeTurn(tankDrive, 45, false, 1.5),
-    //   new ChargeMotor(fs, vision),
-    //   new FeedFuel(intake)
-    // ));
+    autonChooser.addOption("Outpost", new SequentialCommandGroup(
+      new DistanceDrive(tankDrive, -3.406 + Constants.DriveConstants.CHASSILENGTH, 1.75),
+      new WaitCommand(2),
+      new DistanceDrive(tankDrive, 1.7018 - Constants.DriveConstants.CHASSILENGTH, 1),
+      new DegreeTurn(tankDrive, 135, true, 1.5),
+      new ChargeMotor(fs, vision),
+      new FeedFuel(intake)
+    ));  
 
-    // autonChooser.addOption("LIMELIGHT SHOOT with time", new SequentialCommandGroup(
-    //   new AutoDrive(tankDrive, -0.5, 0).withTimeout(1),
-    //   new LockOnHub(tankDrive, vision),
-    //   new ChargeMotor(fs, vision),
-    //   new FeedFuel(intake)
-    // ));
+    autonChooser.addOption("Neutral Zone LEFT", new SequentialCommandGroup(
+      new DistanceDrive(tankDrive, 4.72186, 2),
+      new DegreeTurn(tankDrive, 90, true, 1.5),
+      new ParallelRaceGroup(new DistanceDrive(tankDrive, 5.08, 0.5), new SetIntakeState(intake, IntakeState.INTAKE))
+    ));
 
-    // autonChooser.addOption("Outpost", new SequentialCommandGroup(
-    //   new DistanceDrive(tankDrive, -3.406 + Constants.DriveConstants.CHASSILENGTH, 1.75),
-    //   new WaitCommand(2),
-    //   new DistanceDrive(tankDrive, 1.7018 - Constants.DriveConstants.CHASSILENGTH, 1),
-    //   new DegreeTurn(tankDrive, 135, true, 1.5),
-    //   new ChargeMotor(fs, vision),
-    //   new FeedFuel(intake)
-    // ));  
+    autonChooser.addOption("Neutral Zone RIGHT", new SequentialCommandGroup(
+      new DistanceDrive(tankDrive, 4.72186, 2),
+      new DegreeTurn(tankDrive, 90, false, 1.5),
+      new ParallelRaceGroup(new DistanceDrive(tankDrive, 5.08, 0.5), new SetIntakeState(intake, IntakeState.INTAKE))
+    ));
 
-    // autonChooser.addOption("Neutral Zone LEFT", new SequentialCommandGroup(
-    //   new DistanceDrive(tankDrive, 4.72186, 2),
-    //   new DegreeTurn(tankDrive, 90, true, 1.5),
-    //   new ParallelRaceGroup(new DistanceDrive(tankDrive, 5.08, 0.5), new SetIntakeState(intake, IntakeState.INTAKE))
-    // ));
-
-    // autonChooser.addOption("Neutral Zone RIGHT", new SequentialCommandGroup(
-    //   new DistanceDrive(tankDrive, 4.72186, 2),
-    //   new DegreeTurn(tankDrive, 90, false, 1.5),
-    //   new ParallelRaceGroup(new DistanceDrive(tankDrive, 5.08, 0.5), new SetIntakeState(intake, IntakeState.INTAKE))
-    // ));
-
-    // autonChooser.addOption("Center Block", new SequentialCommandGroup(
-    //   new ParallelCommandGroup(new DistanceDrive(tankDrive, 185.9 * Constants.MathConstants.INCH_TO_METER, 2), new SetIntakeState(intake, IntakeState.INTAKE))
+    autonChooser.addOption("Center Block", new SequentialCommandGroup(
+      new ParallelCommandGroup(new DistanceDrive(tankDrive, 185.9 * Constants.MathConstants.INCH_TO_METER, 2), new SetIntakeState(intake, IntakeState.INTAKE))
       
       
-    // ));
+    ));
 
     SmartDashboard.putData(autonChooser);
 
@@ -167,15 +158,12 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    //  new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileFalse(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1));
-    //  new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, 1)).whileFalse(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1));
-    // // teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1);
-    //  tankDrive.setDefaultCommand(teleJoyDrive);
-
-    swerveDrive.setDefaultCommand(teleJoyDriveSwerve);
-
-    new JoystickButton(joy, 7).onTrue(new InstantCommand(swerveDrive::flipFieldRelative ,swerveDrive));
-
+     new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileFalse(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1));
+     new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, 1));
+    // teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1);
+     tankDrive.setDefaultCommand(teleJoyDrive);
+    
+    //new JoystickButton(joy, 7).onTrue(new InstantCommand(tankDrive::flipFieldRelative ,tankDrive));
     /*tmp */
     //pigeon
     //new JoystickButton(joy, 8).onTrue(new InstantCommand(swerveDrive::resetPigeon, swerveDrive));
@@ -203,7 +191,6 @@ public class RobotContainer {
 
     //new JoystickButton(bBoard,Constants.ButtonConstants.SHAKE_ROBOT_BUTTON_ID).onTrue(new SequentialCommandGroup(new AutoDrive(tankDrive, -2, 0).withTimeout(.1), new AutoDrive(tankDrive, 2, 0).withTimeout(.2)/* , teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1)*/));
 
-    new JoystickButton(bBoard, 10).onTrue(new ParallelCommandGroup(new FuelShooterCommand(fs, vision, FuelShooterState.REVERSE), new SetIntakeState(intake, IntakeState.SUCK)));
     // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1
     // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.DRIVE)); //climb to drive

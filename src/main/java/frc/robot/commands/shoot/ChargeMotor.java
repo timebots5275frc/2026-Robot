@@ -23,7 +23,7 @@ public class ChargeMotor extends Command {
 
   boolean usingVision = false;
 
-  int allowedError = 50;
+  int allowedError = 20;
 
   public ChargeMotor(FuelShooter shooter, Vision vision) {
     this.vision = vision;
@@ -78,7 +78,7 @@ public class ChargeMotor extends Command {
                 //  System.out.println("See April tag " + vision.AprilTagID());
 
                  targetRPM = -shooter.calculateRPMFromLimelight(tx,ty,dx)/*   shooter.getShooterRPMMult()*/;
-                // SmartDashboard.putNumber("target rpm", targetRPM);
+                 SmartDashboard.putNumber("target rpm", targetRPM);
 
 
                  shooter.shooterMotorPID.setReference(targetRPM , ControlType.kVelocity);
@@ -86,7 +86,7 @@ public class ChargeMotor extends Command {
 
                  //prints distance and target rpm
                  
-                  SmartDashboard.putNumber("Shooter Distance", shooter.dx);
+                //  SmartDashboard.putNumber("Shooter Distance", shooter.dx);
                   SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
                 //  System.out.println("target RPM " + targetRPM);
                }
@@ -94,8 +94,7 @@ public class ChargeMotor extends Command {
         if(vision.hasValidData() == false){
             // System.out.println(vision.AprilTagID() + "no valid data");
             // drive.driveArcade(0, 0);
-            targetRPM = -3500;
-            shooter.shooterMotorPID.setReference(targetRPM, ControlType.kVelocity);
+            shooter.shooterMotorPID.setReference(-Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM, ControlType.kVelocity);
         }
         SmartDashboard.putBoolean("Charging Motor", true);
   }
@@ -117,16 +116,14 @@ public class ChargeMotor extends Command {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    //SmartDashboard.putNumber("Number",  Math.abs(targetRPM) - allowedError); 
+  public boolean isFinished() { 
     if (targetRPM == 0) {
       return false;
     }
      SmartDashboard.putBoolean("Charging Motor", true);
     
-    if (Math.abs(shooter.getMotor().getEncoder().getVelocity()) >= Math.abs(targetRPM) - allowedError && Math.abs(shooter.getMotor().getEncoder().getVelocity()) <= Math.abs(targetRPM) + allowedError) {
+    if (shooter.getMotor().getEncoder().getVelocity() >= targetRPM - allowedError && shooter.getMotor().getEncoder().getVelocity() <= targetRPM + allowedError) {
       SmartDashboard.putBoolean("Charging Motor", false);
-      
       return true;
     } 
     return false;

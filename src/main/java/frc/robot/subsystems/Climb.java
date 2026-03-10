@@ -73,7 +73,7 @@ public class Climb extends SubsystemBase {
     @Override
     public void periodic() {
         climbPose = climbEncoder.getPosition();
-       // SmartDashboard.putNumber("Climber pose", climbEncoder.getPosition());
+        SmartDashboard.putNumber("Climber pose", climbEncoder.getPosition());
     }
 
 }

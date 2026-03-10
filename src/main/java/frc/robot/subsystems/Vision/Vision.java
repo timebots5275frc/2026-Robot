@@ -120,11 +120,11 @@ public class Vision extends SubsystemBase {
 
   void LogData()
   {
-    // SmartDashboard.putString("Detected AprilTagID", aprilTagID == -1 ? "None" : String.valueOf(aprilTagID));
-    // SmartDashboard.putString("AprilTag position in Robot Space", aprilTagID == -1 ? "N/A" : avgAprilTagPosInRobotSpace.toString(3));
-    // SmartDashboard.putString("AprilTag rotation in Robot Space", aprilTagID == -1 ? "N/A" : avgAprilTagRotInRobotSpace.toString(3));
-    // SmartDashboard.putString("AprilTag horizontal offset", aprilTagID == -1 ? "N/A" : String.valueOf(horizontalOffsetFromAprilTag));
-    // SmartDashboard.putNumber("Things using limelight", thingsUsingLimelight);
+    SmartDashboard.putString("Detected AprilTagID", aprilTagID == -1 ? "None" : String.valueOf(aprilTagID));
+    SmartDashboard.putString("AprilTag position in Robot Space", aprilTagID == -1 ? "N/A" : avgAprilTagPosInRobotSpace.toString(3));
+    SmartDashboard.putString("AprilTag rotation in Robot Space", aprilTagID == -1 ? "N/A" : avgAprilTagRotInRobotSpace.toString(3));
+    SmartDashboard.putString("AprilTag horizontal offset", aprilTagID == -1 ? "N/A" : String.valueOf(horizontalOffsetFromAprilTag));
+    SmartDashboard.putNumber("Things using limelight", thingsUsingLimelight);
   }
 
   void ClearAprilTagData()

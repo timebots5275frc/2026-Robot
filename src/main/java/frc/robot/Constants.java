@@ -68,8 +68,7 @@ public final class Constants
 
     public static final class DriveConstants {
 
-      public static final double DEAD_BAND_DRIVE = 0.02;
-       public static final double DEAD_BAND_STEER = 0.05;
+      public static final double deadband = 0.2;
 
       // Motor controller IDs for drivetrain motors
       public static final int LEFT_LEADER_ID = 5  ;
@@ -93,7 +92,7 @@ public final class Constants
       public static final double CONTROLLER_TWIST_RATE = 2; // constant turn rate for using controller
 
       //DistanceDrive
-      public static final double GEAR_RATIO = 10.71; 
+      public static final double GEAR_RATIO = 10.71; //TODO: find this out
 
       public static final double METERS_PER_MOTOR_ROTATION = WHEEL_CIRCUMFERENCE / GEAR_RATIO;
 
@@ -102,88 +101,9 @@ public final class Constants
       public static final int PIGEON_2_ID = 9;
     // #endregion
 
-    public static final double TRACK_WIDTH = 21.5 * MathConstants.INCH_TO_METER;
+    public static final double TRACK_WIDTH = 0;//TODO: Find this out, meters
 
-    public static final double CHASSILENGTH = 26.5 * MathConstants.INCH_TO_METER ; 
-
-      public static class SwerveConstants {
-          public static final SwerveModuleLocations Robot2025SwerveLocations = new SwerveModuleLocations(
-                11.875  * MathConstants.INCH_TO_METER, // LEFT_FRONT_WHEEL_X
-                12.375  * MathConstants.INCH_TO_METER,   // LEFT_FRONT_WHEEL_Y
-                11.875   * MathConstants.INCH_TO_METER, // RIGHT_FRONT_WHEEL_X
-                -12.375 * MathConstants.INCH_TO_METER,   // RIGHT_FRONT_WHEEL_Y
-                -11.875  * MathConstants.INCH_TO_METER, // RIGHT_REAR_WHEEL_X
-                -12.375 * MathConstants.INCH_TO_METER,   // RIGHT_REAR_WHEEL_Y
-                -11.875  * MathConstants.INCH_TO_METER, // LEFT_REAR_WHEEL_X
-                11.375  * MathConstants.INCH_TO_METER    // LEFT_REAR_WHEEL_Y
-            ); 
-            // in case the autofill doesnt show, the can ids go as follows.
-            // L/R F/B D/S M for left/right front/back drive/steer motor. it goes in order of lf,rf,lr,rr with drive first 
-        
-            public static final SwerveCanIDs Robot2025SwerveCAN = new SwerveCanIDs(
-              10, 
-                20, 
-                11, 
-                21, 
-                13, 
-                23, 
-                12, 
-                22, 
-                30, 
-                31, 
-                33, 
-                32
-              ); 
-
-
-              // Test Robot Constants
-              public static final SwerveCanIDs AdrianBotSwerveCAN = new SwerveCanIDs(
-                10, 
-                20, 
-                11, 
-                21, 
-                13, 
-                23, 
-                12, 
-                22, 
-                30, 
-                31, 
-                33, 
-                32
-              ); 
-
-            public static final SwerveModuleLocations AdrianBotSwerveLocations = new SwerveModuleLocations(
-                12.375   * MathConstants.INCH_TO_METER, // LEFT_FRONT_WHEEL_X
-                9.375  * MathConstants.INCH_TO_METER,   // LEFT_FRONT_WHEEL_Y
-                12.375   * MathConstants.INCH_TO_METER, // RIGHT_FRONT_WHEEL_X
-                -9.375 * MathConstants.INCH_TO_METER,   // RIGHT_FRONT_WHEEL_Y
-                -12.375  * MathConstants.INCH_TO_METER, // RIGHT_REAR_WHEEL_X
-                -9.375 * MathConstants.INCH_TO_METER,   // RIGHT_REAR_WHEEL_Y
-                -12.375  * MathConstants.INCH_TO_METER, // LEFT_REAR_WHEEL_X
-                9.375  * MathConstants.INCH_TO_METER    // LEFT_REAR_WHEEL_Y
-              ); 
-          public static final SwerveCanIDs ROBOT_SWERVE_CAN = Robot2025SwerveCAN;
-          public static final SwerveModuleLocations ROBOT_SWERVE_LOCATIONS = Robot2025SwerveLocations;
-          public static final double WHEEL_RADIUS = 2.0 * MathConstants.INCH_TO_METER; // meters * 0.98
-          public static final double WHEEL_CIRCUMFERENCE = 2.0 * Math.PI * WHEEL_RADIUS; // meters/revolution
-          public static final double MAX_DRIVE_SPEED = 5.5; // meters/second
-          public static final double MAX_STEER_RATE = .5; // rotations/second of a wheel for steer.
-          public static final double MAX_TWIST_RATE = .6 * 2.0 * Math.PI; // radians/second of the robot rotation.
-          public static final double CONTROLLER_TWIST_RATE = 2; // constant turn rate for using controller
-          public static final int PIGEON_2_ID = 9;
-          public static final double DRIVE_GEAR_RATIO = 1.0/5.9;//.169;
-          public static final double STEER_GEAR_RATIO = .05333333333;
-          public static final PID PID_SparkMax_Steer = new PID(0.0004,0,0.0001,0,0.0001);
-          //public static final PID PID_SparkMax_Steer = new PID(0.0005,0.00000018,0.001,0,0.0001);
-          public static final PID PID_Encoder_Steer = new PID(15, 10, .1);
-          public static final PID PID_SparkFlex_Drive = new PID(0.0003,0.0000001,0.005,0,0.0002);
-          public static final double AUTO_ODOMETRY_DRIVE_MIN_SPEED = .1;
-          public static final double AUTO_ODOMETRY_DRIVE_MAX_SPEED = 2;
-
-          public static final double AUTO_ODOMETRY_DRIVE_TARGET_ALLOWED_ERROR = .1; // in meters
-          public static final double AUTO_ODOMETRY_DRIVE_SLOWDOWN_DISTANCE = .6; // in meters
-      }
-    
+    public static final double CHASSILENGTH = 0;
   }
   public static final class MathConstants
   {
@@ -194,7 +114,7 @@ public final class Constants
     public static final boolean ENABLE_LIMELIGHT_LIGHT_ON_ENABLE = true;
     public static final int VALUES_TO_AVERAGE = 3;
     public static final double TARGET_POSITION_ALLOWED_ERROR = .1; // meters
-    public static final double LIMELIGHT_X_OFFSET = 0.158865; // meters
+    public static final double LIMELIGHT_X_OFFSET = 0.31773; // meters
 
     public static final double LIMELIGHT_DATA_WAIT_TIME = .5; // seconds
 
@@ -289,11 +209,11 @@ public final class Constants
   }
     public static final class JoystickConstants
     {
-      public static final double JOY_X_RATE_LIMIT = 2.5;
-      public static final double JOY_TURN_RATE_LIMIT = 2;
+      public static final double JOY_X_RATE_LIMIT = 3;
+      public static final double JOY_TURN_RATE_LIMIT = 5;
 
-      public static final double JOY_INPUT_VELOCITY_MULT = .65;
-      public static final double JOY_INPUT_ROTATION_VELOCITY_MULT = .21;
+      public static final double JOY_INPUT_VELOCITY_MULT = 1;
+      public static final double JOY_INPUT_ROTATION_VELOCITY_MULT = .25;
     }
 
     public static final class ControllerConstants 
@@ -322,11 +242,10 @@ public final class Constants
 
       public static final PID INTAKE_MOTOR_2_PID = new PID(0.0001,0.0,0.0, 0.00, 0.0012, 0, 0);
       public static final PID INTAKE_MOTOR_1_PID = new PID(0.00015,0.0,0.0, 0.00, 0.0018, 0, 0);
-      public static final PID SHOOTER_MOTOR_PID = new PID(0.0001,0.0000001,0.0, 0.00, 0.0015, 0, 0);
-      public static final int INTAKESPEED1 = 1500;
-      public static final int INTAKESPEED2 = 5000; //spark max
-      public static final double FEEDSPEED1 = 2000; 
-      public static final double FEEDSPEED2 = 1750; //this is the spark max
+      public static final PID SHOOTER_MOTOR_PID = new PID(0.0007,0.00000000,0.0, 0.00, 0.0018, 0, 0);
+      public static final int INTAKESPEED1 = 2500;
+      public static final int INTAKESPEED2 = 4750;
+      public static final double FEEDSPEED = 2000; 
       public static final int DEFAULT_SHOOTER_RPM = 3500;
     }
 
@@ -334,7 +253,7 @@ public final class Constants
       public static final double GRAVITY = 9.8;
       public static final double WHEEL_RADIUS = 0.1016; //4 inch wheel radius 
       public static final double CAMERA_HEIGHT = 20.5 * 0.0254; //.75
-      public static final double CAMERA_OFFSET = 1.1176/2;
+      public static final double CAMERA_OFFSET = 1.1176;
       public static final double TARGET_HEIGHT = 1.8542;
       public static final double MOUNTING_ANGLE = 10;
       public static final double SHOOTER_ANGLE = 75;

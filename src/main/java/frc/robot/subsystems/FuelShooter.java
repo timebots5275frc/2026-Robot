@@ -41,7 +41,6 @@ public class FuelShooter extends SubsystemBase {
 
   public enum FuelShooterState{
     CHARGEMOTOR,
-    REVERSE,
     NONE,
   }
 
@@ -71,8 +70,6 @@ public class FuelShooter extends SubsystemBase {
       break;
       case NONE: shooterMotorPID.setReference(Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
       break;
-      case REVERSE: shooterMotorPID.setReference(1500, ControlType.kVelocity);
-      break;
     }
   }
 
@@ -99,7 +96,7 @@ public class FuelShooter extends SubsystemBase {
     double denominator = (2.0 * cosTheta * cosTheta * (dx * Math.tan(thetaRad) - deltaH));
      if (denominator <= 0.0) {return rpm;}
     double v0 = Math.sqrt(Constants.CalculateShooterRpmConstants.GRAVITY * dx * dx / denominator);
-    rpm = (v0 * 60)/2*Math.PI*5;
+    rpm = (v0 * 60)/2*Math.PI*4.5;
     rpm *= Constants.CalculateShooterRpmConstants.RPM_FUDGE_FACTOR;
     // SmartDashboard.putNumber("rpm", rpm);
     // SmartDashboard.putNumber("den", denominator);

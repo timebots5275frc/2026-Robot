@@ -29,8 +29,10 @@ public class DistanceDrive extends Command {
     @Override
     public void execute() {
         
-        drive.driveArcade(speed, 0);
 
+         double direction = Math.signum(distanceMeters);
+         drive.driveArcade(Math.abs(speed) * direction, 0);
+        
     }
 
     @Override
