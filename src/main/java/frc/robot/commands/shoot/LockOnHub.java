@@ -33,7 +33,7 @@ public class LockOnHub extends Command {
     public void execute() {
 
         if (!vision.hasValidData()) { //SPIN
-            drive.driveArcade(0, 0.1); 
+            drive.driveArcade(0, .4); 
             
             return;
         }
@@ -43,10 +43,10 @@ public class LockOnHub extends Command {
             vision.AprilTagID() == 5  || vision.AprilTagID() == 8  || vision.AprilTagID() == 9  || //red
             vision.AprilTagID() == 10 || vision.AprilTagID() == 11 || vision.AprilTagID() == 2  // //red
         ) {
-            double allowedError = 10; //degrees 
-            double kP = 0.1; 
+            double allowedError = Math.asin(.1016/vision.AprilTagPosInRobotSpace().magnitude()); //degrees 
+            double kP = 0.02; 
             double maxRot = 1; 
-            double tx = vision.HorizontalOffsetFromAprilTag(); 
+            double tx = vision.HorizontalOffsetFromAprilTag();
 
 
             //STOP to not have wiggles
@@ -60,11 +60,86 @@ public class LockOnHub extends Command {
              double correctionDeg = tx * kP;
              double correctionRad = Math.toRadians(correctionDeg);
 
-             correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
+             correctionDeg = MathUtil.clamp(correctionDeg, -maxRot, maxRot);
 
-             drive.driveArcade(0, correctionRad);
+             drive.driveArcade(0, .5);
 
             SmartDashboard.putBoolean("Locked in", lockedOn);
+
+            // if(vision.AprilTagID() == 9 || vision.AprilTagID() == 25){
+        //     //STOP to not have wiggles
+        //     if (10 >= tx && tx <= 20) {
+        //         drive.driveArcade(0, 0);
+        //         lockedOn = true;
+        //         return;
+        //     }
+        //     if(){}
+        //     lockedOn = false;
+        //      correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
+        //      drive.driveArcade(0, correctionRad);
+        //     SmartDashboard.putBoolean("Locked in", lockedOn);
+        //  }
+        //  //----------------------
+        //  if(vision.AprilTagID() == 10 || vision.AprilTagID() == 26){
+        //     //STOP to not have wiggles
+        //     if (Math.abs(tx) < allowedError) {
+        //         drive.driveArcade(0, 0);
+        //         lockedOn = true;
+        //         return;
+        //     }
+        //     lockedOn = false;
+        //      correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
+        //      drive.driveArcade(0, correctionRad);
+        //     SmartDashboard.putBoolean("Locked in", lockedOn);
+        //  }
+        //  if(vision.AprilTagID() == 18 || vision.AprilTagID() == 21){
+        //     //STOP to not have wiggles
+        //     if (Math.abs(tx) < allowedError) {
+        //         drive.driveArcade(0, 0);
+        //         lockedOn = true;
+        //         return;
+        //     }
+        //     lockedOn = false;
+        //      correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
+        //      drive.driveArcade(0, correctionRad);
+        //     SmartDashboard.putBoolean("Locked in", lockedOn);
+        //  }
+        //  if(vision.AprilTagID() == 27 || vision.AprilTagID() == 24){
+        //     //STOP to not have wiggles
+        //     if (Math.abs(tx) < allowedError) {
+        //         drive.driveArcade(0, 0);
+        //         lockedOn = true;
+        //         return;
+        //     }
+        //     lockedOn = false;
+        //      correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
+        //      drive.driveArcade(0, correctionRad);
+        //     SmartDashboard.putBoolean("Locked in", lockedOn);
+        //  }
+        //  if(vision.AprilTagID() == 8 || vision.AprilTagID() == 11){
+        //     //STOP to not have wiggles
+        //     if (Math.abs(tx) < allowedError) {
+        //         drive.driveArcade(0, 0);
+        //         lockedOn = true;
+        //         return;
+        //     }
+        //     lockedOn = false;
+        //      correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
+        //      drive.driveArcade(0, correctionRad);
+        //     SmartDashboard.putBoolean("Locked in", lockedOn);
+        //  }
+        //  if(vision.AprilTagID() == 5 || vision.AprilTagID() == 2){
+        //     //STOP to not have wiggles
+        //     if (Math.abs(tx) < allowedError) {
+        //         drive.driveArcade(0, 0);
+        //         lockedOn = true;
+        //         return;
+        //     }
+        //     lockedOn = false;
+        //      correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
+        //      drive.driveArcade(0, correctionRad);
+        //     SmartDashboard.putBoolean("Locked in", lockedOn);
+        //  }
          }
 
         

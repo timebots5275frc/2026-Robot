@@ -52,11 +52,11 @@ public class FuelShooter extends SubsystemBase {
     Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setSparkFlexPID(shooterMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters, IdleMode.kCoast);
     shooterMotorPID = shooterMotor1.getClosedLoopController(); 
 
-    //follower
-    shooterMotor2 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, MotorType.kBrushless);
-    SparkFlexConfig motor2Config = Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkFlexPID(shooterMotor1);
-    motor2Config.follow(shooterMotor1, true);
-    shooterMotor2.configure(motor2Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // //follower
+    // shooterMotor2 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, MotorType.kBrushless);
+    // SparkFlexConfig motor2Config = Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkFlexPID(shooterMotor1);
+    // motor2Config.follow(shooterMotor1, true);
+    // shooterMotor2.configure(motor2Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
    }
 
   public void SetShooterState(FuelShooterState state){

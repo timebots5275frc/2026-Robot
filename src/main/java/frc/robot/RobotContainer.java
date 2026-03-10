@@ -175,7 +175,7 @@ public class RobotContainer {
      * 2.Finds nescasarry RPM & charges motor
      * 3.feeds fuel into shooter
      */
-    new JoystickButton(joy, Constants.ButtonConstants.SHOOT_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup(/*new LockOnHub(tankDrive, vision),*/ new ChargeMotor(fs, vision), new FeedFuel(intake)));
+    new JoystickButton(joy, Constants.ButtonConstants.SHOOT_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup(new LockOnHub(tankDrive, vision), new ChargeMotor(fs, vision), new FeedFuel(intake)));
     
     //shoot without vision
     new JoystickButton(bBoard, Constants.ButtonConstants.SHOOT_NO_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(intake)));
