@@ -92,7 +92,7 @@ public final class Constants
       public static final double CONTROLLER_TWIST_RATE = 2; // constant turn rate for using controller
 
       //DistanceDrive
-      public static final double GEAR_RATIO = 10.71; //TODO: find this out
+      public static final double GEAR_RATIO = 10.71;
 
       public static final double METERS_PER_MOTOR_ROTATION = WHEEL_CIRCUMFERENCE / GEAR_RATIO;
 
@@ -101,9 +101,9 @@ public final class Constants
       public static final int PIGEON_2_ID = 9;
     // #endregion
 
-    public static final double TRACK_WIDTH = 0;//TODO: Find this out, meters
+    public static final double TRACK_WIDTH = 21.5 * MathConstants.INCH_TO_METER;
 
-    public static final double CHASSILENGTH = 0;
+    public static final double CHASSILENGTH = 26.5 * MathConstants.INCH_TO_METER ; 
   }
   public static final class MathConstants
   {
