@@ -7,15 +7,17 @@
  import com.revrobotics.spark.SparkBase.PersistMode;
  import com.revrobotics.spark.SparkBase.ResetMode;
  import com.revrobotics.spark.SparkLowLevel.MotorType;
- import com.revrobotics.spark.SparkFlex;
+
+import static frc.robot.Constants.Constants.DriveConstants.*;
+
+import com.revrobotics.spark.SparkFlex;
  import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import static frc.robot.Constants.DriveConstants.*;
+import frc.robot.Constants.Constants;
 
  public class CANDriveSubsystem extends SubsystemBase {
    public final SparkFlex leftLeader;

@@ -13,7 +13,7 @@ import com.revrobotics.spark.SparkFlex;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.Constants;
 
 public class FuelShooter extends SubsystemBase {
 
@@ -53,10 +53,11 @@ public class FuelShooter extends SubsystemBase {
     shooterMotorPID = shooterMotor1.getClosedLoopController(); 
 
     // //follower
-    // shooterMotor2 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_2_ID, MotorType.kBrushless);
-    // SparkFlexConfig motor2Config = Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkFlexPID(shooterMotor1);
-    // motor2Config.follow(shooterMotor1, true);
-    // shooterMotor2.configure(motor2Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    shooterMotor2 = new SparkFlex(Constants.FuelShooterConstants.SHOOTER_MOTOR_ID2, MotorType.kBrushless);
+    SparkFlexConfig motor2Config = Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkFlexPID(shooterMotor1);
+    motor2Config.follow(shooterMotor1, true);
+    motor2Config.inverted(true);
+    shooterMotor2.configure(motor2Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
    }
 
   public void SetShooterState(FuelShooterState state){
@@ -68,7 +69,7 @@ public class FuelShooter extends SubsystemBase {
     switch(state){
       case CHARGEMOTOR:                
       break;
-      case NONE: shooterMotorPID.setReference(Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
+      case NONE: shooterMotorPID.setReference(-Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
       break;
     }
   }

@@ -8,7 +8,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.Constants.Constants;
 import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.FuelShooter.FuelShooterState;
 import frc.robot.subsystems.Vision.Vision;
@@ -17,29 +17,20 @@ import frc.robot.subsystems.Vision.Vision;
 public class ChargeMotor extends Command {
   /** Creates a new ChargeMotor. */
 
-  Vision vision;
+
   FuelShooter shooter;
   double targetRPM;
 
-  boolean usingVision = false;
+  
 
   int allowedError = 20;
 
-  public ChargeMotor(FuelShooter shooter, Vision vision) {
-    this.vision = vision;
-    this.shooter = shooter;
 
-    usingVision  = true;
-
-    addRequirements(vision);
-    addRequirements(shooter);
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
   public ChargeMotor(FuelShooter shooter, double RPM) {
    // this.vision = vision;
     this.shooter = shooter;
     this.targetRPM = -RPM /* shooter.getShooterRPMMult()*/;
-    usingVision = false;
+    
 
    // addRequirements(vision);
     addRequirements(shooter);
@@ -50,53 +41,11 @@ public class ChargeMotor extends Command {
   @Override
   public void initialize() {
       shooter.SetShooterState(FuelShooterState.CHARGEMOTOR);
-        if(!usingVision) {
-          shooter.shooterMotorPID.setReference(targetRPM, ControlType.kVelocity);
-          return;
-        };
-        vision.setUsingLimelight(true);
-
-        // double x0 = vision.RobotPosInFieldSpace().x; // robot X pose
-        // double y0 = vision.RobotPosInFieldSpace().y; // robot Y pose
-        double thetaRad = 0.977384; //launch angle in radians
-        double thetaDeg = Math.toDegrees(thetaRad); //launch angle in degrees
-        double tx = vision.HorizontalOffsetFromAprilTag(); //target pose
-        double ty = vision.AprilTagRotInRobotSpace().y;
-        double dx = vision.AprilTagPosInRobotSpace().magnitude();
         
-
-        if(vision.hasValidData() == true){
-            // System.out.println("See April tag " + vision.AprilTagID());
-            //18,27,26,25,21,24 - blue hub
-            //5,8,9,10,11,2 - red hub
-            if(
-                vision.AprilTagID() == 18 || vision.AprilTagID() == 27 || vision.AprilTagID() == 26 || //blue
-                vision.AprilTagID() == 25 || vision.AprilTagID() == 21 || vision.AprilTagID() == 24 || //blue
-                vision.AprilTagID() == 5  || vision.AprilTagID() == 8  || vision.AprilTagID() == 9  || //red
-                vision.AprilTagID() == 10 || vision.AprilTagID() == 11 || vision.AprilTagID() == 2  // //red
-              ){
-                //  System.out.println("See April tag " + vision.AprilTagID());
-
-                 targetRPM = -shooter.calculateRPMFromLimelight(tx,ty,dx)/*   shooter.getShooterRPMMult()*/;
-                 SmartDashboard.putNumber("target rpm", targetRPM);
-
-
-                 shooter.shooterMotorPID.setReference(targetRPM , ControlType.kVelocity);
-
-
-                 //prints distance and target rpm
-                 
-                //  SmartDashboard.putNumber("Shooter Distance", shooter.dx);
-                  SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
-                //  System.out.println("target RPM " + targetRPM);
-               }
-        }
-        if(vision.hasValidData() == false){
-            // System.out.println(vision.AprilTagID() + "no valid data");
-            // drive.driveArcade(0, 0);
-            shooter.shooterMotorPID.setReference(-Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM, ControlType.kVelocity);
-        }
-        SmartDashboard.putBoolean("Charging Motor", true);
+      shooter.shooterMotorPID.setReference(targetRPM, ControlType.kVelocity);
+       
+      
+      SmartDashboard.putBoolean("Charging Motor", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -108,7 +57,7 @@ public class ChargeMotor extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(usingVision) vision.setUsingLimelight(false);
+   
     if(interrupted) {
       shooter.SetShooterState(FuelShooterState.NONE);
     }

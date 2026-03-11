@@ -4,8 +4,9 @@
 
 package frc.robot;
 
-import frc.robot.Constants.MathConstants;
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.Constants;
+import frc.robot.Constants.Constants.MathConstants;
+import frc.robot.Constants.Constants.OperatorConstants;
 import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.StopShooter;
 import frc.robot.commands.TeleopJoystickDrive;
@@ -78,68 +79,68 @@ public class RobotContainer {
     
     
 
-    autonChooser.setDefaultOption("Drive ONLY", new SequentialCommandGroup(
-      // new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22,0),
-      new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22, 0)
-    ));
+    // autonChooser.setDefaultOption("Drive ONLY", new SequentialCommandGroup(
+    //   // new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22,0),
+    //   new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22, 0)
+    // ));
 
 
-    autonChooser.setDefaultOption("LIMELIGHT SHOOT with distance", new SequentialCommandGroup(
-      new DistanceDrive(tankDrive, -.75, -0.5),
-      //new LockOnHub(tankDrive, vision),
-      new ChargeMotor(fs, vision),
-      new FeedFuel(intake)
-    ));
+    // autonChooser.setDefaultOption("LIMELIGHT SHOOT with distance", new SequentialCommandGroup(
+    //   new DistanceDrive(tankDrive, -.75, -0.5),
+    //   //new LockOnHub(tankDrive, vision),
+    //   new ChargeMotor(fs, vision),
+    //   new FeedFuel(intake)
+    // ));
 
-    autonChooser.addOption("LIMELIGHT SHOOT with distance LEFT", new SequentialCommandGroup(
-      new DistanceDrive(tankDrive, -.75, -0.5),
-      new DegreeTurn(tankDrive, 45, true, 1.5),
-      new LockOnHub(tankDrive, vision),
-      new ChargeMotor(fs, vision),
-      new FeedFuel(intake)
-    ));
+    // autonChooser.addOption("LIMELIGHT SHOOT with distance LEFT", new SequentialCommandGroup(
+    //   new DistanceDrive(tankDrive, -.75, -0.5),
+    //   new DegreeTurn(tankDrive, 45, true, 1.5),
+    //   new LockOnHub(tankDrive, vision),
+    //   new ChargeMotor(fs, vision),
+    //   new FeedFuel(intake)
+    // ));
 
-    autonChooser.addOption("LIMELIGHT SHOOT with distance RIGHT", new SequentialCommandGroup(
-      new DistanceDrive(tankDrive, -1.25, -0.5),
-      new LockOnHub(tankDrive, vision),
-      new DegreeTurn(tankDrive, 45, false, 1.5),
-      new ChargeMotor(fs, vision),
-      new FeedFuel(intake)
-    ));
+    // autonChooser.addOption("LIMELIGHT SHOOT with distance RIGHT", new SequentialCommandGroup(
+    //   new DistanceDrive(tankDrive, -1.25, -0.5),
+    //   new LockOnHub(tankDrive, vision),
+    //   new DegreeTurn(tankDrive, 45, false, 1.5),
+    //   new ChargeMotor(fs, vision),
+    //   new FeedFuel(intake)
+    // ));
 
-    autonChooser.addOption("LIMELIGHT SHOOT with time", new SequentialCommandGroup(
-      new AutoDrive(tankDrive, -0.5, 0).withTimeout(1),
-      new LockOnHub(tankDrive, vision),
-      new ChargeMotor(fs, vision),
-      new FeedFuel(intake)
-    ));
+    // autonChooser.addOption("LIMELIGHT SHOOT with time", new SequentialCommandGroup(
+    //   new AutoDrive(tankDrive, -0.5, 0).withTimeout(1),
+    //   new LockOnHub(tankDrive, vision),
+    //   new ChargeMotor(fs, vision),
+    //   new FeedFuel(intake)
+    // ));
 
-    autonChooser.addOption("Outpost", new SequentialCommandGroup(
-      new DistanceDrive(tankDrive, -3.406 + Constants.DriveConstants.CHASSILENGTH, 1.75),
-      new WaitCommand(2),
-      new DistanceDrive(tankDrive, 1.7018 - Constants.DriveConstants.CHASSILENGTH, 1),
-      new DegreeTurn(tankDrive, 135, true, 1.5),
-      new ChargeMotor(fs, vision),
-      new FeedFuel(intake)
-    ));  
+    // autonChooser.addOption("Outpost", new SequentialCommandGroup(
+    //   new DistanceDrive(tankDrive, -3.406 + Constants.DriveConstants.CHASSILENGTH, 1.75),
+    //   new WaitCommand(2),
+    //   new DistanceDrive(tankDrive, 1.7018 - Constants.DriveConstants.CHASSILENGTH, 1),
+    //   new DegreeTurn(tankDrive, 135, true, 1.5),
+    //   new ChargeMotor(fs, vision),
+    //   new FeedFuel(intake)
+    // ));  
 
-    autonChooser.addOption("Neutral Zone LEFT", new SequentialCommandGroup(
-      new DistanceDrive(tankDrive, 4.72186, 2),
-      new DegreeTurn(tankDrive, 90, true, 1.5),
-      new ParallelRaceGroup(new DistanceDrive(tankDrive, 5.08, 0.5), new SetIntakeState(intake, IntakeState.INTAKE))
-    ));
+    // autonChooser.addOption("Neutral Zone LEFT", new SequentialCommandGroup(
+    //   new DistanceDrive(tankDrive, 4.72186, 2),
+    //   new DegreeTurn(tankDrive, 90, true, 1.5),
+    //   new ParallelRaceGroup(new DistanceDrive(tankDrive, 5.08, 0.5), new SetIntakeState(intake, IntakeState.INTAKE))
+    // ));
 
-    autonChooser.addOption("Neutral Zone RIGHT", new SequentialCommandGroup(
-      new DistanceDrive(tankDrive, 4.72186, 2),
-      new DegreeTurn(tankDrive, 90, false, 1.5),
-      new ParallelRaceGroup(new DistanceDrive(tankDrive, 5.08, 0.5), new SetIntakeState(intake, IntakeState.INTAKE))
-    ));
+    // autonChooser.addOption("Neutral Zone RIGHT", new SequentialCommandGroup(
+    //   new DistanceDrive(tankDrive, 4.72186, 2),
+    //   new DegreeTurn(tankDrive, 90, false, 1.5),
+    //   new ParallelRaceGroup(new DistanceDrive(tankDrive, 5.08, 0.5), new SetIntakeState(intake, IntakeState.INTAKE))
+    // ));
 
-    autonChooser.addOption("Center Block", new SequentialCommandGroup(
-      new ParallelCommandGroup(new DistanceDrive(tankDrive, 185.9 * Constants.MathConstants.INCH_TO_METER, 2), new SetIntakeState(intake, IntakeState.INTAKE))
+    // autonChooser.addOption("Center Block", new SequentialCommandGroup(
+    //   new ParallelCommandGroup(new DistanceDrive(tankDrive, 185.9 * Constants.MathConstants.INCH_TO_METER, 2), new SetIntakeState(intake, IntakeState.INTAKE))
       
       
-    ));
+    // ));
 
     SmartDashboard.putData(autonChooser);
 
@@ -175,7 +176,7 @@ public class RobotContainer {
      * 2.Finds nescasarry RPM & charges motor
      * 3.feeds fuel into shooter
      */
-    new JoystickButton(joy, Constants.ButtonConstants.SHOOT_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup(new LockOnHub(tankDrive, vision), new ChargeMotor(fs, vision), new FeedFuel(intake)));
+    new JoystickButton(joy, Constants.ButtonConstants.SHOOT_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup(new LockOnHub(tankDrive, vision, fs), new FeedFuel(intake)));
     
     //shoot without vision
     new JoystickButton(bBoard, Constants.ButtonConstants.SHOOT_NO_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(intake)));

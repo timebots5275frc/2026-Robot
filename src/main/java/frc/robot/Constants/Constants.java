@@ -2,8 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package frc.robot.Constants;
 
+import java.util.List;
+
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.CustomTypes.PID;
 // import frc.robot.CustomTypes.SwerveCanIDs;
@@ -110,103 +116,6 @@ public final class Constants
     public static final double INCH_TO_METER = 0.0254;
   }
 
-  public static final class VisionConstants {
-    public static final boolean ENABLE_LIMELIGHT_LIGHT_ON_ENABLE = true;
-    public static final int VALUES_TO_AVERAGE = 3;
-    public static final double TARGET_POSITION_ALLOWED_ERROR = .1; // meters
-    public static final double LIMELIGHT_X_OFFSET = 0.31773; // meters
-
-    public static final double LIMELIGHT_DATA_WAIT_TIME = .5; // seconds
-
-    public static final double MAX_AMP_TARGET_DISTANCE = 3;
-    public static final Vector2 AMP_VISION_DRIVE_TARGET = new Vector2(.07, .47);
-
-    public static enum AprilTagData
-    {
-      //Red Hub
-      Hub_Right_Far_Red(2, "Hub Right Far", DriverStation.Alliance.Red),
-      Hub_Back_Right_Red(3, "Hub Back Right", DriverStation.Alliance.Red),
-      Hub_Back_Left_Red(4, "Hub Back Left", DriverStation.Alliance.Red, 0, 16.6193978),
-      Hub_Left_Far_Red(5, "Hub Left Far", DriverStation.Alliance.Red, -2.7389074, 14.778355),
-      Hub_Left_Close_Red(8, "Hub Left Close", DriverStation.Alliance.Red),
-      Hub_Front_Left_Red(9, "Hub Front Left", DriverStation.Alliance.Red),
-      Hub_Front_Right_Red(10, "Hub Front Right", DriverStation.Alliance.Red),
-      Hub_Right_Close_Red(11, "Hub Right Close", DriverStation.Alliance.Red),
-      //Blue Hub
-      Hub_Right_Far_Blue(18, "Hub Right Far", DriverStation.Alliance.Blue),
-      Hub_Back_Right_Blue(19, "Hub Back Right", DriverStation.Alliance.Blue),
-      Hub_Back_Left_Blue(20, "Hub Back Left", DriverStation.Alliance.Blue, 0, 16.6193978),
-      Hub_Left_Far_Blue(21, "Hub Left Far", DriverStation.Alliance.Blue, -2.7389074, 14.778355),
-      Hub_Left_Close_Blue(24, "Hub Left Close", DriverStation.Alliance.Blue),
-      Hub_Front_Left_Blue(25, "Hub Front Left", DriverStation.Alliance.Blue),
-      Hub_Front_Right_Blue(26, "Hub Front Right", DriverStation.Alliance.Blue),
-      Hub_Right_Close_Blue(27, "Hub Right Close", DriverStation.Alliance.Blue);
-
-      public final int id;
-      public final String name;
-      public final DriverStation.Alliance alliance;
-      private AprilTagData(int id, String name, DriverStation.Alliance alliance)
-      {
-        this.id = id;
-        this.name = name;
-        this.alliance = alliance;
-      }
-
-      private AprilTagData(int id, String name, DriverStation.Alliance alliance, double x, double y)
-      {
-        this.id = id;
-        this.name = name;
-        this.alliance = alliance;
-      }
-
-      @Override
-      public String toString()
-      {
-        return (alliance == DriverStation.Alliance.Blue ? "Blue " : "Red ") + name + "[" + id + "]";
-      }
-
-      public static AprilTagData getTag(int id) {
-        switch(id){
-          // case 1: return Trench_Right_Neutral_Zone;
-          case 2: return Hub_Right_Far_Red;
-          case 3: return Hub_Back_Right_Red;
-          case 4: return Hub_Back_Left_Red;
-          case 5: return Hub_Left_Far_Red;
-          // case 6: return Trench_Left_Neutral_Zone;
-          // case 7: return Trench_Left_Alliance_Zone;
-          case 8: return Hub_Left_Close_Red;
-          case 9: return Hub_Front_Left_Red;
-          case 10: return Hub_Front_Right_Red;
-          case 11: return Hub_Right_Close_Red;
-          // case 12: return Trench_Right_Alliance_Zone;
-          // case 13: return Loading_Station_Right;
-          // case 14: return Loading_Station_Left;
-          // case 15: return Tower_Right;
-          // case 16: return Tower_Left;
-          // case 17: return Trench_Right_Neutral_Zone;
-          case 18: return Hub_Right_Far_Blue;
-          case 19: return Hub_Back_Right_Blue;
-          case 20: return Hub_Back_Left_Blue;
-          case 21: return Hub_Left_Far_Blue;
-          // case 22: return ba_amplifier;
-          // case 23: return ba_speaker_main;
-          case 24: return Hub_Left_Close_Blue;
-          case 25: return Hub_Front_Left_Blue;
-          case 26: return Hub_Front_Right_Blue;
-          case 27: return Hub_Right_Close_Blue;
-          // case 28: return ra_core_opp_scoring_table;
-          // case 29: return ra_core_mid;
-          // case 30: return ba_core_mid;
-          // case 31: return ba_core_opp_scoring_table;
-          // case 32: return ba_core_scoring_table;
-          default: return null;
-        }
-      }
-
-      // public static boolean isSpeakerTag(AprilTagData tag) { return tag == AprilTagData.Hub_Back_Left || tag == AprilTagData.Hub_Back_Right; }
-      // public static boolean isAmpTag(AprilTagData tag) { return tag == AprilTagData.Hub_Front_Left || tag == AprilTagData.Hub_Front_Right; }
-    }
-  }
     public static final class JoystickConstants
     {
       public static final double JOY_X_RATE_LIMIT = 3;
@@ -228,6 +137,7 @@ public final class Constants
       public static final int INTAKE_MOTOR_1_ID = 10;
       public static final int INTAKE_MOTOR_2_ID = 11; 
       public static final int SHOOTER_MOTOR_ID = 12;
+      public static final int SHOOTER_MOTOR_ID2 = 13;
 
       public static final int SHOOTER_FREE_LIMIT = 35;
       public static final int SHOOTER_STALL_LIMIT = 60;

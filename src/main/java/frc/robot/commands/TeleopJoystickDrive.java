@@ -9,7 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.Constants.Constants;
 import frc.robot.CustomTypes.Math.Vector2;
 import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.Input.Input;
