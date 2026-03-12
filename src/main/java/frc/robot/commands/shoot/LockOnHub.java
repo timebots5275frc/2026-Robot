@@ -80,23 +80,23 @@ public class LockOnHub extends Command {
 
 
 
-        double allowedError = Math.asin(.1016/vision.AprilTagPosInRobotSpace().magnitude()); //degrees 
-        double kP = 0.02; 
+        double allowedError = 5; //degrees 
+        double kP = 1.0; 
         double maxRot = 1; 
-        double tx = vision.HorizontalOffsetFromAprilTag();
+        //double tx = vision.HorizontalOffsetFromAprilTag();
 
 
         //STOP to not have wiggles
-        if (Math.abs(tx) < allowedError) {
+        if (Math.abs(angleToTag) < allowedError) {
             drive.driveArcade(0, 0);
             lockedOn = true;
 
-                double thetaRad = 0.977384; //launch angle in radians
-                double thetaDeg = Math.toDegrees(thetaRad); //launch angle in degrees
-                double ty = vision.AprilTagRotInRobotSpace().y;
-                double dx = vision.AprilTagPosInRobotSpace().magnitude();
+                // double thetaRad = 0.977384; //launch angle in radians
+                // double thetaDeg = Math.toDegrees(thetaRad); //launch angle in degrees
+                // double ty = vision.AprilTagRotInRobotSpace().y;
+              //  double dx = vision.AprilTagPosInRobotSpace().magnitude();
 
-                targetRPM = -shooter.calculateRPMFromLimelight(tx,ty,dx)/*   shooter.getShooterRPMMult()*/;
+                targetRPM = -shooter.calculateRPMFromLimelight(angleToTag,0,dx)/*   shooter.getShooterRPMMult()*/; //TODO: what should ty be
                 SmartDashboard.putNumber("target rpm", targetRPM);
 
 
@@ -109,16 +109,16 @@ public class LockOnHub extends Command {
                 SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
             return;
         }
-            lockedOn = false;
+        lockedOn = false;
 
-             double correctionDeg = tx * kP;
-             double correctionRad = Math.toRadians(correctionDeg);
+        double correctionDeg = angleToTag * kP;
+        double correctionRad = Math.toRadians(correctionDeg);
 
-             correctionDeg = MathUtil.clamp(correctionDeg, -maxRot, maxRot);
+        correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
 
-             drive.driveArcade(0, .5);
+        drive.driveArcade(0, correctionRad);
 
-            SmartDashboard.putBoolean("Locked in", lockedOn);
+        SmartDashboard.putBoolean("Locked in", lockedOn);
 
     }
         
