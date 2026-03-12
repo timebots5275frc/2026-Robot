@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.Constants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.CustomTypes.Math.Vector3;
 import frc.robot.subsystems.CANDriveSubsystem;
@@ -87,7 +88,7 @@ public class LockOnHub extends Command {
 
 
         //STOP to not have wiggles
-        if (Math.abs(angleToTag) < allowedError) {
+        if  (Math.abs(shooterPose.getRotation().getZ()) - Math.abs(angleToTag) < allowedError && Math.abs(shooterPose.getRotation().getZ()) - Math.abs(angleToTag) > -allowedError) {
             drive.driveArcade(0, 0);
             lockedOn = true;
 
@@ -96,7 +97,7 @@ public class LockOnHub extends Command {
                 // double ty = vision.AprilTagRotInRobotSpace().y;
               //  double dx = vision.AprilTagPosInRobotSpace().magnitude();
 
-                targetRPM = -shooter.calculateRPMFromLimelight(angleToTag,0,dx)/*   shooter.getShooterRPMMult()*/; //TODO: what should ty be
+                targetRPM = -shooter.calculateRPMFromLimelight(angleToTag,53,dx)/*   shooter.getShooterRPMMult()*/; //TODO: what should ty be
                 SmartDashboard.putNumber("target rpm", targetRPM);
 
 
