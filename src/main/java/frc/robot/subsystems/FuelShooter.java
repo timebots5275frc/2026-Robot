@@ -84,9 +84,8 @@ public class FuelShooter extends SubsystemBase {
     shooterMotorPID.setReference(0.0, ControlType.kVelocity);
   }
 
-  public double calculateRPMFromLimelight(double tx, double ty, double dx) {
+  public double calculateRPMFromLimelight(double tx, double dx) {
     this.tx = tx;
-    this.ty = ty;
     this.dx = dx + Constants.CalculateShooterRpmConstants.CAMERA_OFFSET;
     
     double rpm = 3500;

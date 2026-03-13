@@ -88,7 +88,7 @@ public class LockOnHub extends Command {
 
 
         //STOP to not have wiggles
-        if  (Math.abs(shooterPose.getRotation().getZ()) - Math.abs(angleToTag) < allowedError && Math.abs(shooterPose.getRotation().getZ()) - Math.abs(angleToTag) > -allowedError) {
+        if  (Math.abs(shooterPose.getRotation().getZ() - angleToTag) < allowedError) {
             drive.driveArcade(0, 0);
             lockedOn = true;
 
@@ -97,7 +97,7 @@ public class LockOnHub extends Command {
                 // double ty = vision.AprilTagRotInRobotSpace().y;
               //  double dx = vision.AprilTagPosInRobotSpace().magnitude();
 
-                targetRPM = -shooter.calculateRPMFromLimelight(angleToTag,53,dx)/*   shooter.getShooterRPMMult()*/; //TODO: what should ty be
+                targetRPM = -shooter.calculateRPMFromLimelight(angleToTag,Math.hypot(dx,dy))/*   shooter.getShooterRPMMult()*/; //TODO: what should ty be
                 SmartDashboard.putNumber("target rpm", targetRPM);
 
 
