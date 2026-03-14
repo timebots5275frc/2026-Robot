@@ -54,7 +54,7 @@ public class FuelShooter extends SubsystemBase {
 
     // //follower
     shooterMotor2 = new SparkFlex(Constants.FuelShooterConstants.SHOOTER_MOTOR_ID2, MotorType.kBrushless);
-    SparkFlexConfig motor2Config = Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkFlexPID(shooterMotor1);
+    SparkFlexConfig motor2Config = Constants.FuelShooterConstants.SHOOTER_MOTOR_PID.setSparkFlexPID(shooterMotor1);
     motor2Config.follow(shooterMotor1, true);
     motor2Config.inverted(true);
     shooterMotor2.configure(motor2Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -107,6 +107,8 @@ public class FuelShooter extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("shooter rpm", shooterMotor1.getEncoder().getVelocity());
+    SmartDashboard.putNumber("shooter1 current", shooterMotor1.getOutputCurrent());
+    SmartDashboard.putNumber("shooter2 current", shooterMotor2.getOutputCurrent());
   }
 
   public FuelShooterState getShooterState() {

@@ -44,6 +44,7 @@ public class LockOnHub extends Command {
     @Override
     public void initialize() {
         vision.setUsingLimelight(true);
+        vision.CalculateRobotPositionInFieldSpace();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -97,7 +98,7 @@ public class LockOnHub extends Command {
                 // double ty = vision.AprilTagRotInRobotSpace().y;
               //  double dx = vision.AprilTagPosInRobotSpace().magnitude();
 
-                targetRPM = -shooter.calculateRPMFromLimelight(angleToTag,Math.hypot(dx,dy))/*   shooter.getShooterRPMMult()*/; //TODO: what should ty be
+                targetRPM = -shooter.calculateRPMFromLimelight(angleToTag,Math.hypot(dx,dy))/*   shooter.getShooterRPMMult()*/; 
                 SmartDashboard.putNumber("target rpm", targetRPM);
 
 

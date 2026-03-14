@@ -24,7 +24,7 @@ public class TeleopJoystickDrive extends Command {
     public SlewRateLimiter srlTurn = new SlewRateLimiter(Constants.JoystickConstants.JOY_TURN_RATE_LIMIT);
     public boolean fieldRelative;
     private boolean usingJoystick;
-    public int front = -1;
+    private int front = -1;
     private double C;
 
     /**
@@ -48,7 +48,9 @@ public class TeleopJoystickDrive extends Command {
     public void initialize() {
         //AutoTargetStateManager.onStart();
         //drivetrain.resetPigeon();
-        drivetrain.getDifferentialDrive().setDeadband(Constants.DriveConstants.deadband);
+        drivetrain.getDifferentialDrive().setDeadband(0); // 0 so not applied twice
+
+        
     }
 
     @Override
@@ -70,19 +72,44 @@ public class TeleopJoystickDrive extends Command {
         }
 
         // moveInput = new Vector2(
-        //     MathUtil.applyDeadband(moveInput.x, Constants.DriveConstants.deadband),
-        //     MathUtil.applyDeadband(moveInput.y, Constants.DriveConstants.deadband)
+        //     MathUtil.applyDeadband(moveInput.x, Constants.DriveConstants.DEAD_BAND_DRIVE),
+        //     MathUtil.applyDeadband(moveInput.y, Constants.DriveConstants.DEAD_BAND_DRIVE)
         // );
-        // // deadband -> square -> scale -> ratelimit -> drive
-        // turnInput = MathUtil.applyDeadband(turnInput, Constants.DriveConstants.deadband);
+        // deadband -> square -> scale -> ratelimit -> drive
+       // turnInput = MathUtil.applyDeadband(turnInput, Constants.DriveConstants.DEAD_BAND_STEER);
+
+       //deadband
+        if(Math.abs(turnInput) > Constants.DriveConstants.DEAD_BAND_STEER) {
+            turnInput = turnInput - (Math.signum(turnInput) * Constants.DriveConstants.DEAD_BAND_STEER) / (1 - Constants.DriveConstants.DEAD_BAND_STEER);
+        } else {
+            turnInput = 0;
+        }
+
+        if(Math.abs(moveInput.x) > Constants.DriveConstants.DEAD_BAND_DRIVE) {
+            moveInput.x = moveInput.x - (Math.signum(moveInput.x) * Constants.DriveConstants.DEAD_BAND_DRIVE) / (1 - Constants.DriveConstants.DEAD_BAND_DRIVE);
+        } else {
+            moveInput.x = 0;
+        }
+
+        if(Math.abs(moveInput.y) > Constants.DriveConstants.DEAD_BAND_DRIVE) {
+            moveInput.y = moveInput.y - (Math.signum(moveInput.y) * Constants.DriveConstants.DEAD_BAND_DRIVE) / (1 - Constants.DriveConstants.DEAD_BAND_DRIVE);
+        } else {
+            moveInput.y = 0;
+        }
+
+
+        moveInput = new Vector2(
+           moveInput.x,
+           moveInput.y
+        );
 
         //Square input
-        moveInput.x = moveInput.x * Math.abs(moveInput.x)* Math.abs(moveInput.x);
-        turnInput = turnInput * Math.abs(turnInput)* Math.abs(turnInput);
+        moveInput.x = (moveInput.x * Math.abs(moveInput.x) * Math.abs(moveInput.x)) * Constants.JoystickConstants.JOY_INPUT_VELOCITY_MULT;
+        turnInput = (turnInput * Math.abs(turnInput) * Math.abs(turnInput)) * Constants.JoystickConstants.JOY_INPUT_ROTATION_VELOCITY_MULT;
         
         //scale
-        Vector2 inputVelocity = moveInput.times(((speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED) * Constants.JoystickConstants.JOY_INPUT_VELOCITY_MULT));
-        double inputRotationVelocity = (turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE)*Constants.JoystickConstants.JOY_INPUT_ROTATION_VELOCITY_MULT; //rot. vel.
+        Vector2 inputVelocity = moveInput.times(((speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED)));
+        double inputRotationVelocity = (turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE); //rot. vel.
                                                                                                                //remove last multiplied number for max results
         
         int rot_sign = (int)(inputRotationVelocity / Math.abs(inputRotationVelocity)); //returns 1 or -1
@@ -94,8 +121,8 @@ public class TeleopJoystickDrive extends Command {
         }
 
 
-        SmartDashboard.putNumber("Throttle teleJoy", speedPercent);
-        SmartDashboard.putNumber("Turn_speed", inputRotationVelocity);
+        // SmartDashboard.putNumber("Throttle teleJoy", speedPercent);
+        // SmartDashboard.putNumber("Turn_speed", inputRotationVelocity);
 
         System.out.println(moveInput.x);
 
@@ -103,7 +130,17 @@ public class TeleopJoystickDrive extends Command {
 
         //ratelimit and drive
 
-        drivetrain.driveArcade(srlX.calculate(inputVelocity.x * front), srlTurn.calculate(inputRotationVelocity));
+        // inputVelocity.x = srlX.calculate(inputVelocity.x * front);
+        // inputRotationVelocity = srlTurn.calculate(inputRotationVelocity);
+        if (Math.abs(inputVelocity.x) > 0 || Math.abs(inputRotationVelocity) >0) {
+            drivetrain.driveArcade(srlX.calculate(inputVelocity.x * front), srlTurn.calculate(inputRotationVelocity));
+        } else {
+            drivetrain.driveArcade(0, 0);
+        }
+        
+
+        //SmartDashboard.putNumber("move", moveInput.x);
+       // SmartDashboard.putNumber("turn", turnInput);
     }
 
     

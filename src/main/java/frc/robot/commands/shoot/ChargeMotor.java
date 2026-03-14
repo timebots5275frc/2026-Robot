@@ -42,7 +42,7 @@ public class ChargeMotor extends Command {
   public void initialize() {
       shooter.SetShooterState(FuelShooterState.CHARGEMOTOR);
         
-      shooter.shooterMotorPID.setReference(targetRPM, ControlType.kVelocity);
+      shooter.shooterMotorPID.setReference(-targetRPM, ControlType.kVelocity);
        
       
       SmartDashboard.putBoolean("Charging Motor", true);
@@ -71,7 +71,7 @@ public class ChargeMotor extends Command {
     }
      SmartDashboard.putBoolean("Charging Motor", true);
     
-    if (shooter.getMotor().getEncoder().getVelocity() >= targetRPM - allowedError && shooter.getMotor().getEncoder().getVelocity() <= targetRPM + allowedError) {
+    if (Math.abs(shooter.getMotor().getEncoder().getVelocity()) >= Math.abs(targetRPM) - allowedError && Math.abs(shooter.getMotor().getEncoder().getVelocity()) <= Math.abs(targetRPM) + allowedError) {
       SmartDashboard.putBoolean("Charging Motor", false);
       return true;
     } 

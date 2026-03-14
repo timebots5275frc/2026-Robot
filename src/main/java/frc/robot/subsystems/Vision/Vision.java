@@ -57,6 +57,7 @@ public class Vision extends SubsystemBase {
     if (aprilTagID != -1)
     {
       CalculateTargetTransformInRobotSpace();
+      CalculateRobotPositionInFieldSpace();
     }
     else
     {
@@ -79,7 +80,7 @@ public class Vision extends SubsystemBase {
     }
   }
 
-  void CalculateRobotPositionInFieldSpace()
+  public void CalculateRobotPositionInFieldSpace()
   {
     double[] vals = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
     //botpose - x,y,z, roll, pitch, yaw
