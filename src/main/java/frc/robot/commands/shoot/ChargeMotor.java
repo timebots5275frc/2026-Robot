@@ -8,10 +8,8 @@ import com.revrobotics.spark.SparkBase.ControlType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.Constants;
 import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.FuelShooter.FuelShooterState;
-import frc.robot.subsystems.Vision.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ChargeMotor extends Command {

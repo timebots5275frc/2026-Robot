@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import com.revrobotics.spark.SparkBase.ControlType;
-
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.FuelShooter;

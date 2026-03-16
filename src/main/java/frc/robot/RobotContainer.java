@@ -5,22 +5,14 @@
 package frc.robot;
 
 import frc.robot.Constants.Constants;
-import frc.robot.Constants.Constants.MathConstants;
 import frc.robot.Constants.Constants.OperatorConstants;
 import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.StopShooter;
 import frc.robot.commands.TeleopJoystickDrive;
-
 import frc.robot.commands.auto.AutoDrive;
-
-import frc.robot.commands.auto.DegreeTurn;
-import frc.robot.commands.auto.DistanceDrive;
 import frc.robot.commands.shoot.ChargeMotor;
 import frc.robot.commands.shoot.FeedFuel;
 import frc.robot.commands.shoot.LockOnHub;
-import frc.robot.commands.auto.DistanceDrive;
-import frc.robot.commands.shoot.ChargeMotor;
-import frc.robot.commands.shoot.FeedFuel;
 import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -32,11 +24,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -186,19 +174,10 @@ public class RobotContainer {
     new JoystickButton(bBoard, Constants.ButtonConstants.OUTTAKE_BUTTON_ID).onTrue(new SetIntakeState(intake, IntakeState.OUTTAKE)); 
 
     new JoystickButton(bBoard, Constants.ButtonConstants.STOP_INTAKE_BUTTON_ID).onTrue(new SetIntakeState(intake, IntakeState.NONE)); 
-    //new JoystickButton(bBoard, Constants.ButtonConstants.FEED_INTAKE_BUTTON_ID).onTrue(new SetIntakeState(intake, IntakeState.FEED)); 
 
     new JoystickButton(bBoard, Constants.ButtonConstants.STOP_SHOOTER_BUTTON_ID).onTrue(new StopShooter(fs)); 
 
-    //new JoystickButton(bBoard,Constants.ButtonConstants.SHAKE_ROBOT_BUTTON_ID).onTrue(new SequentialCommandGroup(new AutoDrive(tankDrive, -2, 0).withTimeout(.1), new AutoDrive(tankDrive, 2, 0).withTimeout(.2)/* , teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1)*/));
-
-    // new JoystickButton(joy, 1).onTrue((new HubAimCommand(vision, fs))); //shoot with vision
-    // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.L1)); //climb L1
-    // new JoystickButton(joy, 2).onTrue(new ClimbCommand(climb, ClimbStates.DRIVE)); //climb to drive
-    // new JoystickButton(joy, 2).whileTrue(new ResetClimb(climb)); //reset climb
-
-    // new JoystickButton(bBoard, Constants.ButtonConstants.INCREASE_LEFT_MOTOR).onTrue(new ChangeMotorSpeed(tankDrive, 0.1, false));
-
+    new JoystickButton(bBoard,Constants.ButtonConstants.SHAKE_ROBOT_BUTTON_ID).onTrue(new SequentialCommandGroup(new AutoDrive(tankDrive, -2, 0).withTimeout(.1), new AutoDrive(tankDrive, 2, 0).withTimeout(.2)/* , teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1)*/));
   }
 
   /**

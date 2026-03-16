@@ -10,7 +10,8 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.Constants.VisionConstants;
+import frc.robot.Constants.Constants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.CustomTypes.Math.Vector3;
 
 
@@ -56,6 +57,7 @@ public class Vision extends SubsystemBase {
 
     if (aprilTagID != -1)
     {
+      CalculateRobotPositionInFieldSpace();
       CalculateTargetTransformInRobotSpace();
     }
     else
@@ -87,7 +89,7 @@ public class Vision extends SubsystemBase {
       addVector3ToArrayList(new Vector3(vals[0], vals[1], vals[2]), robotPosInFieldSpaceValues);
       addVector3ToArrayList(new Vector3(vals[3], vals[4], vals[5]), robotRotInFieldSpaceValues);
       avgRobotPosInFieldSpace = getAverageOfArrayList(robotPosInFieldSpaceValues);
-      avgAprilTagRotInRobotSpace = getAverageOfArrayList(robotRotInFieldSpaceValues);
+      avgRobotRotInFieldSpace = getAverageOfArrayList(robotRotInFieldSpaceValues);
     } else {
       System.out.println("Bad Data");
     }

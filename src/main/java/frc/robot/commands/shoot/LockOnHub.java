@@ -8,7 +8,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,7 +26,8 @@ public class LockOnHub extends Command {
     private FuelShooter shooter;
     private double targetRPM = 0;
     private boolean lockedOn = false;
-    private double allowedError = 10;
+    private double angleTolerance = Math.toRadians(5);
+    private double rpmTolerance = 100;
 
     public LockOnHub(CANDriveSubsystem drive, Vision vision, FuelShooter shooter) {
        this.drive = drive;
@@ -71,52 +71,46 @@ public class LockOnHub extends Command {
 
         double angleToTag = Math.atan2(dy, dx);
 
-        shooterPose.getRotation().getZ(); // this should be the angle of the robot to be compared to target angle
+        // this should be the angle of the robot to be compared to target angle
 
         // TODO use this angle to look at the tag.
 
+        double robotHeading = shooterPose.getRotation().getZ();
+        // double error = angleToTag - robotHeading;
+        // error = Math.atan2(Math.sin(error), Math.cos(error));
+        double error = MathUtil.angleModulus(angleToTag - robotHeading); //does same thing as previous 2 lines
 
 
-
-
-
-        double allowedError = Math.asin(.1016/vision.AprilTagPosInRobotSpace().magnitude()); //degrees 
-        double kP = 0.02; 
+        double kP = 2.0; 
         double maxRot = 1; 
-        double tx = vision.HorizontalOffsetFromAprilTag();
 
 
         //STOP to not have wiggles
-        if (Math.abs(tx) < allowedError) {
+        if (Math.abs(error) < angleTolerance) {
             drive.driveArcade(0, 0);
             lockedOn = true;
 
-                double thetaRad = 0.977384; //launch angle in radians
-                double thetaDeg = Math.toDegrees(thetaRad); //launch angle in degrees
-                double ty = vision.AprilTagRotInRobotSpace().y;
-                double dx = vision.AprilTagPosInRobotSpace().magnitude();
-
-                targetRPM = -shooter.calculateRPMFromLimelight(tx,ty,dx)/*   shooter.getShooterRPMMult()*/;
-                SmartDashboard.putNumber("target rpm", targetRPM);
+            double distance = Math.hypot(dx, dy);
+            targetRPM = -shooter.calculateRPMFromLimelight(distance);
+            SmartDashboard.putNumber("target rpm", targetRPM);
 
 
-                shooter.shooterMotorPID.setReference(targetRPM , ControlType.kVelocity);
+            shooter.shooterMotorPID.setReference(targetRPM , ControlType.kVelocity);
 
 
-                //prints distance and target rpm
+        //  prints distance and target rpm
                 
-            //  SmartDashboard.putNumber("Shooter Distance", shooter.dx);
-                SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
+        //  SmartDashboard.putNumber("Shooter Distance", shooter.dx);
+            SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
             return;
         }
             lockedOn = false;
 
-             double correctionDeg = tx * kP;
-             double correctionRad = Math.toRadians(correctionDeg);
+             double correctionRad = error * kP;
 
-             correctionDeg = MathUtil.clamp(correctionDeg, -maxRot, maxRot);
+             correctionRad = MathUtil.clamp(correctionRad, -maxRot, maxRot);
 
-             drive.driveArcade(0, .5);
+             drive.driveArcade(0, correctionRad);
 
             SmartDashboard.putBoolean("Locked in", lockedOn);
 
@@ -144,7 +138,7 @@ public class LockOnHub extends Command {
         }
         SmartDashboard.putBoolean("Charging Motor", true);
     
-        if (shooter.getMotor().getEncoder().getVelocity() >= targetRPM - allowedError && shooter.getMotor().getEncoder().getVelocity() <= targetRPM + allowedError) {
+        if (Math.abs(shooter.getMotor().getEncoder().getVelocity() - targetRPM) < rpmTolerance) {
             SmartDashboard.putBoolean("Charging Motor", false);
             return true;
         } 
