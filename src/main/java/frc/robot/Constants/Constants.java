@@ -74,7 +74,8 @@ public final class Constants
 
     public static final class DriveConstants {
 
-      public static final double deadband = 0.2;
+      public static final double DEAD_BAND_DRIVE = 0.02;
+       public static final double DEAD_BAND_STEER = 0.05;
 
       // Motor controller IDs for drivetrain motors
       public static final int LEFT_LEADER_ID = 5  ;
@@ -142,19 +143,19 @@ public final class Constants
       public static final int SHOOTER_FREE_LIMIT = 35;
       public static final int SHOOTER_STALL_LIMIT = 60;
 
-      public static final int INTAKE_FREE_LIMIT1 = 30;
+      public static final int INTAKE_FREE_LIMIT1 = 35;
       public static final int INTAKE_STALL_LIMIT1 = 60;
 
-      public static final int INTAKE_FREE_LIMIT2 = 30;
-      public static final int INTAKE_STALL_LIMIT2 = 40;
+      public static final int INTAKE_FREE_LIMIT2 = 35;
+      public static final int INTAKE_STALL_LIMIT2 = 60;
 
       public static final int MOTOR_SPEED_NONE = 0;
 
-      public static final PID INTAKE_MOTOR_2_PID = new PID(0.0001,0.0,0.0, 0.00, 0.0012, 0, 0);
-      public static final PID INTAKE_MOTOR_1_PID = new PID(0.00015,0.0,0.0, 0.00, 0.0018, 0, 0);
-      public static final PID SHOOTER_MOTOR_PID = new PID(0.0007,0.00000000,0.0, 0.00, 0.0018, 0, 0);
+      public static final PID INTAKE_MOTOR_2_PID = new PID(0.0001,0.0,0.0, 0.00, 0.0015, 0, 0);
+      public static final PID INTAKE_MOTOR_1_PID = new PID(0.00015,0.0,0.0, 0.00, 0.002, 0, 0);
+      public static final PID SHOOTER_MOTOR_PID = new PID(0.00052,0.0000001,0.0, 0.00, 0.0015, 0, 0);
       public static final int INTAKESPEED1 = 2500;
-      public static final int INTAKESPEED2 = 8000;
+      public static final int INTAKESPEED2 = 5000;
       public static final double FEEDSPEED = 2000; 
       public static final int DEFAULT_SHOOTER_RPM = 3500;
     }

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.Constants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.CustomTypes.Math.Vector3;
 import frc.robot.subsystems.CANDriveSubsystem;
@@ -43,6 +44,7 @@ public class LockOnHub extends Command {
     @Override
     public void initialize() {
         vision.setUsingLimelight(true);
+        vision.CalculateRobotPositionInFieldSpace();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -104,7 +106,7 @@ public class LockOnHub extends Command {
             SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
             return;
         }
-            lockedOn = false;
+        lockedOn = false;
 
              double correctionRad = error * kP;
 
@@ -112,7 +114,7 @@ public class LockOnHub extends Command {
 
              drive.driveArcade(0, correctionRad);
 
-            SmartDashboard.putBoolean("Locked in", lockedOn);
+        SmartDashboard.putBoolean("Locked in", lockedOn);
 
     }
         
