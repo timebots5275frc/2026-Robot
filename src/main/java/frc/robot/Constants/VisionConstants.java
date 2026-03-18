@@ -18,18 +18,18 @@ public class VisionConstants {
 
 
 
-	public static final boolean ENABLE_LIMELIGHT_LIGHT_ON_ENABLE = true;
+	// public static final boolean ENABLE_LIMELIGHT_LIGHT_ON_ENABLE = true;
 	public static final int VALUES_TO_AVERAGE = 3;
-	public static final double TARGET_POSITION_ALLOWED_ERROR = .1; // meters
-	public static final double LIMELIGHT_X_OFFSET = 0.31773; // meters
+	// public static final double TARGET_POSITION_ALLOWED_ERROR = .1; // meters
+	// public static final double LIMELIGHT_X_OFFSET = 0.31773; // meters
 
-	public static final double LIMELIGHT_DATA_WAIT_TIME = .5; // seconds
-	public static final double MAX_AMP_TARGET_DISTANCE = 3;
-	public static final Vector2 AMP_VISION_DRIVE_TARGET = new Vector2(.07, .47);
+	// public static final double LIMELIGHT_DATA_WAIT_TIME = .5; // seconds
+	// public static final double MAX_AMP_TARGET_DISTANCE = 3;
+	// public static final Vector2 AMP_VISION_DRIVE_TARGET = new Vector2(.07, .47);
 
-	public static final double TURRET_LOCAL_POS_X = -0.15; // meters, right hand rule!!
-    public static final double TURRET_LOCAL_POS_Y = 0.0; // meters, right hand rule!! 
-    public static final double TURRET_LOCAL_POS_Z = 0.4; // meters, right hand rule!! 
+	public static final double TURRET_LOCAL_POS_X = 0; // meters, right hand rule!! 
+    public static final double TURRET_LOCAL_POS_Y = 0; // meters, right hand rule!! 
+    public static final double TURRET_LOCAL_POS_Z = 0; // meters, right hand rule!! 
 
     public static final Transform3d ROBOT_TO_TURRET = new Transform3d(
         new Translation3d(

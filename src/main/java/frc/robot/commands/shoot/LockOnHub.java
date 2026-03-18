@@ -53,7 +53,7 @@ public class LockOnHub extends Command {
     public void execute() {
 
         if (!vision.hasValidData()) { //SPIN
-            drive.driveArcade(0, .4); 
+            drive.driveArcade(0, 0); 
             return;
         }
 
@@ -83,18 +83,22 @@ public class LockOnHub extends Command {
         double error = MathUtil.angleModulus(angleToTag - robotHeading); //does same thing as previous 2 lines
 
 
-        double kP = 2.0; 
-        double maxRot = 1; 
+        double kP = 0.1; 
+        // double kI = 0;
+        // double kD = 0;
+        double maxRot = 10; 
 
 
-        //STOP to not have wiggles
+//ready to shoot
         if (Math.abs(error) < angleTolerance) {
-            drive.driveArcade(0, 0);
+            //drive.driveArcade(0, 0);
             lockedOn = true;
 
-            double distance = Math.hypot(dx, dy);
-            targetRPM = -shooter.calculateRPMFromLimelight(distance);
+            // double distance = Math.hypot(dx, dy);
+            double distance = vision.AprilTagPosInRobotSpace().magnitude() + Constants.CalculateShooterRpmConstants.CAMERA_OFFSET;
+            targetRPM = shooter.calculateRPMFromLimelight(distance);
             SmartDashboard.putNumber("target rpm", targetRPM);
+            SmartDashboard.putNumber("distance", distance);
 
 
             shooter.shooterMotorPID.setReference(targetRPM , ControlType.kVelocity);
@@ -104,7 +108,7 @@ public class LockOnHub extends Command {
                 
         //  SmartDashboard.putNumber("Shooter Distance", shooter.dx);
             SmartDashboard.putNumber("Shooter RPM (calc)", targetRPM);
-            return;
+           return;
         }
         lockedOn = false;
 
@@ -115,6 +119,9 @@ public class LockOnHub extends Command {
              drive.driveArcade(0, correctionRad);
 
         SmartDashboard.putBoolean("Locked in", lockedOn);
+        SmartDashboard.putNumber("error", Math.toDegrees(error));
+        SmartDashboard.putNumber("angle to tag", angleToTag);
+        SmartDashboard.putNumber("robot Heading", robotHeading);
 
     }
         
