@@ -53,7 +53,8 @@ public class LockOnHub extends Command {
     public void execute() {
 
         if (!vision.hasValidData()) { //SPIN
-            drive.driveArcade(0, .4); 
+            // drive.driveArcade(0, 0.4); // good for auto but not tele - op 
+                                          // doesnt allow for driver control if april tag isnt seen so best case should just be, do nothing
             return;
         }
 
@@ -83,16 +84,17 @@ public class LockOnHub extends Command {
         double error = MathUtil.angleModulus(angleToTag - robotHeading); //does same thing as previous 2 lines
 
 
-        double kP = 2.0; 
-        double maxRot = 1; 
+        double kP = .1; 
+        double maxRot = 10; 
 
 
         //STOP to not have wiggles
         if (Math.abs(error) < angleTolerance) {
-            drive.driveArcade(0, 0);
+            // drive.driveArcade(0, 0);
             lockedOn = true;
 
-            double distance = Math.hypot(dx, dy);
+            // double distance = Math.hypot(dx, dy);
+            double distance = vision.AprilTagPosInRobotSpace().magnitude() + Constants.CalculateShooterRpmConstants.CAMERA_OFFSET;
             targetRPM = -shooter.calculateRPMFromLimelight(distance);
             SmartDashboard.putNumber("target rpm", targetRPM);
 

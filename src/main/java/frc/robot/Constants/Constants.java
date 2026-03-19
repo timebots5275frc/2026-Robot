@@ -164,11 +164,11 @@ public final class Constants
       public static final double GRAVITY = 9.8;
       public static final double WHEEL_RADIUS = 0.1016; //4 inch wheel radius 
       public static final double CAMERA_HEIGHT = 20.5 * 0.0254; //.75
-      public static final double CAMERA_OFFSET = 1.1176;
+      public static final double CAMERA_OFFSET = 0.5588;
       public static final double TARGET_HEIGHT = 1.8542;
-      public static final double MOUNTING_ANGLE = 10;
+      public static final double MOUNTING_ANGLE = 20;
       public static final double SHOOTER_ANGLE = 75;
-      public static final double RPM_FUDGE_FACTOR = 1.12;
+      public static final double RPM_FUDGE_FACTOR = 1.0;
     } 
 
     public static final class ClimbConstants {
