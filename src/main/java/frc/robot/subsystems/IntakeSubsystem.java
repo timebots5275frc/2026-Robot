@@ -16,7 +16,7 @@ import frc.robot.Constants.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  private SparkMax intakeMotor1;
+  private SparkFlex intakeMotor1;
   private SparkClosedLoopController intakePID1;
   
   private SparkMax intakeMotor2; // this is spark max dont forget
@@ -34,19 +34,11 @@ public class IntakeSubsystem extends SubsystemBase {
     Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkMaxPID(intakeMotor2,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     intakePID2 = intakeMotor2.getClosedLoopController();
 
-    // intakeMotor1 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
-    // Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT1);
-    // Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT1);
-    // Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkFlexPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
-    // intakePID1 = intakeMotor1.getClosedLoopController();   
-
-    intakeMotor1 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
+    intakeMotor1 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT1);
     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT1);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkMaxPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
-    intakePID1 = intakeMotor1.getClosedLoopController();   
-
-    
+    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkFlexPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
+    intakePID1 = intakeMotor1.getClosedLoopController();       
     
   }
 

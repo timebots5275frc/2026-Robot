@@ -87,7 +87,9 @@ public class Vision extends SubsystemBase {
     double[] vals = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
     //botpose - x,y,z, roll, pitch, yaw
     if (vals[0]!=0) {
-      addVector3ToArrayList(new Vector3(vals[0], vals[1], vals[2]), robotPosInFieldSpaceValues);
+       addVector3ToArrayList(new Vector3(vals[0], vals[1], vals[2]), robotPosInFieldSpaceValues);
+      //addVector3ToArrayList(new Vector3(vals[2], vals[0] * -1, vals[1] * -1), robotPosInFieldSpaceValues);
+
       addVector3ToArrayList(new Vector3(vals[3], vals[4], vals[5]), robotRotInFieldSpaceValues);
       avgRobotPosInFieldSpace = getAverageOfArrayList(robotPosInFieldSpaceValues);
       avgRobotRotInFieldSpace = getAverageOfArrayList(robotRotInFieldSpaceValues);
