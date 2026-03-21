@@ -3,6 +3,7 @@ package frc.robot.subsystems.Vision;
 import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,9 +20,15 @@ public class Vision extends SubsystemBase {
   private Vector3 avgAprilTagPosInRobotSpace = Vector3.zero;
   private ArrayList<Vector3> aprilTagPosInRobotSpaceValues = new ArrayList<>();
 
+  private Vector3 avgAprilTagRotInRobotSpace = Vector3.zero;
+  private ArrayList<Vector3> aprilTagRotInRobotSpaceValues = new ArrayList<>();
+
   // ROBOT (field space)
   private Vector3 avgRobotPosInFieldSpace = Vector3.zero;
   private ArrayList<Vector3> robotPosInFieldSpaceValues = new ArrayList<>();
+  
+  private Vector3 avgRobotRotInFieldSpace = Vector3.zero;
+  private ArrayList<Vector3> robotRotInFieldSpaceValues = new ArrayList<>();
 
   // YAW (radians)
   private double robotYawRadians = 0.0;
@@ -40,14 +47,51 @@ public class Vision extends SubsystemBase {
     double tv = table.getEntry("tv").getDouble(0);
 
     if (tv == 1) {
-      CalculateRobotPositionInFieldSpace();
-      CalculateTargetTransformInRobotSpace();
+      CalculateRobotPositionInFieldSpaceone();
+      CalculateTargetTransformInRobotSpaceone();
     } else {
-      ClearAprilTagData();
+      // ClearAprilTagData();
     }
 
     LogData();
   }
+
+  void CalculateTargetTransformInRobotSpaceone()
+  {
+    double[] vals = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
+    if(vals[0]!=0){
+      // addVector3ToArrayList(new Vector3(vals[0], vals[1], vals[2]), aprilTagPosInRobotSpaceValues);
+      addVector3ToArrayList(new Vector3(vals[3], vals[4], vals[5]), aprilTagRotInRobotSpaceValues);
+      // avgAprilTagPosInRobotSpace = getAverageOfArrayList(aprilTagPosInRobotSpaceValues);
+      avgAprilTagRotInRobotSpace = getAverageOfArrayList(aprilTagRotInRobotSpaceValues);
+    } else {
+      System.out.println("Bad Data");
+    }
+  }
+
+  public void CalculateRobotPositionInFieldSpaceone()
+  {
+    double[] vals = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+    //botpose - x,y,z, roll, pitch, yaw
+    if (vals[0]!=0) {
+      //  addVector3ToArrayList(new Vector3(vals[0], vals[1], vals[2]), robotPosInFieldSpaceValues);
+      //addVector3ToArrayList(new Vector3(vals[2], vals[0] * -1, vals[1] * -1), robotPosInFieldSpaceValues);
+
+      addVector3ToArrayList(new Vector3(vals[3], vals[4], vals[5]), robotRotInFieldSpaceValues);
+      // avgRobotPosInFieldSpace = getAverageOfArrayList(robotPosInFieldSpaceValues);
+      avgRobotRotInFieldSpace = getAverageOfArrayList(robotRotInFieldSpaceValues);
+    } else {
+      System.out.println("Bad Data");
+    }
+    
+  }
+
+  void addVector3ToArrayList(Vector3 newVal, ArrayList<Vector3> arrayList)
+  {
+    arrayList.add(0, newVal);
+    if (arrayList.size() > VisionConstants.VALUES_TO_AVERAGE) {arrayList.remove(arrayList.size() - 1); }
+  }
+
 
   // =========================
   // TAG POSITION (robot space)
@@ -57,11 +101,11 @@ public class Vision extends SubsystemBase {
 
     double[] vals = table.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
 
-    if (vals.length == 6) {
+    if (vals[0]!=0) {
 
       Vector3 pos = new Vector3(vals[0], vals[1], vals[2]);
 
-      addFilteredSample(pos, 0.5);
+      addFilteredSample(pos, 100);
       avgAprilTagPosInRobotSpace = getAverageOfArrayList(aprilTagPosInRobotSpaceValues);
     }
   }
@@ -75,11 +119,12 @@ public class Vision extends SubsystemBase {
 
     double[] vals = table.getEntry("botpose").getDoubleArray(new double[6]);
 
-    if (vals.length == 6) {
+    if (vals[0]!=0) {
+      AprilTag tag = VisionConstants.AprilTagFieldConstants.TAGS.get(aprilTagID);
 
-      Vector3 pos = new Vector3(vals[0], vals[1], vals[2]);
+      Vector3 pos = new Vector3(vals[0] + tag.pose.getX(), vals[1] + tag.pose.getY(), vals[2]);
 
-      addFilteredRobotSample(pos, 1.0);
+      addFilteredRobotSample(pos, 100);
       avgRobotPosInFieldSpace = getAverageOfArrayList(robotPosInFieldSpaceValues);
 
       robotYawRadians = Math.toRadians(vals[5]);
@@ -175,4 +220,6 @@ public class Vision extends SubsystemBase {
   public Vector3 RobotPosInFieldSpace() { return avgRobotPosInFieldSpace; }
   public double RobotYawRadians() { return robotYawRadians; }
   public double HorizontalOffsetFromAprilTag() { return horizontalOffsetFromAprilTag; }
+  public Vector3 AprilTagRotInRobotSpace() { return avgAprilTagRotInRobotSpace; } //
+  public Vector3 RobotRotInFieldSpace() { return avgRobotRotInFieldSpace; } //
 }
