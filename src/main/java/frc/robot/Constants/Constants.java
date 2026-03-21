@@ -144,10 +144,10 @@ public final class Constants
       public static final int SHOOTER_STALL_LIMIT = 60;
 
       public static final int INTAKE_FREE_LIMIT1 = 35;
-      public static final int INTAKE_STALL_LIMIT1 = 60;
+      public static final int INTAKE_STALL_LIMIT1 = 80;
 
       public static final int INTAKE_FREE_LIMIT2 = 35;
-      public static final int INTAKE_STALL_LIMIT2 = 60;
+      public static final int INTAKE_STALL_LIMIT2 = 80;
 
       public static final int MOTOR_SPEED_NONE = 0;
 

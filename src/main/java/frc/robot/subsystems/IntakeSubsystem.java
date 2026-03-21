@@ -57,8 +57,8 @@ public class IntakeSubsystem extends SubsystemBase {
         intakePID2.setReference(-Constants.FuelShooterConstants.INTAKESPEED2, ControlType.kVelocity);
         break;
       case OUTTAKE:
-        intakePID1.setReference(-Constants.FuelShooterConstants.INTAKESPEED1, ControlType.kVelocity);
-        intakePID2.setReference(-Constants.FuelShooterConstants.INTAKESPEED2, ControlType.kVelocity);
+        intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED1, ControlType.kVelocity);
+        intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2, ControlType.kVelocity);
         break;
       case FEED:
         intakePID1.setReference(Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);

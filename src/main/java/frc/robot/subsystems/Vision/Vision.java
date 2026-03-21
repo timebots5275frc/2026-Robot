@@ -105,7 +105,7 @@ public class Vision extends SubsystemBase {
 
     double[] vals = table.getEntry("botpose").getDoubleArray(new double[6]);
 
-    if (vals[0]!=0) {
+    if (vals[0]!=0 && aprilTagID != -1) {
       AprilTag tag = VisionConstants.AprilTagFieldConstants.TAGS.get(aprilTagID);
 
       Vector3 pos = new Vector3(mt2.pose.getX() + tag.pose.getX(), mt2.pose.getY() + tag.pose.getY(), 0);
