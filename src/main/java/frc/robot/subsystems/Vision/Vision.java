@@ -3,6 +3,8 @@ package frc.robot.subsystems.Vision;
 import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
+
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -10,81 +12,65 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.CustomTypes.Math.Vector3;
+import frc.robot.commands.shoot.LockOnHub;
 
 public class Vision extends SubsystemBase {
 
-  private int aprilTagID = -1;
-  private double horizontalOffsetFromAprilTag;
-
-  // TAG (robot space)
-  private Vector3 avgAprilTagPosInRobotSpace = Vector3.zero;
-  private ArrayList<Vector3> aprilTagPosInRobotSpaceValues = new ArrayList<>();
-
-  private Vector3 avgAprilTagRotInRobotSpace = Vector3.zero;
-  private ArrayList<Vector3> aprilTagRotInRobotSpaceValues = new ArrayList<>();
-
-  // ROBOT (field space)
-  private Vector3 avgRobotPosInFieldSpace = Vector3.zero;
-  private ArrayList<Vector3> robotPosInFieldSpaceValues = new ArrayList<>();
+    private int aprilTagID = -1;
+    private double horizontalOffsetFromAprilTag;
   
-  private Vector3 avgRobotRotInFieldSpace = Vector3.zero;
-  private ArrayList<Vector3> robotRotInFieldSpaceValues = new ArrayList<>();
-
-  // YAW (radians)
-  private double robotYawRadians = 0.0;
-
-  public BooleanSupplier HasValidData = () -> hasValidData();
-
-  public static boolean usingLimelight = false;
-  int thingsUsingLimelight = 0;
-
-  @Override
-  public void periodic() {
-    var table = NetworkTableInstance.getDefault().getTable("limelight");
-
-    aprilTagID = (int) table.getEntry("tid").getDouble(-1.0);
-    horizontalOffsetFromAprilTag = table.getEntry("tx").getDouble(0);
-    double tv = table.getEntry("tv").getDouble(0);
-
-    if (tv == 1) {
-      CalculateRobotPositionInFieldSpaceone();
-      CalculateTargetTransformInRobotSpaceone();
-    } else {
-      // ClearAprilTagData();
-    }
-
-    LogData();
-  }
-
-  void CalculateTargetTransformInRobotSpaceone()
-  {
-    double[] vals = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
-    if(vals[0]!=0){
-      // addVector3ToArrayList(new Vector3(vals[0], vals[1], vals[2]), aprilTagPosInRobotSpaceValues);
-      addVector3ToArrayList(new Vector3(vals[3], vals[4], vals[5]), aprilTagRotInRobotSpaceValues);
-      // avgAprilTagPosInRobotSpace = getAverageOfArrayList(aprilTagPosInRobotSpaceValues);
-      avgAprilTagRotInRobotSpace = getAverageOfArrayList(aprilTagRotInRobotSpaceValues);
-    } else {
-      System.out.println("Bad Data");
-    }
-  }
-
-  public void CalculateRobotPositionInFieldSpaceone()
-  {
-    double[] vals = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
-    //botpose - x,y,z, roll, pitch, yaw
-    if (vals[0]!=0) {
-      //  addVector3ToArrayList(new Vector3(vals[0], vals[1], vals[2]), robotPosInFieldSpaceValues);
-      //addVector3ToArrayList(new Vector3(vals[2], vals[0] * -1, vals[1] * -1), robotPosInFieldSpaceValues);
-
-      addVector3ToArrayList(new Vector3(vals[3], vals[4], vals[5]), robotRotInFieldSpaceValues);
-      // avgRobotPosInFieldSpace = getAverageOfArrayList(robotPosInFieldSpaceValues);
-      avgRobotRotInFieldSpace = getAverageOfArrayList(robotRotInFieldSpaceValues);
-    } else {
-      System.out.println("Bad Data");
-    }
+    // TAG (robot space)
+    private Vector3 avgAprilTagPosInRobotSpace = Vector3.zero;
+    private ArrayList<Vector3> aprilTagPosInRobotSpaceValues = new ArrayList<>();
+  
+    private Vector3 avgAprilTagRotInRobotSpace = Vector3.zero;
+    private ArrayList<Vector3> aprilTagRotInRobotSpaceValues = new ArrayList<>();
+  
+    // ROBOT (field space)
+    private Vector3 avgRobotPosInFieldSpace = Vector3.zero;
+    private ArrayList<Vector3> robotPosInFieldSpaceValues = new ArrayList<>();
     
-  }
+    private Vector3 avgRobotRotInFieldSpace = Vector3.zero;
+    private ArrayList<Vector3> robotRotInFieldSpaceValues = new ArrayList<>();
+  
+    // YAW (radians)
+    private double robotYawRadians = 0.0;
+  
+    public BooleanSupplier HasValidData = () -> hasValidData();
+  
+    public static boolean usingLimelight = false;
+    int thingsUsingLimelight = 0;
+
+    public Pigeon2 gyro;
+    LimelightHelpers.PoseEstimate mt2;
+
+    public Vision(Pigeon2 gyro) {
+      this.gyro = gyro;
+    }
+  
+    @Override
+    public void periodic() {
+
+      LimelightHelpers.SetRobotOrientation("limelight", gyro.getYaw().getValueAsDouble(), 0, 0, 0, 0, 0);
+      mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+      
+      var table = NetworkTableInstance.getDefault().getTable("limelight");
+
+        aprilTagID = (int) table.getEntry("tid").getDouble(-1.0);
+      horizontalOffsetFromAprilTag = table.getEntry("tx").getDouble(0);
+      double tv = table.getEntry("tv").getDouble(0);
+
+      if (tv == 1) {
+        CalculateRobotPositionInFieldSpace();
+        CalculateTargetTransformInRobotSpace();
+      } else {
+       // ClearAprilTagData();
+      }
+
+      LogData();
+    }
+
+ 
 
   void addVector3ToArrayList(Vector3 newVal, ArrayList<Vector3> arrayList)
   {
@@ -122,12 +108,12 @@ public class Vision extends SubsystemBase {
     if (vals[0]!=0) {
       AprilTag tag = VisionConstants.AprilTagFieldConstants.TAGS.get(aprilTagID);
 
-      Vector3 pos = new Vector3(vals[0] + tag.pose.getX(), vals[1] + tag.pose.getY(), vals[2]);
+      Vector3 pos = new Vector3(mt2.pose.getX() + tag.pose.getX(), mt2.pose.getY() + tag.pose.getY(), 0);
 
       addFilteredRobotSample(pos, 100);
       avgRobotPosInFieldSpace = getAverageOfArrayList(robotPosInFieldSpaceValues);
 
-      robotYawRadians = Math.toRadians(vals[5]);
+      robotYawRadians = mt2.pose.getRotation().getRadians();
     }
   }
 

@@ -19,6 +19,9 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeState;
 import frc.robot.subsystems.Input.Input;
 import frc.robot.subsystems.Vision.Vision;
+
+import com.ctre.phoenix6.hardware.Pigeon2;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -46,6 +49,7 @@ public class RobotContainer {
    CANDriveSubsystem tankDrive;
     FuelShooter fs;
     IntakeSubsystem intake;
+    Pigeon2 gyro;
 
     
     // Climb climb;
@@ -56,13 +60,14 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(SendableChooser<Command> autonChooser) {
+    gyro = new Pigeon2(Constants.DriveConstants.PIGEON_2_ID);
     bBoard = new GenericHID(1);
     joy = new Joystick(0);
     input = new Input(joy);
     tankDrive = new CANDriveSubsystem();
     fs = new FuelShooter();
     intake = new IntakeSubsystem();
-    vision = new Vision();
+    vision = new Vision(gyro);
     
     
     
