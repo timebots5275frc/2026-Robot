@@ -157,15 +157,15 @@ public class LockOnHub extends Command {
 
         // SmartDashboard.putBoolean("Locked in", lockedOn);
         // SmartDashboard.putNumber("error", Math.toDegrees(error));
-        SmartDashboard.putNumber("angle to tag", angleToTag);
-        // SmartDashboard.putNumber("robot Heading", robotHeading);
-        SmartDashboard.putNumber("target heading", targetHeading);
-        SmartDashboard.putNumber("dx", dx);
-        SmartDashboard.putNumber("dy", dy);
-        SmartDashboard.putNumber("shooter pose x", shooterPose.getX());
-        SmartDashboard.putNumber("shooter pose y", shooterPose.getY());
-        SmartDashboard.putNumber("target pose x", targetPose.getX());
-        SmartDashboard.putNumber("target pose y", targetPose.getY());
+        // SmartDashboard.putNumber("angle to tag", angleToTag);
+        // // SmartDashboard.putNumber("robot Heading", robotHeading);
+        // SmartDashboard.putNumber("target heading", targetHeading);
+        // SmartDashboard.putNumber("dx", dx);
+        // SmartDashboard.putNumber("dy", dy);
+        // SmartDashboard.putNumber("shooter pose x", shooterPose.getX());
+        // SmartDashboard.putNumber("shooter pose y", shooterPose.getY());
+        // SmartDashboard.putNumber("target pose x", targetPose.getX());
+        // SmartDashboard.putNumber("target pose y", targetPose.getY());
 
     }
 

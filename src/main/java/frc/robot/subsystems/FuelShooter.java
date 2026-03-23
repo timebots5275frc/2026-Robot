@@ -15,10 +15,10 @@ import frc.robot.Constants.Constants;
 
 public class FuelShooter extends SubsystemBase {
 
-  private SparkFlex shooterMotor1;
+  public SparkFlex shooterMotor1;
   public SparkClosedLoopController shooterMotorPID;
 
-  private SparkFlex shooterMotor2;
+  public SparkFlex shooterMotor2;
 
   private FuelShooterState state;
 

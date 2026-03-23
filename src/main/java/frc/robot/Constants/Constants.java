@@ -168,7 +168,7 @@ public final class Constants
       public static final double TARGET_HEIGHT = 1.8542;
       public static final double MOUNTING_ANGLE = 20;
       public static final double SHOOTER_ANGLE = 75;
-      public static final double RPM_FUDGE_FACTOR = 1.0;
+      public static final double RPM_FUDGE_FACTOR = 1.05;
     } 
 
     public static final class ClimbConstants {
