@@ -85,6 +85,8 @@ public class LimelightDistanceShootCommand extends Command {
   @Override
   public void execute() {
 
+    //use gyro to help with tracking robot pose
+
     int aTag = vision.AprilTagID();
 
     if(vision.hasValidData()) {
