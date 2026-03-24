@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -39,8 +40,8 @@ public class LimelightDistanceShootCommand extends Command {
   private double robotY = 0;
   private double robotHeading = 0;
   private Translation3d targetPose;
-  private DifferentialDriveKinematics ddk = new DifferentialDriveKinematics(.025);//not correct track width
-  private DifferentialDrivePoseEstimator ddpe = new DifferentialDrivePoseEstimator(ddk, vision.gyro.getRotation2d(), (CANDriveSubsystem.leftLeader.getEncoder().getPosition() * 2 * Math.PI * 4) , (CANDriveSubsystem.rightLeader.getEncoder().getPosition() * 2 * Math.PI * 4), new Pose2d());
+  private DifferentialDriveKinematics ddk;
+  private DifferentialDrivePoseEstimator ddpe;
 
     /** Creates a new LimelightDistanceShootCommand. */
     public LimelightDistanceShootCommand(Vision vision, FuelShooter fuelShooter) {
@@ -53,6 +54,8 @@ public class LimelightDistanceShootCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+     ddk = new DifferentialDriveKinematics(.025);//not correct track width
+     ddpe = new DifferentialDrivePoseEstimator(ddk, vision.gyro.getRotation2d(), (CANDriveSubsystem.leftLeader.getEncoder().getPosition() * 2 * Math.PI * 4) , (CANDriveSubsystem.rightLeader.getEncoder().getPosition() * 2 * Math.PI * 4), new Pose2d());
     vision.gyro.reset();
     vision.setUsingLimelight(true);
 
@@ -89,6 +92,7 @@ public class LimelightDistanceShootCommand extends Command {
     int aTag = vision.AprilTagID();
 
     if(vision.hasValidData()) {
+      ddpe.resetPosition(new Rotation2d(0,0), 0, 0, new Pose2d(0,0,new Rotation2d(0,0)));
       vision.CalculateRobotPositionInFieldSpace();
       //averages vision and gyro data
       robotX = vision.RobotPosInFieldSpace().x + VisionConstants.AprilTagFieldConstants.TAGS.get(aTag).pose.getX();
