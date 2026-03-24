@@ -82,7 +82,7 @@ public class RobotContainer {
 
 
     autonChooser.setDefaultOption("LIMELIGHT SHOOT with distance", new SequentialCommandGroup(
-      new DistanceDrive(tankDrive, -.75, -0.5),
+      new DistanceDrive(tankDrive, -1.5, -0.5),
       new LimelightDistanceShootCommand(vision, fs),
       //new LockOnHub(tankDrive, vision),
       // new ChargeMotor(fs, vision),
