@@ -156,7 +156,7 @@ public final class Constants
       public static final PID SHOOTER_MOTOR_PID = new PID(0.00052,0.0000001,0.0, 0.00, 0.0015, 0, 0);
       public static final int INTAKESPEED1 = 2500;
       public static final int INTAKESPEED2 = 5000;
-      public static final double FEEDSPEED = 2000; 
+      public static final double FEEDSPEED = 2500; 
       public static final int DEFAULT_SHOOTER_RPM = 3500;
     }
 
@@ -168,7 +168,7 @@ public final class Constants
       public static final double TARGET_HEIGHT = 1.8542;
       public static final double MOUNTING_ANGLE = 20;
       public static final double SHOOTER_ANGLE = 75;
-      public static final double RPM_FUDGE_FACTOR = 1.05;
+      public static final double RPM_FUDGE_FACTOR = 1.00;
     } 
 
     public static final class ClimbConstants {

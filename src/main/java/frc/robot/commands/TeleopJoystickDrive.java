@@ -107,7 +107,7 @@ public class TeleopJoystickDrive extends Command {
         turnInput = (turnInput * Math.abs(turnInput) * Math.abs(turnInput)) * Constants.JoystickConstants.JOY_INPUT_ROTATION_VELOCITY_MULT;
         
         //scale
-        Vector2 inputVelocity = moveInput.times(((speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED)));
+        Vector2 inputVelocity = moveInput.times(((-speedPercent * Constants.DriveConstants.MAX_DRIVE_SPEED)));
         double inputRotationVelocity = (turnInput * speedPercent * Constants.DriveConstants.MAX_TWIST_RATE); //rot. vel.
                                                                                                                //remove last multiplied number for max results
         

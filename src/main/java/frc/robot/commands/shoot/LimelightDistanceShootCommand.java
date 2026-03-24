@@ -28,7 +28,7 @@ public class LimelightDistanceShootCommand extends Command {
   private FuelShooter fuelShooter;
   private double LLDist = 0;
   private double targetRPM = 0;
-  private double allowedError = 50;
+  private double allowedError = 25;
   private double robotX = 0;
   private double robotY = 0;
   // private double dx = 0;
@@ -78,7 +78,7 @@ public class LimelightDistanceShootCommand extends Command {
     LLDist = vision.AprilTagPosInRobotSpace().magnitude();
     targetRPM = fuelShooter.calculateRPMFromLimelight(LLDist);
 
-    fuelShooter.shooterMotorPID.setReference(-targetRPM, ControlType.kVelocity);
+    fuelShooter.shooterMotorPID.setReference(targetRPM, ControlType.kVelocity);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -100,6 +100,7 @@ public class LimelightDistanceShootCommand extends Command {
     SmartDashboard.putNumber("RobotX", robotX);
     SmartDashboard.putNumber("RobotY", robotY);
     SmartDashboard.putNumber("RobotHeading", robotHeading);
+    SmartDashboard.putNumber("targetRPM", targetRPM);
 
   }
 
@@ -108,7 +109,7 @@ public class LimelightDistanceShootCommand extends Command {
   public void end(boolean interrupted) {
     vision.setUsingLimelight(false);
     vision.ClearAprilTagData();
-    fuelShooter.SetShooterState(FuelShooterState.NONE);
+    // fuelShooter.SetShooterState(FuelShooterState.NONE);
     end = false;
   }
 
