@@ -20,10 +20,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Constants;
 
  public class CANDriveSubsystem extends SubsystemBase {
-   public final SparkFlex leftLeader;
-   private final SparkFlex leftFollower;
-   private final SparkFlex rightLeader;
-   private final SparkFlex rightFollower;
+   public static SparkFlex leftLeader;
+   private SparkFlex leftFollower;
+   public static  SparkFlex rightLeader;
+   private  SparkFlex rightFollower;
 
    private final DifferentialDrive drive;
 

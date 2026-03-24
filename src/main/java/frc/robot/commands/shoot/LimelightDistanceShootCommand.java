@@ -9,12 +9,18 @@ import java.util.Optional;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.revrobotics.spark.SparkBase.ControlType;
 
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.Constants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.CANDriveSubsystem;
 import frc.robot.subsystems.FuelShooter;
 import frc.robot.subsystems.FuelShooter.FuelShooterState;
 import frc.robot.subsystems.Vision.Vision;
@@ -31,12 +37,11 @@ public class LimelightDistanceShootCommand extends Command {
   private double allowedError = 25;
   private double robotX = 0;
   private double robotY = 0;
-  // private double dx = 0;
-  // private double dy = 0;
   private double robotHeading = 0;
-  // private Pigeon2 gyro;
   private Translation3d targetPose;
-  
+  private DifferentialDriveKinematics ddk = new DifferentialDriveKinematics(.025);//not correct track width
+  private DifferentialDrivePoseEstimator ddpe = new DifferentialDrivePoseEstimator(ddk, vision.gyro.getRotation2d(), (CANDriveSubsystem.leftLeader.getEncoder().getPosition() * 2 * Math.PI * 4) , (CANDriveSubsystem.rightLeader.getEncoder().getPosition() * 2 * Math.PI * 4), new Pose2d());
+
     /** Creates a new LimelightDistanceShootCommand. */
     public LimelightDistanceShootCommand(Vision vision, FuelShooter fuelShooter) {
       this.vision = vision;
@@ -48,6 +53,7 @@ public class LimelightDistanceShootCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    vision.gyro.reset();
     vision.setUsingLimelight(true);
 
     Optional<Alliance> alliance = DriverStation.getAlliance();
@@ -57,21 +63,9 @@ public class LimelightDistanceShootCommand extends Command {
                 : VisionConstants.RED_HUB_POSE;
 
     if(!vision.hasValidData()) {
-      // potentially make it so LL dist is calcualted based off of the robots last known location on the field
-      // pros
-      //  -if being defended and we saw the aTag before they cut off our vision distance is still accurate
-      // cons
-      //  - if the last known tag was the tunnel or something else its going to be way off
-      //  - potentially not enough time to develop and test
-      // solutions to cons
-      //  - could just press shoot no limelight button for 3500 rpm const
-      //  - rest of monday, all of tuesday, all of wednesday
 
-      //make relative to hub
-      // LLDist = Math.hypot(robotX, robotY);
-      // fuelShooter.calculateRPMFromLimelight(Math.hypot(targetPose.getX() - robotX, targetPose.getY() - robotY));
-
-      fuelShooter.shooterMotorPID.setReference(-3500,ControlType.kVelocity);
+      fuelShooter.calculateRPMFromLimelight(Math.hypot(robotX - targetPose.getX(), robotY - targetPose.getY()));
+      // fuelShooter.shooterMotorPID.setReference(Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM ,ControlType.kVelocity);
       end = true;
     }
 
@@ -85,12 +79,18 @@ public class LimelightDistanceShootCommand extends Command {
   @Override
   public void execute() {
 
-    //use gyro to help with tracking robot pose
+    if(!vision.hasValidData()){
+      if(robotX == 0) return; //so robot doesnt start calculating its pose until it creates and origin from tag
+      ddpe.update(vision.gyro.getRotation2d(), (CANDriveSubsystem.leftLeader.getEncoder().getPosition() * 2 * Math.PI * 4), (CANDriveSubsystem.rightLeader.getEncoder().getPosition() * 2 * Math.PI * 4));
+      robotX = ddpe.getEstimatedPosition().getX();
+      robotY = ddpe.getEstimatedPosition().getY();
+    }
 
     int aTag = vision.AprilTagID();
 
     if(vision.hasValidData()) {
       vision.CalculateRobotPositionInFieldSpace();
+      //averages vision and gyro data
       robotX = vision.RobotPosInFieldSpace().x + VisionConstants.AprilTagFieldConstants.TAGS.get(aTag).pose.getX();
       robotY = vision.RobotPosInFieldSpace().y + VisionConstants.AprilTagFieldConstants.TAGS.get(aTag).pose.getY();
       robotHeading = vision.gyro.getYaw().getValueAsDouble();
