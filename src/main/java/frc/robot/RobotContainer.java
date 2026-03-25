@@ -82,7 +82,7 @@ public class RobotContainer {
 
 
     autonChooser.setDefaultOption("LIMELIGHT SHOOT with distance", new SequentialCommandGroup(
-      new DistanceDrive(tankDrive, -1.5, -0.5),
+      new DistanceDrive(tankDrive, -1.5, 0.5),
       new LimelightDistanceShootCommand(vision, fs),
       //new LockOnHub(tankDrive, vision),
       // new ChargeMotor(fs, vision),
@@ -106,7 +106,7 @@ public class RobotContainer {
     // ));
 
     autonChooser.addOption("LIMELIGHT SHOOT with time", new SequentialCommandGroup(
-      new AutoDrive(tankDrive, -0.5, 0).withTimeout(1),
+      new AutoDrive(tankDrive, -0.5, 0).withTimeout(1.25),
       new WaitCommand(1.5),
       new LimelightDistanceShootCommand(vision, fs),
       // new LockOnHub(tankDrive, vision),
@@ -158,8 +158,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-     new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileFalse(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1));
-     new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, 1));
+     new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileFalse(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, 1));
+     new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1));
     // teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1);
      tankDrive.setDefaultCommand(teleJoyDrive);
     
