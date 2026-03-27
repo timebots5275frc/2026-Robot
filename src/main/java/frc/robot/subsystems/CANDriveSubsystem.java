@@ -10,24 +10,44 @@
 
 import static frc.robot.Constants.Constants.DriveConstants.*;
 
+import java.util.Optional;
+
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.revrobotics.spark.SparkFlex;
  import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Constants;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.Vision.LimelightHelpers;
+import frc.robot.subsystems.Vision.Vision;
 
  public class CANDriveSubsystem extends SubsystemBase {
    public static SparkFlex leftLeader;
    private SparkFlex leftFollower;
    public static  SparkFlex rightLeader;
    private  SparkFlex rightFollower;
+   private Vision vision;
+   private Pigeon2 gyro;
+   private DifferentialDriveKinematics ddk;
+   private DifferentialDrivePoseEstimator ddpe;
+   private Translation3d targetPose;
 
    private final DifferentialDrive drive;
 
-  public CANDriveSubsystem() {
+  public CANDriveSubsystem(Vision vision) {
+    this.vision = vision;
+
     // create brushed motors for drive
     leftLeader = new SparkFlex(LEFT_LEADER_ID, MotorType.kBrushless);
     leftFollower = new SparkFlex(LEFT_FOLLOWER_ID, MotorType.kBrushless);
@@ -40,10 +60,10 @@ import frc.robot.Constants.Constants;
      // Set can timeout. Because this project only sets parameters once on
      // construction, the timeout can be long without blocking robot operation. Code
      // which sets or gets parameters during operation may need a shorter timeout.
-     leftLeader.setCANTimeout(250);
-     rightLeader.setCANTimeout(250);
-     leftFollower.setCANTimeout(250);
-     rightFollower.setCANTimeout(250);
+    //  leftLeader.setCANTimeout(250);
+    //  rightLeader.setCANTimeout(250);
+    //  leftFollower.setCANTimeout(250);
+    //  rightFollower.setCANTimeout(250);
 
      // Create the configuration to apply to motors. Voltage compensation
      // helps the robot perform more similarly on different
@@ -75,12 +95,15 @@ import frc.robot.Constants.Constants;
      config.inverted(true);
      leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-     
-   }
+     ddk = new DifferentialDriveKinematics(.6);
 
-   @Override
-   public void periodic() {
-    SmartDashboard.putNumber("Drive Current", leftLeader.getOutputCurrent());
+   ddpe = new DifferentialDrivePoseEstimator(
+    ddk,
+    vision.gyro.getRotation2d(),
+    (CANDriveSubsystem.leftLeader.getEncoder().getPosition() * 2 * Math.PI * .0508), 
+    (CANDriveSubsystem.rightLeader.getEncoder().getPosition() * 2 * Math.PI * .0508),
+    new Pose2d()
+);
    }
 
    public void driveArcade(double xSpeed, double zRotation) {
@@ -94,6 +117,22 @@ import frc.robot.Constants.Constants;
       leftLeader.getEncoder().setPosition(0);
       rightLeader.getEncoder().setPosition(0);
     }
+
+public Pose2d getPose() {
+    return ddpe.getEstimatedPosition();
+}
+
+public void addVisionMeasurement(Pose2d visionPose, double timestamp) {
+    ddpe.addVisionMeasurement(visionPose, timestamp);
+}
+
+public double getLeftDistance() {
+    return leftLeader.getEncoder().getPosition() * 2 * Math.PI * 0.0508;
+}
+
+public double getRightDistance() {
+    return rightLeader.getEncoder().getPosition() * 2 * Math.PI * 0.0508;
+}
 
     public double getAverageDistanceMeters() {
       double leftMeters = leftLeader.getEncoder().getPosition() * METERS_PER_MOTOR_ROTATION;
@@ -118,6 +157,35 @@ import frc.robot.Constants.Constants;
     public DifferentialDrive getDifferentialDrive() {
       return drive;
     }
-    
+
+    @Override
+   public void periodic() {
+
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+        targetPose =
+            alliance.isPresent() && alliance.get() == Alliance.Blue
+                ? VisionConstants.BLUE_HUB_POSE
+                : VisionConstants.RED_HUB_POSE;
+
+    int aTag = vision.AprilTagID();
+
+    if (vision.hasValidData()) {
+      double latencyMS = (LimelightHelpers.getLatency_Pipeline("limelight")+LimelightHelpers.getLatency_Capture("limelight"));
+      double timeStamp = Timer.getFPGATimestamp() - (latencyMS/1000.0);
+
+      ddpe.update(vision.gyro.getRotation2d(), (getLeftDistance()), (getRightDistance()));
+      ddpe.addVisionMeasurement(new Pose2d(vision.RobotPosInFieldSpace().x + VisionConstants.AprilTagFieldConstants.TAGS.get(aTag-1).pose.getX(),vision.RobotPosInFieldSpace().y + VisionConstants.AprilTagFieldConstants.TAGS.get(aTag-1).pose.getY(), vision.gyro.getRotation2d()), timeStamp);
+      return;
+    }
+
+    ddpe.update(
+        vision.gyro.getRotation2d(),
+        (getLeftDistance()), 
+        (getRightDistance())
+    );
+
+    SmartDashboard.putNumber("robotX", ddpe.getEstimatedPosition().getX());
+    SmartDashboard.putNumber("robotX", ddpe.getEstimatedPosition().getY());
+   }
 
 }

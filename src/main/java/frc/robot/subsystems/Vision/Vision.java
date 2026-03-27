@@ -6,13 +6,11 @@ import java.util.function.BooleanSupplier;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.CustomTypes.Math.Vector3;
-import frc.robot.commands.shoot.LockOnHub;
 
 public class Vision extends SubsystemBase {
 
@@ -166,14 +164,14 @@ public class Vision extends SubsystemBase {
 
   void LogData() {
     SmartDashboard.putString("Detected AprilTagID", aprilTagID == -1 ? "None" : String.valueOf(aprilTagID));
-    SmartDashboard.putString("AprilTag position (robot)", aprilTagID == -1 ? "N/A" : avgAprilTagPosInRobotSpace.toString(3));
+    // SmartDashboard.putString("AprilTag position (robot)", aprilTagID == -1 ? "N/A" : avgAprilTagPosInRobotSpace.toString(3));
     SmartDashboard.putNumber("Robot Yaw (rad)", robotYawRadians);
     SmartDashboard.putNumber("Things using limelight", thingsUsingLimelight);
   }
 
   public void ClearAprilTagData() {
     aprilTagPosInRobotSpaceValues.clear();
-    robotPosInFieldSpaceValues.clear(); // ✅ important
+    robotPosInFieldSpaceValues.clear(); 
   }
 
   public void OnTeleopDisable() {

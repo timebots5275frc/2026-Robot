@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Constants;
 import frc.robot.CustomTypes.Math.Vector2;
@@ -115,7 +114,7 @@ public class TeleopJoystickDrive extends Command {
         
         // if rotation is too high set rotation as max
         if(Math.abs(inputRotationVelocity)>Constants.DriveConstants.MAX_TWIST_RATE){
-            System.out.println("IRV exceeds max twist rate");
+            // System.out.println("IRV exceeds max twist rate");
             inputRotationVelocity=Constants.DriveConstants.MAX_TWIST_RATE*rot_sign;
         }
 
@@ -123,7 +122,7 @@ public class TeleopJoystickDrive extends Command {
         // SmartDashboard.putNumber("Throttle teleJoy", speedPercent);
         // SmartDashboard.putNumber("Turn_speed", inputRotationVelocity);
 
-        System.out.println(moveInput.x);
+        // System.out.println(moveInput.x);
 
         
 
@@ -136,10 +135,7 @@ public class TeleopJoystickDrive extends Command {
         } else {
             drivetrain.driveArcade(0, 0);
         }
-        
 
-        //SmartDashboard.putNumber("move", moveInput.x);
-       // SmartDashboard.putNumber("turn", turnInput);
     }
 
     

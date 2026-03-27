@@ -26,6 +26,7 @@ public class FuelShooter extends SubsystemBase {
 
   public enum FuelShooterState{
     CHARGEMOTOR,
+    SUCK,
     NONE,
   }
 
@@ -56,6 +57,10 @@ public class FuelShooter extends SubsystemBase {
       break;
       case NONE: shooterMotorPID.setReference(Constants.FuelShooterConstants.MOTOR_SPEED_NONE, ControlType.kVelocity);
       break;
+      case SUCK: shooterMotorPID.setReference(-Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM + 1000, ControlType.kVelocity);
+        break;
+      default:
+        break;
     }
   }
 
@@ -88,8 +93,8 @@ public class FuelShooter extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("shooter rpm", shooterMotor1.getEncoder().getVelocity());
-    SmartDashboard.putNumber("shooter1 current", shooterMotor1.getOutputCurrent());
-    SmartDashboard.putNumber("shooter2 current", shooterMotor2.getOutputCurrent());
+    // SmartDashboard.putNumber("shooter1 current", shooterMotor1.getOutputCurrent());
+    // SmartDashboard.putNumber("shooter2 current", shooterMotor2.getOutputCurrent());
   }
 
   public FuelShooterState getShooterState() {

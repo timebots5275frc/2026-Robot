@@ -43,7 +43,7 @@ public class ChargeMotor extends Command {
       shooter.shooterMotorPID.setReference(-targetRPM, ControlType.kVelocity);
        
       
-      SmartDashboard.putBoolean("Charging Motor", true);
+      // SmartDashboard.putBoolean("Charging Motor", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -67,10 +67,10 @@ public class ChargeMotor extends Command {
     if (targetRPM == 0) {
       return false;
     }
-     SmartDashboard.putBoolean("Charging Motor", true);
+    //  SmartDashboard.putBoolean("Charging Motor", true);
     
     if (Math.abs(shooter.getMotor().getEncoder().getVelocity()) >= Math.abs(targetRPM) - allowedError && Math.abs(shooter.getMotor().getEncoder().getVelocity()) <= Math.abs(targetRPM) + allowedError) {
-      SmartDashboard.putBoolean("Charging Motor", false);
+      // SmartDashboard.putBoolean("Charging Motor", false);
       return true;
     } 
     return false;

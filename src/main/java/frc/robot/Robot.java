@@ -4,12 +4,16 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
+
 import au.grapplerobotics.CanBridge;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.Constants;
+import frc.robot.subsystems.Vision.Vision;
 
 
 /**
@@ -20,7 +24,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
 
   // ElevatorSubsystem es = new ElevatorSubsystem();
-  
+  Vision vision;
+  Pigeon2 gyro;
 
   private Command m_autonomousCommand;
   SendableChooser<Command> autonChooser = new SendableChooser<Command>(); // Create a chooser to select an autonomous command
@@ -33,10 +38,13 @@ public class Robot extends TimedRobot {
    */
   
   public Robot() {
+    gyro = new Pigeon2(Constants.DriveConstants.PIGEON_2_ID);
+    vision = new Vision(gyro);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     CanBridge.runTCP();
-    m_robotContainer = new RobotContainer(autonChooser);
+    m_robotContainer = new RobotContainer(autonChooser, vision);
+    vision.setUsingLimelight(true);
   }
 
   /**

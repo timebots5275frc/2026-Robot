@@ -45,6 +45,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public enum IntakeState{
     INTAKE,
     OUTTAKE,
+    SUCK,
     NONE,
     FEED;
   }
@@ -67,6 +68,12 @@ public class IntakeSubsystem extends SubsystemBase {
       case NONE:
         intakePID1.setReference(0, ControlType.kCurrent);
         intakePID2.setReference(0, ControlType.kCurrent);
+        break;
+      case SUCK: 
+        intakePID1.setReference(-Constants.FuelShooterConstants.INTAKESPEED1, ControlType.kVelocity);
+        intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2, ControlType.kVelocity);
+        break;
+      default:
         break;
     }
   }

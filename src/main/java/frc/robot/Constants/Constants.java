@@ -4,17 +4,7 @@
 
 package frc.robot.Constants;
 
-import java.util.List;
-
-import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.CustomTypes.PID;
-// import frc.robot.CustomTypes.SwerveCanIDs;
-// import frc.robot.CustomTypes.SwerveModuleLocations;
-import frc.robot.CustomTypes.Math.Vector2;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -57,7 +47,7 @@ public final class Constants
   {
     //9,10,11,12
     public static final int INCREASE_LEFT_MOTOR_BUTTON_ID = 10;
-    public static final int INCREASE_RIGHT_MOTOR_BUTTON_ID = 12;
+    // public static final int INCREASE_RIGHT_MOTOR_BUTTON_ID = 12;
     public static final int DECREASE_LEFT_MOTOR_BUTTON_ID = 9;
     public static final int DECREASE_RIGHT_MOTOR_BUTTON_ID = 11;
 
@@ -70,6 +60,7 @@ public final class Constants
     public static final int SHAKE_ROBOT_BUTTON_ID = 12;
     public static final int STOP_INTAKE_BUTTON_ID = 4; 
     public static final int FEED_INTAKE_BUTTON_ID = 9;
+    public static final int SUCK_BUTTON = 10;
   }
 
     public static final class DriveConstants {
