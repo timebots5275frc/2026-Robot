@@ -47,7 +47,9 @@ public class IntakeSubsystem extends SubsystemBase {
     OUTTAKE,
     SUCK,
     NONE,
-    FEED;
+    FEED,
+    BLOW;
+
   }
 
   public void setIntakeState(IntakeState state){
@@ -73,8 +75,11 @@ public class IntakeSubsystem extends SubsystemBase {
         intakePID1.setReference(-Constants.FuelShooterConstants.INTAKESPEED1, ControlType.kVelocity);
         intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2, ControlType.kVelocity);
         break;
-      default:
+      case BLOW:
+      intakePID1.setReference(-Constants.FuelShooterConstants.INTAKESPEED1, ControlType.kVelocity);
+        intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2, ControlType.kVelocity);
         break;
+    
     }
   }
 

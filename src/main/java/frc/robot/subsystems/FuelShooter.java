@@ -28,6 +28,7 @@ public class FuelShooter extends SubsystemBase {
     CHARGEMOTOR,
     SUCK,
     NONE,
+    BLOW
   }
 
   public FuelShooter() {
@@ -59,8 +60,10 @@ public class FuelShooter extends SubsystemBase {
       break;
       case SUCK: shooterMotorPID.setReference(-Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM + 1000, ControlType.kVelocity);
         break;
-      default:
+      case BLOW:
+              shooterMotorPID.setReference(Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM - 1000, ControlType.kVelocity);
         break;
+    
     }
   }
 

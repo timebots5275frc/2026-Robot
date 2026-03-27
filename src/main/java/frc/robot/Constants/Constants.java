@@ -49,7 +49,7 @@ public final class Constants
     public static final int INCREASE_LEFT_MOTOR_BUTTON_ID = 10;
     // public static final int INCREASE_RIGHT_MOTOR_BUTTON_ID = 12;
     public static final int DECREASE_LEFT_MOTOR_BUTTON_ID = 9;
-    public static final int DECREASE_RIGHT_MOTOR_BUTTON_ID = 11;
+   // public static final int DECREASE_RIGHT_MOTOR_BUTTON_ID = 11;
 
     public static final int FLIP_FRONT_BUTTON_ID = 2;
     public static final int SHOOT_LIMELIGHT_BUTTON_ID = 1;
@@ -61,6 +61,7 @@ public final class Constants
     public static final int STOP_INTAKE_BUTTON_ID = 4; 
     public static final int FEED_INTAKE_BUTTON_ID = 9;
     public static final int SUCK_BUTTON = 10;
+    public static final int BLOW_BUTTON = 11;
   }
 
     public static final class DriveConstants {

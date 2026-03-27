@@ -77,7 +77,7 @@ import frc.robot.subsystems.Vision.Vision;
                               Constants.DriveConstants.DRIVE_MOTOR_FREE_LIMIT
                               ); //Constants.DriveConstants.DRIVE_MOTOR_LIMIT_RPM
 
-   config.closedLoopRampRate(Constants.DriveConstants.DRIVE_MOTOR_RAMP_RATE);
+    config.closedLoopRampRate(Constants.DriveConstants.DRIVE_MOTOR_RAMP_RATE);
 
      // Set configuration to follow each leader and then apply it to corresponding
      // follower. Resetting in case a new controller is swapped
@@ -97,14 +97,14 @@ import frc.robot.subsystems.Vision.Vision;
 
      ddk = new DifferentialDriveKinematics(.6);
 
-   ddpe = new DifferentialDrivePoseEstimator(
-    ddk,
-    vision.gyro.getRotation2d(),
-    (CANDriveSubsystem.leftLeader.getEncoder().getPosition() * 2 * Math.PI * .0508), 
-    (CANDriveSubsystem.rightLeader.getEncoder().getPosition() * 2 * Math.PI * .0508),
-    new Pose2d()
-);
-   }
+     ddpe = new DifferentialDrivePoseEstimator(
+     ddk,
+     vision.gyro.getRotation2d(),
+     (CANDriveSubsystem.leftLeader.getEncoder().getPosition() * 2 * Math.PI * .0508), 
+     (CANDriveSubsystem.rightLeader.getEncoder().getPosition() * 2 * Math.PI * .0508),
+     new Pose2d()
+     );
+  }
 
    public void driveArcade(double xSpeed, double zRotation) {
      drive.arcadeDrive(xSpeed, zRotation);
@@ -185,7 +185,7 @@ public double getRightDistance() {
     );
 
     SmartDashboard.putNumber("robotX", ddpe.getEstimatedPosition().getX());
-    SmartDashboard.putNumber("robotX", ddpe.getEstimatedPosition().getY());
+    SmartDashboard.putNumber("robotY", ddpe.getEstimatedPosition().getY());
    }
 
 }

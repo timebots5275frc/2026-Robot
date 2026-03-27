@@ -59,7 +59,7 @@ public class LimelightDistanceShootCommand extends Command {
       robotX = cds.getPose().getX();
       robotY = cds.getPose().getY();
       testRPM = fuelShooter.calculateRPMFromLimelight(Math.hypot(robotX - targetPose.getX(), robotY - targetPose.getY()));
-      fuelShooter.shooterMotorPID.setReference(Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM ,ControlType.kVelocity);
+      fuelShooter.shooterMotorPID.setReference(testRPM ,ControlType.kVelocity);
       return;
     }
 
