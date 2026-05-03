@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import au.grapplerobotics.CanBridge;
@@ -73,6 +76,7 @@ public class Robot extends TimedRobot {
   @Override public void robotInit()
   {
     CameraServer.startAutomaticCapture();
+    //org.littletonrobotics.junction.Logger.getInstance().start();
   }
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
