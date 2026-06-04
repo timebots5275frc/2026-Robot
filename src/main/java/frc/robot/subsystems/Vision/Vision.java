@@ -30,6 +30,8 @@ public class Vision extends SubsystemBase {
     
     private Vector3 avgRobotRotInFieldSpace = Vector3.zero;
     private ArrayList<Vector3> robotRotInFieldSpaceValues = new ArrayList<>();
+
+    private boolean visioncalc = false;
   
     // YAW (radians)
     private double robotYawRadians = 0.0;
@@ -54,15 +56,20 @@ public class Vision extends SubsystemBase {
       
       var table = NetworkTableInstance.getDefault().getTable("limelight");
 
-        aprilTagID = (int) table.getEntry("tid").getDouble(-1.0);
+        aprilTagID = (int) table.getEntry("tid").getDouble(-1.0); 
       horizontalOffsetFromAprilTag = table.getEntry("tx").getDouble(0);
       double tv = table.getEntry("tv").getDouble(0);
+      SmartDashboard.putNumber("tv", tv);
 
-      if (tv == 1) {
+      if (tv > 0.5) {
+        visioncalc = true;
+        SmartDashboard.putBoolean("vision calc", visioncalc);
         CalculateRobotPositionInFieldSpace();
         CalculateTargetTransformInRobotSpace();
       } else {
        // ClearAprilTagData();
+       visioncalc = false;
+       SmartDashboard.putBoolean("vision calc", visioncalc);
       }
 
       LogData();
@@ -104,7 +111,7 @@ public class Vision extends SubsystemBase {
     double[] vals = table.getEntry("botpose").getDoubleArray(new double[6]);
 
     if (vals[0]!=0 && aprilTagID != -1) {
-      AprilTag tag = VisionConstants.AprilTagFieldConstants.TAGS.get(aprilTagID);
+      AprilTag tag = VisionConstants.AprilTagFieldConstants.TAGS.get(aprilTagID-1);
 
       Vector3 pos = new Vector3(mt2.pose.getX() + tag.pose.getX(), mt2.pose.getY() + tag.pose.getY(), 0);
 

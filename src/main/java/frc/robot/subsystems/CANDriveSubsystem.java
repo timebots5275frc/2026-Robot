@@ -10,7 +10,7 @@
 
 import static frc.robot.Constants.Constants.DriveConstants.*;
 
-import java.util.Optional;
+// import java.util.Optional;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.revrobotics.spark.SparkFlex;
@@ -21,15 +21,15 @@ import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.wpilibj.DriverStation;
+// import edu.wpi.first.wpilibj.DriverStation.Alliance;
+// import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Constants;
-import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.Vision.LimelightHelpers;
+// import frc.robot.Constants.VisionConstants;
+// import frc.robot.subsystems.Vision.LimelightHelpers;
 import frc.robot.subsystems.Vision.Vision;
 
  public class CANDriveSubsystem extends SubsystemBase {
@@ -41,7 +41,7 @@ import frc.robot.subsystems.Vision.Vision;
    private Pigeon2 gyro;
    private DifferentialDriveKinematics ddk;
    private DifferentialDrivePoseEstimator ddpe;
-   private Translation3d targetPose;
+  //  private Translation3d targetPose;
 
    private final DifferentialDrive drive;
 
@@ -161,31 +161,30 @@ public double getRightDistance() {
     @Override
    public void periodic() {
 
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-        targetPose =
-            alliance.isPresent() && alliance.get() == Alliance.Blue
-                ? VisionConstants.BLUE_HUB_POSE
-                : VisionConstants.RED_HUB_POSE;
+    // Optional<Alliance> alliance = DriverStation.getAlliance();
+    //     targetPose =
+    //         alliance.isPresent() && alliance.get() == Alliance.Blue
+    //             ? VisionConstants.BLUE_HUB_POSE
+    //             : VisionConstants.RED_HUB_POSE;
+    // int aTag = vision.AprilTagID();
 
-    int aTag = vision.AprilTagID();
+    // if (vision.hasValidData() && aTag <= 32 && aTag > 0) {
+    //   double latencyMS = (LimelightHelpers.getLatency_Pipeline("limelight")+LimelightHelpers.getLatency_Capture("limelight"));
+    //   double timeStamp = Timer.getFPGATimestamp() - (latencyMS/1000.0);
 
-    if (vision.hasValidData()) {
-      double latencyMS = (LimelightHelpers.getLatency_Pipeline("limelight")+LimelightHelpers.getLatency_Capture("limelight"));
-      double timeStamp = Timer.getFPGATimestamp() - (latencyMS/1000.0);
+    //   ddpe.update(vision.gyro.getRotation2d(), (getLeftDistance()), (getRightDistance()));
+    //   ddpe.addVisionMeasurement(new Pose2d(vision.RobotPosInFieldSpace().x + VisionConstants.AprilTagFieldConstants.TAGS.get(aTag-1).pose.getX(),vision.RobotPosInFieldSpace().y + VisionConstants.AprilTagFieldConstants.TAGS.get(aTag-1).pose.getY(), vision.gyro.getRotation2d()), timeStamp);
+    //   return;
+    // }
 
-      ddpe.update(vision.gyro.getRotation2d(), (getLeftDistance()), (getRightDistance()));
-      ddpe.addVisionMeasurement(new Pose2d(vision.RobotPosInFieldSpace().x + VisionConstants.AprilTagFieldConstants.TAGS.get(aTag-1).pose.getX(),vision.RobotPosInFieldSpace().y + VisionConstants.AprilTagFieldConstants.TAGS.get(aTag-1).pose.getY(), vision.gyro.getRotation2d()), timeStamp);
-      return;
-    }
+    // ddpe.update(
+    //     vision.gyro.getRotation2d(),
+    //     (getLeftDistance()), 
+    //     (getRightDistance())
+    // );
 
-    ddpe.update(
-        vision.gyro.getRotation2d(),
-        (getLeftDistance()), 
-        (getRightDistance())
-    );
-
-    SmartDashboard.putNumber("robotX", ddpe.getEstimatedPosition().getX());
-    SmartDashboard.putNumber("robotY", ddpe.getEstimatedPosition().getY());
+    // SmartDashboard.putNumber("robotX", ddpe.getEstimatedPosition().getX());
+    // SmartDashboard.putNumber("robotY", ddpe.getEstimatedPosition().getY());
    }
 
 }

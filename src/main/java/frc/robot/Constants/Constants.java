@@ -59,9 +59,9 @@ public final class Constants
     public static final int STOP_SHOOTER_BUTTON_ID = 3;
     public static final int SHAKE_ROBOT_BUTTON_ID = 12;
     public static final int STOP_INTAKE_BUTTON_ID = 4; 
-    public static final int FEED_INTAKE_BUTTON_ID = 9;
+   // public static final int FEED_INTAKE_BUTTON_ID = 9;
     public static final int SUCK_BUTTON = 10;
-    public static final int BLOW_BUTTON = 11;
+    public static final int BLOW_BUTTON = 9;
   }
 
     public static final class DriveConstants {
@@ -77,8 +77,8 @@ public final class Constants
 
       // Current limit for drivetrain motors. 60A is a reasonable maximum to reduce
       // likelihood of tripping breakers or damaging CIM motors
-      public static final int DRIVE_MOTOR_STALL_LIMIT = 60;
-      public static final int DRIVE_MOTOR_FREE_LIMIT = 35;
+      public static final int DRIVE_MOTOR_STALL_LIMIT = 40;
+      public static final int DRIVE_MOTOR_FREE_LIMIT = 30;
       public static final int DRIVE_MOTOR_LIMIT_RPM = 5000;
       public static final int DRIVE_MOTOR_RAMP_RATE = 10;
 

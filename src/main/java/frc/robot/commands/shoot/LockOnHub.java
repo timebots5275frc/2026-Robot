@@ -110,7 +110,7 @@ public class LockOnHub extends Command {
         double robotHeading = shooterPose.getRotation().getZ();
         // // Rotation2d robotHeading = gyro.getRotation2d();
         // // double error = robotHeading - angleToTag;
-        double error = targetHeading - robotHeading;
+        double error = robotHeading - angleToTag;
         error = Math.atan2(Math.sin(error), Math.cos(error));
 
         // double heading = shooterPose.getRotation().getZ();
@@ -125,8 +125,11 @@ public class LockOnHub extends Command {
         double maxRot = 10; 
         // Math.abs(robotY) < 0.05
 
+        SmartDashboard.putNumber("robotH", robotHeading);
+        SmartDashboard.putNumber("error", error);
+        // SmartDashboard.putNumber("at", angleTolerance);
         //ready to shoot
-        if (Math.abs(vision.RobotYawRadians()) >= angleToTag) {
+        if (Math.abs(error) < angleTolerance) {
             drive.driveArcade(0, 0);
             lockedOn = true;
 

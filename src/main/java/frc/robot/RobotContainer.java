@@ -134,13 +134,13 @@ public class RobotContainer {
      */
 
      //shoot no lock on
-     //new JoystickButton(joy, Constants.ButtonConstants.SHOOT_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup(new LimelightDistanceShootCommand(vision, fs, tankDrive), new FeedFuel(intake)));
+     new JoystickButton(joy, Constants.ButtonConstants.SHOOT_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup(new LimelightDistanceShootCommand(vision, fs, tankDrive), new FeedFuel(intake)));
     
      //shoot with lock on
-     new JoystickButton(joy, Constants.ButtonConstants.SHOOT_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup(
-      new LockOnHub(tankDrive, vision, fs),
-      new FeedFuel(intake)
-      ));
+    //  new JoystickButton(joy, Constants.ButtonConstants.SHOOT_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup(
+    //   new LockOnHub(tankDrive, vision, fs),
+    //   new FeedFuel(intake)
+    //   ));
     
     
     //shoot without vision
@@ -154,11 +154,11 @@ public class RobotContainer {
 
     new JoystickButton(bBoard, Constants.ButtonConstants.STOP_SHOOTER_BUTTON_ID).onTrue(new StopShooter(fs)); 
 
-    new JoystickButton(bBoard,Constants.ButtonConstants.SHAKE_ROBOT_BUTTON_ID).onTrue(new SequentialCommandGroup(new AutoDrive(tankDrive, -2, 0).withTimeout(.1), new AutoDrive(tankDrive, 2, 0).withTimeout(.2)/* , teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1)*/));
+    new JoystickButton(bBoard,Constants.ButtonConstants.SHAKE_ROBOT_BUTTON_ID).onTrue(new SequentialCommandGroup(new AutoDrive(tankDrive, -1, 0).withTimeout(.1), new AutoDrive(tankDrive, 1, 0).withTimeout(.2)/* , teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1)*/));
   
     new JoystickButton(bBoard, Constants.ButtonConstants.SUCK_BUTTON).onTrue(new ParallelCommandGroup(new SetIntakeState(intake, IntakeState.SUCK), new FuelShooterCommand(fs, vision, FuelShooterState.SUCK)));
 
-    // TODO label button
+    
     new JoystickButton(bBoard, Constants.ButtonConstants.BLOW_BUTTON).onTrue(new ParallelCommandGroup(new SetIntakeState(intake, IntakeState.BLOW), new FuelShooterCommand(fs, vision, FuelShooterState.BLOW)));
   }
 
