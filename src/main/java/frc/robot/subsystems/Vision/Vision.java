@@ -56,7 +56,7 @@ public class Vision extends SubsystemBase {
       
       var table = NetworkTableInstance.getDefault().getTable("limelight");
 
-        aprilTagID = (int) table.getEntry("tid").getDouble(-1.0); 
+      aprilTagID = (int) table.getEntry("tid").getDouble(-1.0); 
       horizontalOffsetFromAprilTag = table.getEntry("tx").getDouble(0);
       double tv = table.getEntry("tv").getDouble(0);
       SmartDashboard.putNumber("tv", tv);

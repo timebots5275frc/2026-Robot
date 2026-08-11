@@ -1,0 +1,43 @@
+function CalculateRobotPositionInFieldSpace
+    - 
+
+function addFilteredSample
+    - filters out extraneous jumps in value for data
+
+function addFilteredRobotSample
+    - filters out extraneous jumps in value for robot space related items
+
+function getAverageOfArrayList
+    - takes an arraylist and gets the average
+
+function clearAprilTagData
+    - clears aprilTagData from aprilTagPosInRobotSpaceValues & robotPosInFieldSpaceValues arrays
+
+function  onTeleOpDisable
+    - sets things using limelight equal to 0
+    - sets function ToggleLimelight to false
+
+function setUsingLimelight
+    - adds or subtracts from thingsUsingLimelight
+    - checks if thingsUsingLimelight <= 0; if condition is true then it sets ToggleLimelight to false; 
+      if condition is false it sets ToggleLimelight to true
+
+function ToggleLimelight
+    - sets usingLimelight equal to on
+    - uses NetworkTableInstance to set LED mode
+
+getters
+    AprilTagID
+        - gets the aprilTagID
+    AprilTagPosInRobotSpace
+        - gets the average april tag position in robot space
+    RobotPosInFieldSpace
+        - gets average robot pos in field space
+    RobotYAWRadians
+        - gets robot yaw radians
+    HorizontalOffsetFromAprilTag
+        - gets the horizontal offset from the april tag
+    AprilTagRotInFieldSpace
+        - gets average april tag rotation in field space
+    RobotRotInFieldSpace
+        - gets average robot rotation in field space
