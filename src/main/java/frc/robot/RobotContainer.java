@@ -60,7 +60,8 @@ public class RobotContainer {
     // Climb climb;
 
   // Xbox controller that can drive and shoot alongside the flight joystick.
-  private final CommandXboxController xboxController =
+  private final CommandXboxController
+   xboxController =
       new CommandXboxController(OperatorConstants.XBOX_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */

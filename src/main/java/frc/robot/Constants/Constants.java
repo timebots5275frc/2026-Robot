@@ -113,10 +113,10 @@ public final class Constants
 
     public static final class JoystickConstants
     {
-      public static final double JOY_X_RATE_LIMIT = 3;
-      public static final double JOY_TURN_RATE_LIMIT = 5;
+      public static final double JOY_X_RATE_LIMIT = 10;
+      public static final double JOY_TURN_RATE_LIMIT = 10;
 
-      public static final double JOY_INPUT_VELOCITY_MULT = 1;
+      public static final double JOY_INPUT_VELOCITY_MULT = .8;
       public static final double JOY_INPUT_ROTATION_VELOCITY_MULT = .25;
     }
 

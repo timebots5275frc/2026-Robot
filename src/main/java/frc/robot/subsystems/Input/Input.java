@@ -83,7 +83,7 @@ public class Input extends SubsystemBase {
 
   void calculateControllerInput() {
     controllerInput = new Vector2(calculateInputWithDeadzone(rawControllerInput.x, Constants.ControllerConstants.DEADZONE_DRIVE), calculateInputWithDeadzone(rawControllerInput.y, Constants.ControllerConstants.DEADZONE_DRIVE));
-    controllerTurn = calculateInputWithDeadzone(rawControllerTurn, Constants.ControllerConstants.DEADZONE_STEER);
+    controllerTurn = -calculateInputWithDeadzone(rawControllerTurn, Constants.ControllerConstants.DEADZONE_STEER);
   }
 
   public double getThrottle() {
