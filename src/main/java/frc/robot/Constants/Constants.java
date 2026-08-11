@@ -33,6 +33,8 @@ public final class Constants
 
     public static final int OPERATOR_CONTROLLER_PORT = 1;
 
+    public static final int XBOX_CONTROLLER_PORT = 2;
+
     // This value is multiplied by the joystick value when rotating the robot to
     // help avoid turning too fast and beign difficult to control
     public static final double DRIVE_SCALING = .7;

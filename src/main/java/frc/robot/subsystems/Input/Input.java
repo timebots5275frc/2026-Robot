@@ -17,7 +17,11 @@ public class Input extends SubsystemBase {
   Joystick driveJoystick;
   XboxController controller;
   double controllerSpeed;
-  public boolean usingJoystick;
+
+  // Whichever device most recently produced non-zero input is treated as the
+  // active driving device, so the joystick and the Xbox controller can both
+  // drive the robot without either one needing to be unplugged.
+  public boolean usingJoystick = true;
 
   Vector2 rawJoystickInput = Vector2.zero;
   double rawJoystickTwist = 0;
@@ -37,25 +41,24 @@ public class Input extends SubsystemBase {
 
   public static double Throttle;
 
-  public Input(GenericHID driveInput) {
-    if (driveInput instanceof Joystick) {
-      driveJoystick = (Joystick) driveInput;
-      usingJoystick = true;
-    } else {
-      controller = (XboxController) driveInput;
-      usingJoystick = false;
-      controllerSpeed = 0.6;
-    }
+  public Input(Joystick joystick, XboxController controller) {
+    this.driveJoystick = joystick;
+    this.controller = controller;
+    this.controllerSpeed = 0.6;
   }
 
   @Override
   public void periodic() {
-    if (usingJoystick) {
-      getRawJoystickInput();
-      calculateJoystickInput();
-    } else {
-      getRawControllerInput();
-      calculateControllerInput();
+    getRawJoystickInput();
+    calculateJoystickInput();
+
+    getRawControllerInput();
+    calculateControllerInput();
+
+    if (joystickInput.x != 0 || joystickInput.y != 0 || joystickTwist != 0) {
+      usingJoystick = true;
+    } else if (controllerInput.x != 0 || controllerInput.y != 0 || controllerTurn != 0) {
+      usingJoystick = false;
     }
   }
 
@@ -116,6 +119,13 @@ public class Input extends SubsystemBase {
   public double JoystickTwist() { return joystickTwist; }
   public Vector2 ControllerInput() {return controllerInput; }
   public double ControllerTurn() {return controllerTurn; }
+
+  /** Move input from whichever device (joystick or Xbox controller) is currently active. */
+  public Vector2 DriveInput() { return usingJoystick ? joystickInput : controllerInput; }
+  /** Turn input from whichever device (joystick or Xbox controller) is currently active. */
+  public double DriveTwist() { return usingJoystick ? joystickTwist : controllerTurn; }
+  /** Speed percent (0-1) from whichever device (joystick or Xbox controller) is currently active. */
+  public double DriveSpeedPercent() { return usingJoystick ? (-getThrottle() + 1) / 2 : controllerSpeed; }
 
   public double calculateInputWithDeadzone(double input, double deadZone) {
     if (Math.abs(input) < deadZone) {

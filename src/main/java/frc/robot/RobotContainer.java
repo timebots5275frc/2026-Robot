@@ -24,13 +24,12 @@ import frc.robot.subsystems.IntakeSubsystem.IntakeState;
 import frc.robot.subsystems.Input.Input;
 import frc.robot.subsystems.Vision.Vision;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -60,16 +59,16 @@ public class RobotContainer {
     
     // Climb climb;
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  // Xbox controller that can drive and shoot alongside the flight joystick.
+  private final CommandXboxController xboxController =
+      new CommandXboxController(OperatorConstants.XBOX_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(SendableChooser<Command> autonChooser, Vision vision) {
     this.vision = vision;
     bBoard = new GenericHID(1);
     joy = new Joystick(0);
-    input = new Input(joy);
+    input = new Input(joy, xboxController.getHID());
     tankDrive = new CANDriveSubsystem(vision);
     fs = new FuelShooter();
     intake = new IntakeSubsystem();
@@ -119,6 +118,12 @@ public class RobotContainer {
      new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1));
     // teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1);
      tankDrive.setDefaultCommand(teleJoyDrive);
+
+    // Xbox controller equivalent of the joystick's flip-front button.
+    // Driving itself works automatically for whichever device (joystick or
+    // Xbox controller) is actively being moved, since Input merges both.
+    xboxController.x().whileFalse(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1));
+    xboxController.x().whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, 1));
     
     //new JoystickButton(joy, 7).onTrue(new InstantCommand(tankDrive::flipFieldRelative ,tankDrive));
     /*tmp */
@@ -142,21 +147,34 @@ public class RobotContainer {
     //   new FeedFuel(intake)
     //   ));
     
-    
+
+    //shoot with vision - Xbox controller equivalent of the joystick's shoot button
+    xboxController.rightTrigger().onTrue(new SequentialCommandGroup(new LimelightDistanceShootCommand(vision, fs, tankDrive), new FeedFuel(intake)));
+
     //shoot without vision
     new JoystickButton(bBoard, Constants.ButtonConstants.SHOOT_NO_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(intake)));
 
     new JoystickButton(bBoard, Constants.ButtonConstants.INTAKE_BUTTON_ID).onTrue(new SetIntakeState(intake, IntakeState.INTAKE));
 
-    new JoystickButton(bBoard, Constants.ButtonConstants.OUTTAKE_BUTTON_ID).onTrue(new SetIntakeState(intake, IntakeState.OUTTAKE)); 
+    new JoystickButton(bBoard, Constants.ButtonConstants.OUTTAKE_BUTTON_ID).onTrue(new SetIntakeState(intake, IntakeState.OUTTAKE));
 
     new JoystickButton(bBoard, Constants.ButtonConstants.STOP_INTAKE_BUTTON_ID).onTrue(new SetIntakeState(intake, IntakeState.NONE)); 
 
-    new JoystickButton(bBoard, Constants.ButtonConstants.STOP_SHOOTER_BUTTON_ID).onTrue(new StopShooter(fs)); 
+    new JoystickButton(bBoard, Constants.ButtonConstants.STOP_SHOOTER_BUTTON_ID).onTrue(new StopShooter(fs));
 
-    new JoystickButton(bBoard,Constants.ButtonConstants.SHAKE_ROBOT_BUTTON_ID).onTrue(new SequentialCommandGroup(new AutoDrive(tankDrive, -1, 0).withTimeout(.1), new AutoDrive(tankDrive, 1, 0).withTimeout(.2)/* , teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1)*/));
-  
-    new JoystickButton(bBoard, Constants.ButtonConstants.SUCK_BUTTON).onTrue(new ParallelCommandGroup(new SetIntakeState(intake, IntakeState.SUCK), new FuelShooterCommand(fs, vision, FuelShooterState.SUCK)));
+    // Xbox controller equivalents of the button board's actions.
+    //shoot without vision
+    xboxController.rightBumper().onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(intake)));
+
+    xboxController.leftTrigger().onTrue(new SetIntakeState(intake, IntakeState.INTAKE)).onFalse(new SetIntakeState(intake, IntakeState.NONE));
+
+    xboxController.y().onTrue(new SetIntakeState(intake, IntakeState.OUTTAKE));
+
+    xboxController.b().onTrue(new StopShooter(fs));
+
+    // D-pad up/down changes the Xbox controller's drive speed percentage.
+    xboxController.povUp().onTrue(new InstantCommand(input::incrementControllerSpeed));
+    xboxController.povDown().onTrue(new InstantCommand(input::decrementControllerSpeed));
 
     
     new JoystickButton(bBoard, Constants.ButtonConstants.BLOW_BUTTON).onTrue(new ParallelCommandGroup(new SetIntakeState(intake, IntakeState.BLOW), new FuelShooterCommand(fs, vision, FuelShooterState.BLOW)));

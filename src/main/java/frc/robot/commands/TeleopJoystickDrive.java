@@ -36,7 +36,6 @@ public class TeleopJoystickDrive extends Command {
         this.input = input_;
         this.fieldRelative = _fieldRelative;
         this.front = front;
-        usingJoystick = this.input.usingJoystick;
         addRequirements(drive);
 
         C = 6;
@@ -53,21 +52,9 @@ public class TeleopJoystickDrive extends Command {
 
     @Override
     public void execute() {
-        Vector2 moveInput;
-        double turnInput;
-        double speedPercent = 0;
-
-        if (usingJoystick) {
-            moveInput = input.JoystickInput();
-            turnInput = input.JoystickTwist();
-            speedPercent = (-input.getThrottle() + 1) / 2; // between 0 and 1 = 0% and 100%
-        }
-        else {
-            moveInput = input.ControllerInput();
-            
-            turnInput = input.ControllerTurn();
-            speedPercent = input.getControllerSpeed();
-        }
+        Vector2 moveInput = input.DriveInput();
+        double turnInput = input.DriveTwist();
+        double speedPercent = input.DriveSpeedPercent();
 
         // moveInput = new Vector2(
         //     MathUtil.applyDeadband(moveInput.x, Constants.DriveConstants.DEAD_BAND_DRIVE),
