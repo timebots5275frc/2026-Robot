@@ -30,8 +30,8 @@ public class TeleopJoystickDrive extends Command {
      * Pure cubic (1.0) feels dead near center and abrupt near the ends.
      * 0.6-0.8 gives fine low-speed control while still reaching full output smoothly.
      */
-    private static final double DRIVE_CURVE = 0.7;
-    private static final double TURN_CURVE = 0.7;
+    private static final double DRIVE_CURVE = 0.3;
+    private static final double TURN_CURVE = 0.3;
 
     /**
      * How much throttle scales turning. 1.0 = turn rate fully scales with throttle
@@ -39,7 +39,7 @@ public class TeleopJoystickDrive extends Command {
      * 0.0 = turn authority is independent of throttle.
      * ~0.5 is a good starting point.
      */
-    private static final double TURN_THROTTLE_SCALE = 0.5;
+    private static final double TURN_THROTTLE_SCALE = 0.2;
 
     private final CANDriveSubsystem drivetrain;
     private final Input input;

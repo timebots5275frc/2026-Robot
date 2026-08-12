@@ -95,7 +95,7 @@ import frc.robot.subsystems.Vision.Vision;
      config.inverted(true);
      leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-     ddk = new DifferentialDriveKinematics(.6);
+     ddk = new DifferentialDriveKinematics(Constants.DriveConstants.TRACK_WIDTH);
 
      ddpe = new DifferentialDrivePoseEstimator(
      ddk,

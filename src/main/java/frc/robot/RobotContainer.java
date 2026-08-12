@@ -150,7 +150,7 @@ public class RobotContainer {
     
 
     //shoot with vision - Xbox controller equivalent of the joystick's shoot button
-    xboxController.rightTrigger().onTrue(new SequentialCommandGroup(new LimelightDistanceShootCommand(vision, fs, tankDrive), new FeedFuel(intake)));
+    xboxController.rightTrigger().onTrue(new SequentialCommandGroup(new LimelightDistanceShootCommand(vision, fs, tankDrive),new WaitCommand(.7), new FeedFuel(intake)));
 
     //shoot without vision
     new JoystickButton(bBoard, Constants.ButtonConstants.SHOOT_NO_LIMELIGHT_BUTTON_ID).onTrue(new SequentialCommandGroup( new ChargeMotor(fs, Constants.FuelShooterConstants.DEFAULT_SHOOTER_RPM), new FeedFuel(intake)));
@@ -169,9 +169,13 @@ public class RobotContainer {
 
     xboxController.leftTrigger().onTrue(new SetIntakeState(intake, IntakeState.INTAKE)).onFalse(new SetIntakeState(intake, IntakeState.NONE));
 
-    xboxController.y().onTrue(new SetIntakeState(intake, IntakeState.OUTTAKE));
+    xboxController.y().onTrue(new SetIntakeState(intake, IntakeState.OUTTAKE)).onFalse(new SetIntakeState(intake, IntakeState.NONE));
 
-    xboxController.b().onTrue(new StopShooter(fs));
+    xboxController.a().onTrue(new SetIntakeState(intake, IntakeState.NONE));
+
+    xboxController.leftBumper().onTrue(new SequentialCommandGroup(new StopShooter(fs), new SetIntakeState(intake, IntakeState.NONE)));
+
+    xboxController.b().onTrue(new ParallelCommandGroup(new SetIntakeState(intake, IntakeState.BLOW), new FuelShooterCommand(fs, vision, FuelShooterState.BLOW)));
 
     // D-pad up/down changes the Xbox controller's drive speed percentage.
     xboxController.povUp().onTrue(new InstantCommand(input::incrementControllerSpeed));

@@ -87,9 +87,9 @@ public final class Constants
       public static final double WHEEL_RADIUS = 2.0 * 0.0254; // meters * 0.98
       public static final double WHEEL_CIRCUMFERENCE = 2.0 * Math.PI * WHEEL_RADIUS; // meters/revolution
 
-      public static final double MAX_DRIVE_SPEED = 3.5; // meters/second
+      public static final double MAX_DRIVE_SPEED = 1; // meters/second
       public static final double MAX_STEER_RATE = .5; // rotations/second of a wheel for steer.
-      public static final double MAX_TWIST_RATE = .6 * 2.0 * Math.PI; // radians/second of the robot rotation.
+      public static final double MAX_TWIST_RATE = .7; // percent output of the robot rotation.
       public static final double CONTROLLER_TWIST_RATE = 2; // constant turn rate for using controller
 
       //DistanceDrive
@@ -113,11 +113,11 @@ public final class Constants
 
     public static final class JoystickConstants
     {
-      public static final double JOY_X_RATE_LIMIT = 10;
-      public static final double JOY_TURN_RATE_LIMIT = 10;
+      public static final double JOY_X_RATE_LIMIT = 6;
+      public static final double JOY_TURN_RATE_LIMIT = 12;
 
-      public static final double JOY_INPUT_VELOCITY_MULT = .8;
-      public static final double JOY_INPUT_ROTATION_VELOCITY_MULT = .25;
+      public static final double JOY_INPUT_VELOCITY_MULT = 1;
+      public static final double JOY_INPUT_ROTATION_VELOCITY_MULT = 1;
     }
 
     public static final class ControllerConstants 
