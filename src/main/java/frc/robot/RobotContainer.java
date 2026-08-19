@@ -173,13 +173,16 @@ public class RobotContainer {
 
     xboxController.a().onTrue(new SetIntakeState(intake, IntakeState.NONE));
 
-    xboxController.leftBumper().onTrue(new SequentialCommandGroup(new StopShooter(fs), new SetIntakeState(intake, IntakeState.NONE)));
+    xboxController.rightBumper().onTrue(new SequentialCommandGroup(new StopShooter(fs), new SetIntakeState(intake, IntakeState.NONE)));
 
     xboxController.b().onTrue(new ParallelCommandGroup(new SetIntakeState(intake, IntakeState.BLOW), new FuelShooterCommand(fs, vision, FuelShooterState.BLOW)));
 
     // D-pad up/down changes the Xbox controller's drive speed percentage.
-    xboxController.povUp().onTrue(new InstantCommand(input::incrementControllerSpeed));
-    xboxController.povDown().onTrue(new InstantCommand(input::decrementControllerSpeed));
+    xboxController.povUp().onTrue(new InstantCommand(input::incrementTranslationControllerSpeed));
+    xboxController.povDown().onTrue(new InstantCommand(input::decrementTranslationControllerSpeed));
+    xboxController.povRight().onTrue(new InstantCommand(input::incrementTwistControllerSpeed));
+    xboxController.povLeft().onTrue(new InstantCommand(input::decrementTwistControllerSpeed));
+
 
     
     new JoystickButton(bBoard, Constants.ButtonConstants.BLOW_BUTTON).onTrue(new ParallelCommandGroup(new SetIntakeState(intake, IntakeState.BLOW), new FuelShooterCommand(fs, vision, FuelShooterState.BLOW)));

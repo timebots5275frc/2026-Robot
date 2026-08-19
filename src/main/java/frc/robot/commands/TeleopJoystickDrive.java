@@ -83,7 +83,8 @@ public class TeleopJoystickDrive extends Command {
         // it may be cached or shared with other consumers.
         Vector2 rawMove = input.DriveInput();
         double rawTurn = input.DriveTwist();
-        double speedPercent = input.DriveSpeedPercent();
+        double translationSpeedPercent = input.TranslationSpeedPercent();
+        double twistSpeedPercent = input.TwistSpeedPercent();
 
         // 1. Deadband + rescale so output is continuous: 0 at the deadband edge, 1 at full stick.
         double move = deadband(rawMove.x, Constants.DriveConstants.DEAD_BAND_DRIVE);
@@ -100,15 +101,15 @@ public class TeleopJoystickDrive extends Command {
         turn = srlTurn.calculate(turn);
 
         // 4. Scale to real velocities.
-        double throttleForTurn = MathUtil.interpolate(1.0, speedPercent, TURN_THROTTLE_SCALE);
+        // double throttleForTurn = MathUtil.interpolate(1.0, speedPercent, TURN_THROTTLE_SCALE);
 
         double velocity = move
-                * speedPercent
+                * translationSpeedPercent
                 * Constants.DriveConstants.MAX_DRIVE_SPEED
                 * Constants.JoystickConstants.JOY_INPUT_VELOCITY_MULT;
 
         double rotationVelocity = turn
-                * throttleForTurn
+                * twistSpeedPercent
                 * Constants.DriveConstants.MAX_TWIST_RATE
                 * Constants.JoystickConstants.JOY_INPUT_ROTATION_VELOCITY_MULT;
 

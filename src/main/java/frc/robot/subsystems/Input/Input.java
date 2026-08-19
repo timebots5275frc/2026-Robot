@@ -16,7 +16,8 @@ import frc.robot.CustomTypes.Math.Vector2;
 public class Input extends SubsystemBase {
   Joystick driveJoystick;
   XboxController controller;
-  double controllerSpeed;
+  double translationControllerSpeed;
+  double twistControllerSpeed;
 
   // Whichever device most recently produced non-zero input is treated as the
   // active driving device, so the joystick and the Xbox controller can both
@@ -44,7 +45,8 @@ public class Input extends SubsystemBase {
   public Input(Joystick joystick, XboxController controller) {
     this.driveJoystick = joystick;
     this.controller = controller;
-    this.controllerSpeed = 0.6;
+    this.translationControllerSpeed = 0.6;
+    this.twistControllerSpeed = 0.6;
   }
 
   @Override
@@ -90,17 +92,30 @@ public class Input extends SubsystemBase {
     return driveJoystick.getThrottle();
   }
 
-  public void incrementControllerSpeed() {
-    if (controllerSpeed + 0.2 <= 1) { controllerSpeed += 0.2; }
+  public void incrementTranslationControllerSpeed() {
+    if (translationControllerSpeed + 0.2 <= 1) { translationControllerSpeed += 0.2; }
   }
 
-  public void decrementControllerSpeed() {
-    if (controllerSpeed - 0.2 >= 0) { controllerSpeed -= 0.2; }
+  public void decrementTranslationControllerSpeed() {
+    if (translationControllerSpeed - 0.2 >= 0) { translationControllerSpeed -= 0.2; }
   }
 
-  public double getControllerSpeed() {
-    return controllerSpeed;
+  public double getTranslationControllerSpeed() {
+    return translationControllerSpeed;
   }
+
+  public void incrementTwistControllerSpeed() {
+    if (twistControllerSpeed + 0.2 <= 1) { twistControllerSpeed += 0.2; }
+  }
+
+  public void decrementTwistControllerSpeed() {
+    if (twistControllerSpeed - 0.2 >= 0) { twistControllerSpeed -= 0.2; }
+  }
+
+  public double getTwistControllerSpeed() {
+    return twistControllerSpeed;
+  }
+
 
   public void flipRumble() {
     System.out.println("Flip rumble");
@@ -125,7 +140,8 @@ public class Input extends SubsystemBase {
   /** Turn input from whichever device (joystick or Xbox controller) is currently active. */
   public double DriveTwist() { return usingJoystick ? joystickTwist : controllerTurn; }
   /** Speed percent (0-1) from whichever device (joystick or Xbox controller) is currently active. */
-  public double DriveSpeedPercent() { return usingJoystick ? (-getThrottle() + 1) / 2 : controllerSpeed; }
+  public double TranslationSpeedPercent() { return usingJoystick ? (-getThrottle() + 1) / 2 : translationControllerSpeed; }
+  public double TwistSpeedPercent() { return usingJoystick ? (-getThrottle() + 1) / 2 : twistControllerSpeed; }
 
   public double calculateInputWithDeadzone(double input, double deadZone) {
     if (Math.abs(input) < deadZone) {
