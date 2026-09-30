@@ -12,11 +12,11 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.Constants;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  private SparkMax intakeMotor1;
+  private SparkFlex intakeMotor1;
   private SparkClosedLoopController intakePID1;
   
   private SparkMax intakeMotor2; // this is spark max dont forget
@@ -34,48 +34,52 @@ public class IntakeSubsystem extends SubsystemBase {
     Constants.FuelShooterConstants.INTAKE_MOTOR_2_PID.setSparkMaxPID(intakeMotor2,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     intakePID2 = intakeMotor2.getClosedLoopController();
 
-    // intakeMotor1 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
-    // Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT1);
-    // Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT1);
-    // Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkFlexPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
-    // intakePID1 = intakeMotor1.getClosedLoopController();   
-
-    intakeMotor1 = new SparkMax(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
+    intakeMotor1 = new SparkFlex(Constants.FuelShooterConstants.INTAKE_MOTOR_1_ID, MotorType.kBrushless);
     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setFreeLimit(Constants.FuelShooterConstants.INTAKE_FREE_LIMIT1);
     Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setStallLimit(Constants.FuelShooterConstants.INTAKE_STALL_LIMIT1);
-    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkMaxPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
-    intakePID1 = intakeMotor1.getClosedLoopController();   
-
-    
+    Constants.FuelShooterConstants.INTAKE_MOTOR_1_PID.setSparkFlexPID(intakeMotor1,ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
+    intakePID1 = intakeMotor1.getClosedLoopController();       
     
   }
 
   public enum IntakeState{
     INTAKE,
     OUTTAKE,
+    SUCK,
     NONE,
-    FEED;
+    FEED,
+    BLOW;
+
   }
 
   public void setIntakeState(IntakeState state){
     this.state = state;
     switch(state){
       case INTAKE:
-        intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED1, ControlType.kVelocity);
-        intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2, ControlType.kVelocity);
+        intakePID1.setReference(-Constants.FuelShooterConstants.INTAKESPEED1, ControlType.kVelocity);
+        intakePID2.setReference(-Constants.FuelShooterConstants.INTAKESPEED2, ControlType.kVelocity);
         break;
       case OUTTAKE:
         intakePID1.setReference(Constants.FuelShooterConstants.INTAKESPEED1, ControlType.kVelocity);
         intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2, ControlType.kVelocity);
         break;
       case FEED:
-        intakePID1.setReference(-Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
-        intakePID2.setReference(Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
+        intakePID1.setReference(Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
+        intakePID2.setReference(-Constants.FuelShooterConstants.FEEDSPEED, ControlType.kVelocity);
         break;
       case NONE:
         intakePID1.setReference(0, ControlType.kCurrent);
         intakePID2.setReference(0, ControlType.kCurrent);
         break;
+      case SUCK: 
+        intakePID1.setReference(-Constants.FuelShooterConstants.INTAKESPEED1, ControlType.kVelocity);
+        intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2, ControlType.kVelocity);
+        break;
+      case BLOW:
+      intakePID1.setReference(-Constants.FuelShooterConstants.INTAKESPEED1, ControlType.kVelocity);
+        intakePID2.setReference(Constants.FuelShooterConstants.INTAKESPEED2, ControlType.kVelocity);
+        break;
+    
     }
   }
 

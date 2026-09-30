@@ -10,14 +10,19 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.Constants;
 import frc.robot.CustomTypes.Math.Vector2;
 
 public class Input extends SubsystemBase {
   Joystick driveJoystick;
   XboxController controller;
-  double controllerSpeed;
-  public boolean usingJoystick;
+  double translationControllerSpeed;
+  double twistControllerSpeed;
+
+  // Whichever device most recently produced non-zero input is treated as the
+  // active driving device, so the joystick and the Xbox controller can both
+  // drive the robot without either one needing to be unplugged.
+  public boolean usingJoystick = true;
 
   Vector2 rawJoystickInput = Vector2.zero;
   double rawJoystickTwist = 0;
@@ -37,25 +42,25 @@ public class Input extends SubsystemBase {
 
   public static double Throttle;
 
-  public Input(GenericHID driveInput) {
-    if (driveInput instanceof Joystick) {
-      driveJoystick = (Joystick) driveInput;
-      usingJoystick = true;
-    } else {
-      controller = (XboxController) driveInput;
-      usingJoystick = false;
-      controllerSpeed = 0.6;
-    }
+  public Input(Joystick joystick, XboxController controller) {
+    this.driveJoystick = joystick;
+    this.controller = controller;
+    this.translationControllerSpeed = 0.6;
+    this.twistControllerSpeed = 0.6;
   }
 
   @Override
   public void periodic() {
-    if (usingJoystick) {
-      getRawJoystickInput();
-      calculateJoystickInput();
-    } else {
-      getRawControllerInput();
-      calculateControllerInput();
+    getRawJoystickInput();
+    calculateJoystickInput();
+
+    getRawControllerInput();
+    calculateControllerInput();
+
+    if (joystickInput.x != 0 || joystickInput.y != 0 || joystickTwist != 0) {
+      usingJoystick = true;
+    } else if (controllerInput.x != 0 || controllerInput.y != 0 || controllerTurn != 0) {
+      usingJoystick = false;
     }
   }
 
@@ -80,24 +85,37 @@ public class Input extends SubsystemBase {
 
   void calculateControllerInput() {
     controllerInput = new Vector2(calculateInputWithDeadzone(rawControllerInput.x, Constants.ControllerConstants.DEADZONE_DRIVE), calculateInputWithDeadzone(rawControllerInput.y, Constants.ControllerConstants.DEADZONE_DRIVE));
-    controllerTurn = calculateInputWithDeadzone(rawControllerTurn, Constants.ControllerConstants.DEADZONE_STEER);
+    controllerTurn = -calculateInputWithDeadzone(rawControllerTurn, Constants.ControllerConstants.DEADZONE_STEER);
   }
 
   public double getThrottle() {
     return driveJoystick.getThrottle();
   }
 
-  public void incrementControllerSpeed() {
-    if (controllerSpeed + 0.2 <= 1) { controllerSpeed += 0.2; }
+  public void incrementTranslationControllerSpeed() {
+    if (translationControllerSpeed + 0.2 <= 1) { translationControllerSpeed += 0.2; }
   }
 
-  public void decrementControllerSpeed() {
-    if (controllerSpeed - 0.2 >= 0) { controllerSpeed -= 0.2; }
+  public void decrementTranslationControllerSpeed() {
+    if (translationControllerSpeed - 0.2 >= 0) { translationControllerSpeed -= 0.2; }
   }
 
-  public double getControllerSpeed() {
-    return controllerSpeed;
+  public double getTranslationControllerSpeed() {
+    return translationControllerSpeed;
   }
+
+  public void incrementTwistControllerSpeed() {
+    if (twistControllerSpeed + 0.2 <= 1) { twistControllerSpeed += 0.2; }
+  }
+
+  public void decrementTwistControllerSpeed() {
+    if (twistControllerSpeed - 0.2 >= 0) { twistControllerSpeed -= 0.2; }
+  }
+
+  public double getTwistControllerSpeed() {
+    return twistControllerSpeed;
+  }
+
 
   public void flipRumble() {
     System.out.println("Flip rumble");
@@ -116,6 +134,14 @@ public class Input extends SubsystemBase {
   public double JoystickTwist() { return joystickTwist; }
   public Vector2 ControllerInput() {return controllerInput; }
   public double ControllerTurn() {return controllerTurn; }
+
+  /** Move input from whichever device (joystick or Xbox controller) is currently active. */
+  public Vector2 DriveInput() { return usingJoystick ? joystickInput : controllerInput; }
+  /** Turn input from whichever device (joystick or Xbox controller) is currently active. */
+  public double DriveTwist() { return usingJoystick ? joystickTwist : controllerTurn; }
+  /** Speed percent (0-1) from whichever device (joystick or Xbox controller) is currently active. */
+  public double TranslationSpeedPercent() { return usingJoystick ? (-getThrottle() + 1) / 2 : translationControllerSpeed; }
+  public double TwistSpeedPercent() { return usingJoystick ? (-getThrottle() + 1) / 2 : twistControllerSpeed; }
 
   public double calculateInputWithDeadzone(double input, double deadZone) {
     if (Math.abs(input) < deadZone) {
