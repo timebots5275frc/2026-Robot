@@ -30,23 +30,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Constants;
 // import frc.robot.Constants.VisionConstants;
 // import frc.robot.subsystems.Vision.LimelightHelpers;
-import frc.robot.subsystems.Vision.Vision;
+//import frc.robot.subsystems.Vision.Vision;
 
  public class CANDriveSubsystem extends SubsystemBase {
    public static SparkFlex leftLeader;
    private SparkFlex leftFollower;
    public static  SparkFlex rightLeader;
    private  SparkFlex rightFollower;
-   private Vision vision;
+   //private Vision vision;
+   /* 
    private Pigeon2 gyro;
    private DifferentialDriveKinematics ddk;
    private DifferentialDrivePoseEstimator ddpe;
   //  private Translation3d targetPose;
+  */
 
    private final DifferentialDrive drive;
 
-  public CANDriveSubsystem(Vision vision) {
-    this.vision = vision;
+  public CANDriveSubsystem(/*Vision vision*/) {
+    //this.vision = vision;
 
     // create brushed motors for drive
     leftLeader = new SparkFlex(LEFT_LEADER_ID, MotorType.kBrushless);
@@ -94,7 +96,7 @@ import frc.robot.subsystems.Vision.Vision;
      // so that postive values drive both sides forward
      config.inverted(true);
      leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
+/* 
      ddk = new DifferentialDriveKinematics(.6);
 
      ddpe = new DifferentialDrivePoseEstimator(
@@ -104,6 +106,7 @@ import frc.robot.subsystems.Vision.Vision;
      (CANDriveSubsystem.rightLeader.getEncoder().getPosition() * 2 * Math.PI * .0508),
      new Pose2d()
      );
+     */
   }
 
    public void driveArcade(double xSpeed, double zRotation) {
@@ -117,15 +120,17 @@ import frc.robot.subsystems.Vision.Vision;
       leftLeader.getEncoder().setPosition(0);
       rightLeader.getEncoder().setPosition(0);
     }
-
+/* 
 public Pose2d getPose() {
     return ddpe.getEstimatedPosition();
 }
+*/
 
+/* 
 public void addVisionMeasurement(Pose2d visionPose, double timestamp) {
     ddpe.addVisionMeasurement(visionPose, timestamp);
 }
-
+*/
 public double getLeftDistance() {
     return leftLeader.getEncoder().getPosition() * 2 * Math.PI * 0.0508;
 }

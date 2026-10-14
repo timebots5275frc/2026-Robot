@@ -16,7 +16,7 @@ public class DistanceDrive extends Command {
     private  double speed;
    
 
-    private Pose2d startPose;
+   
 
     public DistanceDrive(CANDriveSubsystem drive, double distanceMeters, double speed) {
         this.drive = drive;
@@ -29,7 +29,7 @@ public class DistanceDrive extends Command {
     public void initialize() {
         drive.resetEncoders();
         
-        startPose = drive.getPose();
+      
     }
 
     @Override
