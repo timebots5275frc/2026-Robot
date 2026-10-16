@@ -6,15 +6,15 @@ package frc.robot;
 
 import frc.robot.Constants.Constants;
 import frc.robot.Constants.Constants.OperatorConstants;
-
+import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.TeleopJoystickDrive;
 import frc.robot.commands.auto.AutoDrive;
 import frc.robot.commands.auto.DistanceDrive;
 
 import frc.robot.subsystems.CANDriveSubsystem;
-
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Input.Input;
-
+import frc.robot.subsystems.IntakeSubsystem.IntakeState;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 
@@ -46,7 +46,7 @@ public class RobotContainer {
    
     CANDriveSubsystem tankDrive;
   
-   
+   IntakeSubsystem intakeSubsystem;
 
     
     // Climb climb;
@@ -62,7 +62,7 @@ public class RobotContainer {
     joy = new Joystick(0);
     input = new Input(joy);
     tankDrive = new CANDriveSubsystem();
-   
+   intakeSubsystem = new IntakeSubsystem();
 
     // autonChooser.setDefaultOption("Drive ONLY", new SequentialCommandGroup(
     //   // new AutoDrive(tankDrive,MathConstants.INCH_TO_METER*22,0),
@@ -94,6 +94,7 @@ public class RobotContainer {
      new JoystickButton(joy, Constants.ButtonConstants.FLIP_FRONT_BUTTON_ID).whileTrue(teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1));
     // teleJoyDrive = new TeleopJoystickDrive(tankDrive, input, false, -1);
      tankDrive.setDefaultCommand(teleJoyDrive);
+    new JoystickButton(joy, Constants.ButtonConstants.INTAKE_BUTTON_ID).onTrue(new SetIntakeState(intakeSubsystem, IntakeState.INTAKE));
     
    
   }
